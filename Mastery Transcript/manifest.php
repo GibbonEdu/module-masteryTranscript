@@ -26,7 +26,7 @@ $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Assess';
 $version = '0.1.00';
-$author = 'Sanda Kuipers & Ross Parker';
+$author = 'Ross Parker';
 $url = 'https://gibbonedu.org';
 
 //Module tables
