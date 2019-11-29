@@ -27,8 +27,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
 } else {
     // Proceed!
     $page->breadcrumbs
-        ->add(__m('Manage Categories'), 'domains_manage.php')
-        ->add(__m('Add Category'));
+        ->add(__m('Manage Domains'), 'domains_manage.php')
+        ->add(__m('Add Domain'));
 
     $editLink = '';
     if (isset($_GET['editID'])) {

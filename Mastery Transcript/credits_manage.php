@@ -19,41 +19,39 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Tables\DataTable;
 use Gibbon\Services\Format;
-use Gibbon\Module\MasteryTranscript\Domain\DomainGateway;
+use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
 
-if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains_manage.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits_manage.php') == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
     // Proceed!
     $page->breadcrumbs
-        ->add(__m('Manage Domains'));
+        ->add(__m('Manage Credits'));
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
     }
 
     // Query categories
-    $domainGateway = $container->get(DomainGateway::class);
+    $creditGateway = $container->get(CreditGateway::class);
 
-    $criteria = $domainGateway->newQueryCriteria()
+    $criteria = $creditGateway->newQueryCriteria()
         ->fromPOST();
 
-    $domains = $domainGateway->queryDomains($criteria);
+    $domains = $creditGateway->queryCredits($criteria);
 
     // Render table
-    $table = DataTable::createPaginated('domains', $criteria);
+    $table = DataTable::createPaginated('credits', $criteria);
 
     $table->addHeaderAction('add', __('Add'))
-        ->setURL('/modules/Mastery Transcript/domains_manage_add.php')
+        ->setURL('/modules/Mastery Transcript/credits_manage_add.php')
         ->displayLabel();
 
     $table->modifyRows(function ($category, $row) {
         if ($category['active'] == 'N') $row->addClass('error');
         return $row;
     });
-
-    $table->addDraggableColumn('masteryTranscriptDomainID', $gibbon->session->get('absoluteURL').'/modules/Mastery Transcript/domains_manage_editOrderAjax.php');
 
     $table->addExpandableColumn('description');
 
@@ -65,20 +63,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
         return $return;
     });
 
-    $table->addColumn('name', __('Name'))
-        ->sortable(['masteryTranscriptDomain.name']);
+    $table->addColumn('domain', __('Domain'));
+
+    $table->addColumn('name', __('Name'));
 
     $table->addColumn('active', __m('Active'));
 
     // ACTIONS
     $table->addActionColumn()
-        ->addParam('masteryTranscriptDomainID')
+        ->addParam('masteryTranscriptCreditID')
         ->format(function ($category, $actions) {
             $actions->addAction('edit', __('Edit'))
-                    ->setURL('/modules/Mastery Transcript/domains_manage_edit.php');
+                    ->setURL('/modules/Mastery Transcript/credits_manage_edit.php');
 
             $actions->addAction('delete', __('Delete'))
-                    ->setURL('/modules/Mastery Transcript/domains_manage_delete.php');
+                    ->setURL('/modules/Mastery Transcript/credits_manage_delete.php');
         });
 
     echo $table->render($domains);

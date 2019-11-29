@@ -42,6 +42,17 @@ $moduleTables[] = "CREATE TABLE `masteryTranscriptDomain` (
   PRIMARY KEY (`masteryTranscriptDomainID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
+$moduleTables[] = "CREATE TABLE `masteryTranscriptCredit` (
+  `masteryTranscriptCreditID` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `masteryTranscriptDomainID` int(3) unsigned zerofill NOT NULL,
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `description` text NOT NULL,
+  `active` enum('Y','N') NOT NULL DEFAULT 'Y',
+  `logo` varchar(255) NOT NULL DEFAULT '',
+  `gibbonYearGroupIDList` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`masteryTranscriptCreditID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
 //Settings - none
 //$gibbonSetting[] = "";
 
@@ -53,6 +64,26 @@ $actionRows[] = [
     'description'               => 'Manage the domains in which credits can be situated.',
     'URLList'                   => 'domains_manage.php,domains_manage_add.php,domains_manage_edit.php,domains_manage_delete.php',
     'entryURL'                  => 'domains_manage.php',
+    'entrySidebar'              => 'Y',
+    'menuShow'                  => 'Y',
+    'defaultPermissionAdmin'    => 'Y',
+    'defaultPermissionTeacher'  => 'N',
+    'defaultPermissionStudent'  => 'N',
+    'defaultPermissionParent'   => 'N',
+    'defaultPermissionSupport'  => 'N',
+    'categoryPermissionStaff'   => 'Y',
+    'categoryPermissionStudent' => 'N',
+    'categoryPermissionParent'  => 'N',
+    'categoryPermissionOther'   => 'N',
+];
+
+$actionRows[] = [
+    'name'                      => 'Manage Credits',
+    'precedence'                => '0',
+    'category'                  => 'Define',
+    'description'               => 'Manage the credits towards which students come work.',
+    'URLList'                   => 'credits_manage.php,credits_manage_add.php,credits_manage_edit.php,credits_manage_delete.php',
+    'entryURL'                  => 'credits_manage.php',
     'entrySidebar'              => 'Y',
     'menuShow'                  => 'Y',
     'defaultPermissionAdmin'    => 'Y',

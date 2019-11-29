@@ -23,12 +23,12 @@ use Gibbon\Domain\Traits\TableAware;
 use Gibbon\Domain\QueryCriteria;
 use Gibbon\Domain\QueryableGateway;
 
-class DomainGateway extends QueryableGateway
+class CreditGateway extends QueryableGateway
 {
     use TableAware;
 
-    private static $tableName = 'masteryTranscriptDomain';
-    private static $primaryKey = 'masteryTranscriptDomainID';
+    private static $tableName = 'masteryTranscriptCredit';
+    private static $primaryKey = 'masteryTranscriptCreditID';
     private static $searchableColumns = [''];
 
     /**
@@ -36,13 +36,14 @@ class DomainGateway extends QueryableGateway
      * @param bool $inactive
      * @return DataSet
      */
-    public function queryDomains(QueryCriteria $criteria, $all = true)
+    public function queryCredits(QueryCriteria $criteria, $all = true)
     {
         $query = $this
             ->newQuery()
+            ->cols(['masteryTranscriptCredit.*', 'masteryTranscriptDomain.name AS domain'])
             ->from($this->getTableName())
-            ->cols(['*'])
-            ->orderBy(['sequenceNumber', 'name']);
+            ->innerJoin('masteryTranscriptDomain', 'masteryTranscriptCredit.masteryTranscriptDomainID=masteryTranscriptDomain.masteryTranscriptDomainID')
+            ->orderBy(['masteryTranscriptDomain.sequenceNumber', 'masteryTranscriptCredit.name']);
 
         if (!$all) {
             $query->where('active=:active')
@@ -50,18 +51,5 @@ class DomainGateway extends QueryableGateway
         }
 
         return $this->runQuery($query, $criteria);
-    }
-
-    public function selectActiveDomains()
-    {
-        $query = $this
-            ->newSelect()
-            ->from($this->getTableName())
-            ->cols(['masteryTranscriptDomainID AS value', 'name'])
-            ->where('active=:active')
-                ->bindValue('active', 'Y')
-            ->orderBy(['sequenceNumber', 'name']);
-
-        return $this->runSelect($query);
     }
 }

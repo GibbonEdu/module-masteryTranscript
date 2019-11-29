@@ -20,40 +20,48 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Module\MasteryTranscript\Domain\DomainGateway;
+use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
 use Gibbon\FileUploader;
 
-if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains_manage_edit.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits_manage_edit.php') == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
     // Proceed!
-    $masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
+    $masteryTranscriptCreditID = $_GET['masteryTranscriptCreditID'] ?? '';
 
     $page->breadcrumbs
-        ->add(__m('Manage Domains'), 'domains_manage.php')
-        ->add(__m('Edit Domain'));
+        ->add(__m('Manage Credits'), 'credits_manage.php')
+        ->add(__m('Edit Credit'));
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    if (empty($masteryTranscriptDomainID)) {
+    if (empty($masteryTranscriptCreditID)) {
         $page->addError(__('You have not specified one or more required parameters.'));
         return;
     }
 
-    $values = $container->get(domainGateway::class)->getByID($masteryTranscriptDomainID);
+    $values = $container->get(CreditGateway::class)->getByID($masteryTranscriptCreditID);
 
     if (empty($values)) {
         $page->addError(__('The specified record cannot be found.'));
         return;
     }
 
-    $form = Form::create('category', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module').'/domains_manage_editProcess.php');
+    $form = Form::create('category', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module').'/credits_manage_editProcess.php');
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
     $form->addHiddenValue('address', $gibbon->session->get('address'));
-    $form->addHiddenValue('masteryTranscriptDomainID', $masteryTranscriptDomainID);
+    $form->addHiddenValue('masteryTranscriptCreditID', $masteryTranscriptCreditID);
+
+    $domainGateway = $container->get(DomainGateway::class);
+    $domains = $domainGateway->selectActiveDomains()->fetchKeyPair();
+
+    $row = $form->addRow();
+        $row->addLabel('masteryTranscriptDomainID', __('Domain'))->description(__('Must be unique.'));
+        $row->addSelect('masteryTranscriptDomainID')->required()->fromArray($domains)->placeholder();
 
     $row = $form->addRow();
         $row->addLabel('name', __('Name'))->description(__('Must be unique.'));
@@ -67,20 +75,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
         $row->addLabel('active', __('Active'));
         $row->addYesNo('active')->required();
 
-    $row = $form->addRow();
-        $row->addLabel('backgroundColour', __('Background Colour'))->description(__('RGB Hex value, without leading #.'));
-        $row->addTextField('backgroundColour')->maxLength(6);
-
-    $row = $form->addRow();
-        $row->addLabel('accentColour', __('Accent Colour'))->description(__('RGB Hex value, without leading #.'));
-        $row->addTextField('accentColour')->maxLength(6);
-
     $fileUploader = new FileUploader($pdo, $gibbon->session);
     $row = $form->addRow();
         $row->addLabel('file', __('Logo'));
         $row->addFileUpload('file')
             ->setAttachment('logo', $_SESSION[$guid]['absoluteURL'], $values['logo'])
             ->accepts($fileUploader->getFileExtensions('Graphics/Design'));
+
+    $row = $form->addRow();
+        $row->addLabel('gibbonYearGroupIDList', __('Year Groups'))->description(__('Relevant student year groups'));
+        $row->addCheckboxYearGroup('gibbonYearGroupIDList')->addCheckAllNone()->loadFromCSV($values);;
 
     $row = $form->addRow();
         $row->addFooter();
