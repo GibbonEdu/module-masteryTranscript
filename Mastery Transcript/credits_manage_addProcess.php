@@ -23,7 +23,10 @@ use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
 
 require_once '../../gibbon.php';
 
-$URL = $gibbon->session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/credits_manage_add.php';
+$masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
+$search = $_GET['search'] ?? '';
+
+$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_manage_add.php&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search";
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits_manage_add.php') == false) {
     $URL .= '&return=error0';

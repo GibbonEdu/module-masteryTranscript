@@ -29,6 +29,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 } else {
     // Proceed!
     $masteryTranscriptCreditID = $_GET['masteryTranscriptCreditID'] ?? '';
+    $masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
+    $search = $_GET['search'] ?? '';
 
     $page->breadcrumbs
         ->add(__m('Manage Credits'), 'credits_manage.php')
@@ -50,7 +52,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         return;
     }
 
-    $form = Form::create('category', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module').'/credits_manage_editProcess.php');
+    if ($masteryTranscriptDomainID != '' || $search !='') {
+        echo "<div class='linkTop'>";
+        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/credits_manage.php&masteryTranscriptDomainID=".$masteryTranscriptDomainID."&search=".$search."'>".('Back to Search Results')."</a>";
+        echo "</div>";
+    }
+
+    $form = Form::create('category', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/credits_manage_editProcess.php?masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search");
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
     $form->addHiddenValue('address', $gibbon->session->get('address'));

@@ -41,8 +41,7 @@ class DomainGateway extends QueryableGateway
         $query = $this
             ->newQuery()
             ->from($this->getTableName())
-            ->cols(['*'])
-            ->orderBy(['sequenceNumber', 'name']);
+            ->cols(['*']);
 
         if (!$all) {
             $query->where('active=:active')

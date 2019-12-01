@@ -29,7 +29,7 @@ class CreditGateway extends QueryableGateway
 
     private static $tableName = 'masteryTranscriptCredit';
     private static $primaryKey = 'masteryTranscriptCreditID';
-    private static $searchableColumns = [''];
+    private static $searchableColumns = ['masteryTranscriptDomain.masteryTranscriptDomainID', 'masteryTranscriptCredit.name'];
 
     /**
      * @param QueryCriteria $criteria
@@ -42,8 +42,7 @@ class CreditGateway extends QueryableGateway
             ->newQuery()
             ->cols(['masteryTranscriptCredit.*', 'masteryTranscriptDomain.name AS domain'])
             ->from($this->getTableName())
-            ->innerJoin('masteryTranscriptDomain', 'masteryTranscriptCredit.masteryTranscriptDomainID=masteryTranscriptDomain.masteryTranscriptDomainID')
-            ->orderBy(['masteryTranscriptDomain.sequenceNumber', 'masteryTranscriptCredit.name']);
+            ->innerJoin('masteryTranscriptDomain', 'masteryTranscriptCredit.masteryTranscriptDomainID=masteryTranscriptDomain.masteryTranscriptDomainID');
 
         if (!$all) {
             $query->where('active=:active')

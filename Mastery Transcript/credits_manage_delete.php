@@ -26,6 +26,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 } else {
     // Proceed!
     $masteryTranscriptCreditID = $_GET['masteryTranscriptCreditID'] ?? '';
+    $masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
+    $search = $_GET['search'] ?? '';
 
     if (empty($masteryTranscriptCreditID)) {
         $page->addError(__('You have not specified one or more required parameters.'));
@@ -39,6 +41,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         return;
     }
 
-    $form = DeleteForm::createForm($gibbon->session->get('absoluteURL').'/modules/Mastery Transcript/credits_manage_deleteProcess.php');
+    $form = DeleteForm::createForm($gibbon->session->get('absoluteURL')."/modules/Mastery Transcript/credits_manage_deleteProcess.php?masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search");
     echo $form->getOutput();
 }

@@ -24,8 +24,10 @@ use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
 require_once '../../gibbon.php';
 
 $masteryTranscriptCreditID = $_POST['masteryTranscriptCreditID'] ?? '';
+$masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
+$search = $_GET['search'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/credits_manage_edit.php&masteryTranscriptCreditID='.$masteryTranscriptCreditID;
+$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_manage_edit.php&masteryTranscriptCreditID=$masteryTranscriptCreditID&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search";
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits_manage_edit.php') == false) {
     $URL .= '&return=error0';
