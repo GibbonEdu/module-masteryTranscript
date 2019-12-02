@@ -21,6 +21,7 @@ use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Module\MasteryTranscript\Domain\DomainGateway;
 use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
+use Gibbon\Module\MasteryTranscript\Domain\CreditMentorGateway;
 use Gibbon\FileUploader;
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits_manage_edit.php') == false) {
@@ -93,6 +94,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     $row = $form->addRow();
         $row->addLabel('gibbonYearGroupIDList', __('Year Groups'))->description(__('Relevant student year groups'));
         $row->addCheckboxYearGroup('gibbonYearGroupIDList')->addCheckAllNone()->loadFromCSV($values);;
+
+    $gibbonPersonIDList = array();
+    $people = $container->get(CreditMentorGateway::class)->selectMentorsByCredit($masteryTranscriptCreditID);
+    while ($person = $people->fetch()) {
+        $gibbonPersonIDList[] = $person['gibbonPersonID'];
+    }
+    $row = $form->addRow();
+        $row->addLabel('gibbonPersonID', __('Mentor'))->description(__m('Which staff can be selected as a mentor for this credit?'));
+        $row->addSelectStaff('gibbonPersonID')->selectMultiple()->selected($gibbonPersonIDList);
 
     $row = $form->addRow();
         $row->addFooter();

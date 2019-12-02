@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\FileUploader;
 use Gibbon\Services\Format;
 use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
+use Gibbon\Module\MasteryTranscript\Domain\CreditMentorGateway;
 
 require_once '../../gibbon.php';
 
@@ -42,7 +43,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         'name'                      => $_POST['name'] ?? '',
         'description'               => $_POST['description'] ?? '',
         'active'                    => $_POST['active'] ?? '',
-        'gibbonYearGroupIDList'     => (isset($_POST['gibbonYearGroupIDList']) && is_array($_POST['gibbonYearGroupIDList'])) ? implode(',', $_POST['gibbonYearGroupIDList']) : ''
+        'gibbonYearGroupIDList'     => (isset($_POST['gibbonYearGroupIDList']) && is_array($_POST['gibbonYearGroupIDList'])) ? implode(',', $_POST['gibbonYearGroupIDList']) : '',
     ];
 
     // Validate the required values are present
@@ -75,11 +76,26 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     // Create the record
     $masteryTranscriptCreditID = $creditGateway->insert($data);
 
+    //Deal with mentors
+    $creditMentorGateway = $container->get(CreditMentorGateway::class);
+    $gibbonPersonIDs = (isset($_POST['gibbonPersonID']) && is_array($_POST['gibbonPersonID'])) ? $_POST['gibbonPersonID'] : array();
+    if (count($gibbonPersonIDs) > 0) {
+        foreach ($gibbonPersonIDs as $gibbonPersonID) {
+            $data = [
+                'masteryTranscriptCreditID' => $masteryTranscriptCreditID,
+                'gibbonPersonID'            => $gibbonPersonID
+            ];
+            if (!$creditMentorGateway->insert($data)) {
+                $partialFail = true;
+            }
+        }
+    }
+
     if ($masteryTranscriptCreditID && !$partialFail) {
         $URL .= "&return=success0&editID=$masteryTranscriptCreditID";
     }
     else if ($masteryTranscriptCreditID && $partialFail) {
-        $URL .= "&return=error6&editID=$masteryTranscriptCreditID";
+        $URL .= "&return=warning1&editID=$masteryTranscriptCreditID";
     }
     else {
         $URL .= "&return=error2";

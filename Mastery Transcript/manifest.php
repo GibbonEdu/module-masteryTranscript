@@ -53,6 +53,13 @@ $moduleTables[] = "CREATE TABLE `masteryTranscriptCredit` (
   PRIMARY KEY (`masteryTranscriptCreditID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
+$moduleTables[] = "CREATE TABLE `masteryTranscriptCreditMentor` (
+  `masteryTranscriptCreditMentorID` int(6) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `masteryTranscriptCreditID` int(4) unsigned zerofill NOT NULL,
+  `gibbonPersonID` int(10) unsigned zerofill NOT NULL,
+  PRIMARY KEY (`masteryTranscriptCreditMentorID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
 //Settings - none
 //$gibbonSetting[] = "";
 

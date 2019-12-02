@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\FileUploader;
 use Gibbon\Services\Format;
 use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
+use Gibbon\Module\MasteryTranscript\Domain\CreditMentorGateway;
 
 require_once '../../gibbon.php';
 
@@ -60,8 +61,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         exit;
     }
 
-
-
     //Deal with file upload
     $data['logo'] = $_POST['logo'];
     if (!empty($_FILES['file']['tmp_name'])) {
@@ -78,6 +77,24 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
     // Update the record
     $updated = $creditGateway->update($masteryTranscriptCreditID, $data);
+
+    //Deal with mentors
+    $creditMentorGateway = $container->get(CreditMentorGateway::class);
+    if (!$creditMentorGateway->deleteMentorsByCredit($masteryTranscriptCreditID)) {
+        $partialFail = true;
+    }
+    $gibbonPersonIDs = (isset($_POST['gibbonPersonID']) && is_array($_POST['gibbonPersonID'])) ? $_POST['gibbonPersonID'] : array();
+    if (count($gibbonPersonIDs) > 0) {
+        foreach ($gibbonPersonIDs as $gibbonPersonID) {
+            $data = [
+                'masteryTranscriptCreditID' => $masteryTranscriptCreditID,
+                'gibbonPersonID'            => $gibbonPersonID
+            ];
+            if (!$creditMentorGateway->insert($data)) {
+                $partialFail = true;
+            }
+        }
+    }
 
     $URL .= !$updated
         ? "&return=error2"

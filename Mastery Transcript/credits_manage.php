@@ -66,7 +66,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
     $criteria = $creditGateway->newQueryCriteria()
         ->searchBy($creditGateway->getSearchableColumns(), $search)
-        ->searchBy($creditGateway->getSearchableColumns(), $masteryTranscriptDomainID)
+        ->filterBy('masteryTranscriptDomainID', $masteryTranscriptDomainID)
         ->sortBy(['sequenceNumber','masteryTranscriptDomain.name'])
         ->fromPOST();
 

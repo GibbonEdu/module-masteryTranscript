@@ -36,7 +36,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
     $editLink = '';
     if (isset($_GET['editID'])) {
-        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Mastery Transcript/credits_manage_edit.php&masteryTranscriptDomainID='.$_GET['editID'];
+        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Mastery Transcript/credits_manage_edit.php&masteryTranscriptCreditID='.$_GET['editID']."&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search";
     }
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], $editLink, null);
@@ -44,7 +44,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
     if ($masteryTranscriptDomainID != '' || $search !='') {
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/credits_manage.php&masteryTranscriptDomainID=".$masteryTranscriptDomainID."&search=".$search."'>".('Back to Search Results')."</a>";
+        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/credits_manage.php&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search'>".('Back to Search Results')."</a>";
         echo "</div>";
     }
 
@@ -80,6 +80,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     $row = $form->addRow();
         $row->addLabel('gibbonYearGroupIDList', __('Year Groups'))->description(__('Relevant student year groups'));
         $row->addCheckboxYearGroup('gibbonYearGroupIDList')->addCheckAllNone();
+
+    $row = $form->addRow();
+        $row->addLabel('gibbonPersonID', __('Mentor'))->description(__m('Which staff can be selected as a mentor for this credit?'));
+        $row->addSelectStaff('gibbonPersonID')->selectMultiple();
 
     $row = $form->addRow();
         $row->addFooter();

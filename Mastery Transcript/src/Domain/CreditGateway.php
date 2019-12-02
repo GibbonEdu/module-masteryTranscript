@@ -29,7 +29,7 @@ class CreditGateway extends QueryableGateway
 
     private static $tableName = 'masteryTranscriptCredit';
     private static $primaryKey = 'masteryTranscriptCreditID';
-    private static $searchableColumns = ['masteryTranscriptDomain.masteryTranscriptDomainID', 'masteryTranscriptCredit.name'];
+    private static $searchableColumns = ['masteryTranscriptCredit.name'];
 
     /**
      * @param QueryCriteria $criteria
@@ -48,6 +48,14 @@ class CreditGateway extends QueryableGateway
             $query->where('active=:active')
                   ->bindValue('active', 'Y');
         }
+
+        $criteria->addFilterRules([
+            'masteryTranscriptDomainID' => function ($query, $masteryTranscriptDomainID) {
+                return $query
+                    ->where('masteryTranscriptCredit.masteryTranscriptDomainID = :masteryTranscriptDomainID')
+                    ->bindValue('masteryTranscriptDomainID', $masteryTranscriptDomainID);
+            }
+        ]);
 
         return $this->runQuery($query, $criteria);
     }
