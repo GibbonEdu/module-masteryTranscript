@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityMentorGateway;
+use Gibbon\Module\MasteryTranscript\Domain\OpportunityCreditGateway;
 
 require_once '../../gibbon.php';
 
@@ -50,6 +51,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
 
     $opportunityMentorGateway = $container->get(OpportunityMentorGateway::class);
     $opportunityMentorGateway->deleteMentorsByOpportunity($masteryTranscriptOpportunityID);
+
+    $opportunityCreditGateway = $container->get(OpportunityCreditGateway::class);
+    $opportunityCreditGateway->deleteCreditsByOpportunity($masteryTranscriptOpportunityID);
 
     $URL .= !$deleted
         ? '&return=error2'

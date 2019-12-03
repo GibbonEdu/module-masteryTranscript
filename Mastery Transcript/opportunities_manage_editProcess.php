@@ -21,6 +21,7 @@ use Gibbon\FileUploader;
 use Gibbon\Services\Format;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityMentorGateway;
+use Gibbon\Module\MasteryTranscript\Domain\OpportunityCreditGateway;
 
 require_once '../../gibbon.php';
 
@@ -89,6 +90,24 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
                 'gibbonPersonID'            => $gibbonPersonID
             ];
             if (!$opportunityMentorGateway->insert($data)) {
+                $partialFail = true;
+            }
+        }
+    }
+
+    //Deal with credits
+    $opportunityCreditGateway = $container->get(OpportunityCreditGateway::class);
+    if (!$opportunityCreditGateway->deleteCreditsByOpportunity($masteryTranscriptOpportunityID)) {
+        $partialFail = true;
+    }
+    $masteryTranscriptCreditIDs = (isset($_POST['masteryTranscriptCreditID']) && is_array($_POST['masteryTranscriptCreditID'])) ? $_POST['masteryTranscriptCreditID'] : array();
+    if (count($masteryTranscriptCreditIDs) > 0) {
+        foreach ($masteryTranscriptCreditIDs as $masteryTranscriptCreditID) {
+            $data = [
+                'masteryTranscriptOpportunityID' => $masteryTranscriptOpportunityID,
+                'masteryTranscriptCreditID'      => $masteryTranscriptCreditID
+            ];
+            if (!$opportunityCreditGateway->insert($data)) {
                 $partialFail = true;
             }
         }

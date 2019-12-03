@@ -76,6 +76,13 @@ $moduleTables[] = "CREATE TABLE `masteryTranscriptOpportunityMentor` (
   PRIMARY KEY (`masteryTranscriptOpportunityMentorID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
+$moduleTables[] = "CREATE TABLE `masteryTranscriptOpportunityCredit` (
+  `masteryTranscriptOpportunityCreditID` int(6) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `masteryTranscriptOpportunityID` int(4) unsigned zerofill NOT NULL,
+  `masteryTranscriptCreditID` int(4) unsigned zerofill NOT NULL,
+  PRIMARY KEY (`masteryTranscriptOpportunityCreditID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
 //Settings - none
 $gibbonSetting[] = "INSERT INTO `gibbonSetting` (`gibbonSettingID` ,`scope` ,`name` ,`nameDisplay` ,`description` ,`value`) VALUES (NULL , 'Mastery Transcript', 'indexText', 'Index Text', 'Welcome text for users arriving in the module.', '\"The Mastery Transcript Consortium is made up of a growing network of public and private high schools who are codesigning the Mastery Transcript, a high school transcript that supports mastery learning and reflects the unique skills, strengths, and interests of each learner. In the coming years, the MTC hopes to change the way students prepare for college, career, and life.\"<br/><br/><a href=\'https://mastery.org\' target=\'_blank\'>Mastery Transcript Consortium</a>')";
 

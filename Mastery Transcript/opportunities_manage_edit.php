@@ -21,6 +21,7 @@ use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityMentorGateway;
+use Gibbon\Module\MasteryTranscript\Domain\OpportunityCreditGateway;
 use Gibbon\FileUploader;
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportunities_manage_edit.php') == false) {
@@ -92,8 +93,18 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
         $gibbonPersonIDList[] = $person['gibbonPersonID'];
     }
     $row = $form->addRow();
-        $row->addLabel('gibbonPersonID', __('Mentor'))->description(__m('Which staff can be selected as a mentor for this opportunity?'));
+        $row->addLabel('gibbonPersonID', __m('Mentor'))->description(__m('Which staff can be selected as a mentor for this opportunity?'));
         $row->addSelectStaff('gibbonPersonID')->selectMultiple()->selected($gibbonPersonIDList);
+
+    $masteryTranscriptCreditIDList = array();
+    $credits = $container->get(OpportunityCreditGateway::class)->selectCreditsByOpportunity($masteryTranscriptOpportunityID);
+    while ($credit = $credits->fetch()) {
+        $masteryTranscriptCreditIDList[] = $credit['masteryTranscriptCreditID'];
+    }
+    $sql = "SELECT masteryTranscriptCreditID AS value, masteryTranscriptCredit.name, masteryTranscriptDomain.name AS groupBy FROM masteryTranscriptCredit INNER JOIN masteryTranscriptDomain ON (masteryTranscriptCredit.masteryTranscriptDomainID=masteryTranscriptDomain.masteryTranscriptDomainID) WHERE masteryTranscriptCredit.active='Y' ORDER BY masteryTranscriptDomain.name, masteryTranscriptCredit.name";
+    $row = $form->addRow();
+        $row->addLabel('masteryTranscriptCreditID', __m('Available Credits'))->description(__m('Which credits might a student be eligible for?'));
+        $row->addSelect('masteryTranscriptCreditID')->selectMultiple()->fromQuery($pdo, $sql, array(), 'groupBy')->selected($masteryTranscriptCreditIDList);
 
     $row = $form->addRow();
         $row->addFooter();
