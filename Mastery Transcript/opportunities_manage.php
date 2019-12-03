@@ -20,37 +20,28 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\Forms\Form;
 use Gibbon\Tables\DataTable;
 use Gibbon\Services\Format;
-use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
-use Gibbon\Module\MasteryTranscript\Domain\DomainGateway;
+use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
 
-if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits_manage.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportunities_manage.php') == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
     // Proceed!
     $page->breadcrumbs
-        ->add(__m('Manage Credits'));
+        ->add(__m('Manage Opportunities'));
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
     }
 
     //Filter
-    $masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
     $search = $_GET['search'] ?? '';
 
     $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
     $form->setTitle(__('Filter'));
     $form->setClass('noIntBorder fullWidth');
 
-    $form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/credits_manage.php');
-
-    $domainGateway = $container->get(DomainGateway::class);
-    $domains = $domainGateway->selectActiveDomains()->fetchKeyPair();
-
-    $row = $form->addRow();
-        $row->addLabel('masteryTranscriptDomainID', __('Domain'));
-        $row->addSelect('masteryTranscriptDomainID')->fromArray($domains)->placeholder()->selected($masteryTranscriptDomainID);
+    $form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/opportunities_manage.php');
 
     $row = $form->addRow();
         $row->addLabel('search', __('Search'));
@@ -62,23 +53,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     echo $form->getOutput();
 
     // Query categories
-    $creditGateway = $container->get(CreditGateway::class);
+    $opportunityGateway = $container->get(OpportunityGateway::class);
 
-    $criteria = $creditGateway->newQueryCriteria()
-        ->searchBy($creditGateway->getSearchableColumns(), $search)
-        ->filterBy('masteryTranscriptDomainID', $masteryTranscriptDomainID)
-        ->sortBy(['sequenceNumber','masteryTranscriptDomain.name'])
+    $criteria = $opportunityGateway->newQueryCriteria()
+        ->searchBy($opportunityGateway->getSearchableColumns(), $search)
+        ->sortBy(['name'])
         ->fromPOST();
 
-    $credits = $creditGateway->queryCredits($criteria);
+    $domains = $opportunityGateway->queryOpportunities($criteria);
 
     // Render table
-    $table = DataTable::createPaginated('credits', $criteria);
+    $table = DataTable::createPaginated('opportunities', $criteria);
 
     $table->addHeaderAction('add', __('Add'))
-        ->addParam('masteryTranscriptDomainID', $masteryTranscriptDomainID)
         ->addParam('search', $search)
-        ->setURL('/modules/Mastery Transcript/credits_manage_add.php')
+        ->setURL('/modules/Mastery Transcript/opportunities_manage_add.php')
         ->displayLabel();
 
     $table->modifyRows(function ($category, $row) {
@@ -96,24 +85,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         return $return;
     });
 
-    $table->addColumn('domain', __('Domain'));
-
     $table->addColumn('name', __('Name'));
 
     $table->addColumn('active', __m('Active'));
 
     // ACTIONS
     $table->addActionColumn()
-        ->addParam('masteryTranscriptCreditID')
-        ->addParam('masteryTranscriptDomainID', $masteryTranscriptDomainID)
+        ->addParam('masteryTranscriptOpportunityID')
         ->addParam('search', $search)
         ->format(function ($category, $actions) {
             $actions->addAction('edit', __('Edit'))
-                    ->setURL('/modules/Mastery Transcript/credits_manage_edit.php');
+                    ->setURL('/modules/Mastery Transcript/opportunities_manage_edit.php');
 
             $actions->addAction('delete', __('Delete'))
-                    ->setURL('/modules/Mastery Transcript/credits_manage_delete.php');
+                    ->setURL('/modules/Mastery Transcript/opportunities_manage_delete.php');
         });
 
-    echo $table->render($credits);
+    echo $table->render($domains);
 }

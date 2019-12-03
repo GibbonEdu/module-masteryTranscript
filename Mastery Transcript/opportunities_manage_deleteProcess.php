@@ -17,29 +17,28 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
-use Gibbon\Module\MasteryTranscript\Domain\CreditMentorGateway;
+use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
+use Gibbon\Module\MasteryTranscript\Domain\OpportunityMentorGateway;
 
 require_once '../../gibbon.php';
 
-$masteryTranscriptCreditID = $_POST['masteryTranscriptCreditID'] ?? '';
-$masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
+$masteryTranscriptOpportunityID = $_POST['masteryTranscriptOpportunityID'] ?? '';
 $search = $_GET['search'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_manage.php&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search";
+$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_manage.php&search=$search";
 
-if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits_manage_delete.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportunities_manage_delete.php') == false) {
     $URL .= '&return=error0';
     header("Location: {$URL}");
     exit;
-} elseif (empty($masteryTranscriptCreditID)) {
+} elseif (empty($masteryTranscriptOpportunityID)) {
     $URL .= '&return=error1';
     header("Location: {$URL}");
     exit;
 } else {
     // Proceed!
-    $creditGateway = $container->get(CreditGateway::class);
-    $values = $creditGateway->getByID($masteryTranscriptCreditID);
+    $opportunityGateway = $container->get(OpportunityGateway::class);
+    $values = $opportunityGateway->getByID($masteryTranscriptOpportunityID);
 
     if (empty($values)) {
         $URL .= '&return=error2';
@@ -47,10 +46,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         exit;
     }
 
-    $deleted = $creditGateway->delete($masteryTranscriptCreditID);
+    $deleted = $opportunityGateway->delete($masteryTranscriptOpportunityID);
 
-    $creditMentorGateway = $container->get(CreditMentorGateway::class);
-    $creditMentorGateway->deleteMentorsByCredit($masteryTranscriptCreditID);
+    $opportunityMentorGateway = $container->get(OpportunityMentorGateway::class);
+    $opportunityMentorGateway->deleteMentorsByOpportunity($masteryTranscriptOpportunityID);
 
     $URL .= !$deleted
         ? '&return=error2'

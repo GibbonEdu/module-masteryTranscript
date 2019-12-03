@@ -19,41 +19,40 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\FileUploader;
 use Gibbon\Services\Format;
-use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
-use Gibbon\Module\MasteryTranscript\Domain\CreditMentorGateway;
+use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
+use Gibbon\Module\MasteryTranscript\Domain\OpportunityMentorGateway;
 
 require_once '../../gibbon.php';
 
-$masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
 $search = $_GET['search'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_manage_add.php&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search";
+$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_manage_add.php&search=$search";
 
-if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits_manage_add.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportunities_manage_add.php') == false) {
     $URL .= '&return=error0';
     header("Location: {$URL}");
     exit;
 } else {
     // Proceed!
     $partialFail = false;
-    $creditGateway = $container->get(CreditGateway::class);
+    $opportunityGateway = $container->get(OpportunityGateway::class);
 
     $data = [
-        'masteryTranscriptDomainID' => $_POST['masteryTranscriptDomainID'] ?? '',
         'name'                      => $_POST['name'] ?? '',
         'description'               => $_POST['description'] ?? '',
         'active'                    => $_POST['active'] ?? '',
+        'gibbonYearGroupIDList'     => (isset($_POST['gibbonYearGroupIDList']) && is_array($_POST['gibbonYearGroupIDList'])) ? implode(',', $_POST['gibbonYearGroupIDList']) : '',
     ];
 
     // Validate the required values are present
-    if (empty($data['masteryTranscriptDomainID']) || empty($data['name'])) {
+    if (empty($data['name'])) {
         $URL .= '&return=error1';
         header("Location: {$URL}");
         exit;
     }
 
     // Validate that this record is unique
-    if (!$creditGateway->unique($data, ['name'])) {
+    if (!$opportunityGateway->unique($data, ['name'])) {
         $URL .= '&return=error7';
         header("Location: {$URL}");
         exit;
@@ -62,7 +61,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     //Deal with file upload
     if (!empty($_FILES['file']['tmp_name'])) {
         $fileUploader = new FileUploader($pdo, $gibbon->session);
-        $logo = $fileUploader->uploadFromPost($_FILES['file'], 'masteryTranscript_creditLogo_'.$data['name']);
+        $logo = $fileUploader->uploadFromPost($_FILES['file'], 'masteryTranscript_opportunityLogo_'.$data['name']);
 
         if (empty($logo)) {
             $partialFail = true;
@@ -73,28 +72,28 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     }
 
     // Create the record
-    $masteryTranscriptCreditID = $creditGateway->insert($data);
+    $masteryTranscriptOpportunityID = $opportunityGateway->insert($data);
 
     //Deal with mentors
-    $creditMentorGateway = $container->get(CreditMentorGateway::class);
+    $opportunityMentorGateway = $container->get(OpportunityMentorGateway::class);
     $gibbonPersonIDs = (isset($_POST['gibbonPersonID']) && is_array($_POST['gibbonPersonID'])) ? $_POST['gibbonPersonID'] : array();
     if (count($gibbonPersonIDs) > 0) {
         foreach ($gibbonPersonIDs as $gibbonPersonID) {
             $data = [
-                'masteryTranscriptCreditID' => $masteryTranscriptCreditID,
+                'masteryTranscriptOpportunityID' => $masteryTranscriptOpportunityID,
                 'gibbonPersonID'            => $gibbonPersonID
             ];
-            if (!$creditMentorGateway->insert($data)) {
+            if (!$opportunityMentorGateway->insert($data)) {
                 $partialFail = true;
             }
         }
     }
 
-    if ($masteryTranscriptCreditID && !$partialFail) {
-        $URL .= "&return=success0&editID=$masteryTranscriptCreditID";
+    if ($masteryTranscriptOpportunityID && !$partialFail) {
+        $URL .= "&return=success0&editID=$masteryTranscriptOpportunityID";
     }
-    else if ($masteryTranscriptCreditID && $partialFail) {
-        $URL .= "&return=warning1&editID=$masteryTranscriptCreditID";
+    else if ($masteryTranscriptOpportunityID && $partialFail) {
+        $URL .= "&return=warning1&editID=$masteryTranscriptOpportunityID";
     }
     else {
         $URL .= "&return=error2";

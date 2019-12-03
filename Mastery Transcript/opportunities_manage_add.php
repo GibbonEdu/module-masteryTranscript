@@ -20,45 +20,36 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\FileUploader;
-use Gibbon\Module\MasteryTranscript\Domain\DomainGateway;
 
-if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits_manage_add.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportunities_manage_add.php') == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
     // Proceed!
-    $masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
     $search = $_GET['search'] ?? '';
 
     $page->breadcrumbs
-        ->add(__m('Manage Credits'), 'credits_manage.php')
-        ->add(__m('Add Credit'));
+        ->add(__m('Manage Opportunities'), 'opportunities_manage.php')
+        ->add(__m('Add Opportunity'));
 
     $editLink = '';
     if (isset($_GET['editID'])) {
-        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Mastery Transcript/credits_manage_edit.php&masteryTranscriptCreditID='.$_GET['editID']."&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search";
+        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Mastery Transcript/opportunities_manage_edit.php&masteryTranscriptOpportunityID='.$_GET['editID']."&search=$search";
     }
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], $editLink, null);
     }
 
-    if ($masteryTranscriptDomainID != '' || $search !='') {
+    if ($search !='') {
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/credits_manage.php&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search'>".('Back to Search Results')."</a>";
+        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/opportunities_manage.php&search=$search'>".('Back to Search Results')."</a>";
         echo "</div>";
     }
 
-    $form = Form::create('domain', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/credits_manage_addProcess.php?masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search");
+    $form = Form::create('domain', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/opportunities_manage_addProcess.php?search=$search");
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
     $form->addHiddenValue('address', $gibbon->session->get('address'));
-
-    $domainGateway = $container->get(DomainGateway::class);
-    $domains = $domainGateway->selectActiveDomains()->fetchKeyPair();
-
-    $row = $form->addRow();
-        $row->addLabel('masteryTranscriptDomainID', __('Domain'))->description(__('Must be unique.'));
-        $row->addSelect('masteryTranscriptDomainID')->required()->fromArray($domains)->placeholder();
 
     $row = $form->addRow();
         $row->addLabel('name', __('Name'))->description(__('Must be unique.'));
@@ -78,7 +69,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         $row->addFileUpload('file')->accepts($fileUploader->getFileExtensions('Graphics/Design'));
 
     $row = $form->addRow();
-        $row->addLabel('gibbonPersonID', __('Mentor'))->description(__m('Which staff can be selected as a mentor for this credit?'));
+        $row->addLabel('gibbonYearGroupIDList', __('Year Groups'))->description(__('Relevant student year groups'));
+        $row->addCheckboxYearGroup('gibbonYearGroupIDList')->addCheckAllNone();
+
+    $row = $form->addRow();
+        $row->addLabel('gibbonPersonID', __('Mentor'))->description(__m('Which staff can be selected as a mentor for this opportunity?'));
         $row->addSelectStaff('gibbonPersonID')->selectMultiple();
 
     $row = $form->addRow();

@@ -37,6 +37,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
     $domainGateway = $container->get(DomainGateway::class);
 
     $criteria = $domainGateway->newQueryCriteria()
+        ->sortBy(['sequenceNumber', 'name'])
         ->fromPOST();
 
     $domains = $domainGateway->queryDomains($criteria);
