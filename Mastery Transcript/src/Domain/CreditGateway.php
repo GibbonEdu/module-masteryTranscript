@@ -40,12 +40,12 @@ class CreditGateway extends QueryableGateway
     {
         $query = $this
             ->newQuery()
-            ->cols(['masteryTranscriptCredit.*', 'masteryTranscriptDomain.name AS domain'])
+            ->cols(['masteryTranscriptCredit.*', 'masteryTranscriptDomain.name AS domain', 'backgroundColour', 'accentColour'])
             ->from($this->getTableName())
             ->innerJoin('masteryTranscriptDomain', 'masteryTranscriptCredit.masteryTranscriptDomainID=masteryTranscriptDomain.masteryTranscriptDomainID');
 
         if (!$all) {
-            $query->where('active=:active')
+            $query->where('masteryTranscriptCredit.active=:active')
                   ->bindValue('active', 'Y');
         }
 

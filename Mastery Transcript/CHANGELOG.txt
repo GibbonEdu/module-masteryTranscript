@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+v0.2.00
+-------
+View Credits
+View Opportunities
+
 v0.1.00
 -------
 Initial action definitions

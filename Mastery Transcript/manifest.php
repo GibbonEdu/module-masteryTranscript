@@ -25,7 +25,7 @@ $description = 'This module implements the Mastery Transcript (https://mastery.o
 $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '0.1.00';
+$version = '0.2.00';
 $author = 'Ross Parker';
 $url = 'https://gibbonedu.org';
 
@@ -165,4 +165,44 @@ $actionRows[] = [
     'categoryPermissionStudent' => 'N',
     'categoryPermissionParent'  => 'N',
     'categoryPermissionOther'   => 'N',
+];
+
+$actionRows[] = [
+    'name'                      => 'Browse Credits',
+    'precedence'                => '0',
+    'category'                  => 'Journey',
+    'description'               => 'Allows users to view a grid of available mastery credits.',
+    'URLList'                   => 'credits.php',
+    'entryURL'                  => 'credits.php',
+    'entrySidebar'              => 'Y',
+    'menuShow'                  => 'Y',
+    'defaultPermissionAdmin'    => 'Y',
+    'defaultPermissionTeacher'  => 'Y',
+    'defaultPermissionStudent'  => 'Y',
+    'defaultPermissionParent'   => 'Y',
+    'defaultPermissionSupport'  => 'Y',
+    'categoryPermissionStaff'   => 'Y',
+    'categoryPermissionStudent' => 'Y',
+    'categoryPermissionParent'  => 'Y',
+    'categoryPermissionOther'   => 'Y',
+];
+
+$actionRows[] = [
+    'name'                      => 'Browse Opportunities',
+    'precedence'                => '0',
+    'category'                  => 'Journey',
+    'description'               => 'Allows users to view a grid of available learning opportunties.',
+    'URLList'                   => 'opportunities.php',
+    'entryURL'                  => 'opportunities.php',
+    'entrySidebar'              => 'Y',
+    'menuShow'                  => 'Y',
+    'defaultPermissionAdmin'    => 'Y',
+    'defaultPermissionTeacher'  => 'Y',
+    'defaultPermissionStudent'  => 'Y',
+    'defaultPermissionParent'   => 'Y',
+    'defaultPermissionSupport'  => 'Y',
+    'categoryPermissionStaff'   => 'Y',
+    'categoryPermissionStudent' => 'Y',
+    'categoryPermissionParent'  => 'Y',
+    'categoryPermissionOther'   => 'Y',
 ];
