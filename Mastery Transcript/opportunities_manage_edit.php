@@ -84,6 +84,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
             ->accepts($fileUploader->getFileExtensions('Graphics/Design'));
 
     $row = $form->addRow();
+        $row->addLabel('creditLicensing', __m('Logo Credits & Licensing'));
+        $row->addTextArea('creditLicensing');
+
+    $row = $form->addRow();
         $row->addLabel('gibbonYearGroupIDList', __('Year Groups'))->description(__('Relevant student year groups'));
         $row->addCheckboxYearGroup('gibbonYearGroupIDList')->addCheckAllNone()->loadFromCSV($values);;
 

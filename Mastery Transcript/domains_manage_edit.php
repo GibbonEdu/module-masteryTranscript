@@ -83,6 +83,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
             ->accepts($fileUploader->getFileExtensions('Graphics/Design'));
 
     $row = $form->addRow();
+        $row->addLabel('creditLicensing', __m('Logo Credits & Licensing'));
+        $row->addTextArea('creditLicensing');
+
+    $row = $form->addRow();
         $row->addFooter();
         $row->addSubmit();
 

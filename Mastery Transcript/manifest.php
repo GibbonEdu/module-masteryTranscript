@@ -39,6 +39,7 @@ $moduleTables[] = "CREATE TABLE `masteryTranscriptDomain` (
   `backgroundColour` varchar(6) NOT NULL DEFAULT '',
   `accentColour` varchar(6) NOT NULL DEFAULT '',
   `logo` varchar(255) NOT NULL DEFAULT '',
+  `creditLicensing` text NOT NULL,
   PRIMARY KEY (`masteryTranscriptDomainID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
@@ -49,6 +50,7 @@ $moduleTables[] = "CREATE TABLE `masteryTranscriptCredit` (
   `description` text NOT NULL,
   `active` enum('Y','N') NOT NULL DEFAULT 'Y',
   `logo` varchar(255) NOT NULL DEFAULT '',
+  `creditLicensing` text NOT NULL,
   PRIMARY KEY (`masteryTranscriptCreditID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
@@ -66,6 +68,7 @@ $moduleTables[] = "CREATE TABLE `masteryTranscriptOpportunity` (
   `active` enum('Y','N') NOT NULL DEFAULT 'Y',
   `logo` varchar(255) NOT NULL DEFAULT '',
   `gibbonYearGroupIDList` varchar(255) NOT NULL DEFAULT '',
+  `creditLicensing` text NOT NULL,
   PRIMARY KEY (`masteryTranscriptOpportunityID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
@@ -194,6 +197,26 @@ $actionRows[] = [
     'description'               => 'Allows users to view a grid of available learning opportunties.',
     'URLList'                   => 'opportunities.php',
     'entryURL'                  => 'opportunities.php',
+    'entrySidebar'              => 'Y',
+    'menuShow'                  => 'Y',
+    'defaultPermissionAdmin'    => 'Y',
+    'defaultPermissionTeacher'  => 'Y',
+    'defaultPermissionStudent'  => 'Y',
+    'defaultPermissionParent'   => 'Y',
+    'defaultPermissionSupport'  => 'Y',
+    'categoryPermissionStaff'   => 'Y',
+    'categoryPermissionStudent' => 'Y',
+    'categoryPermissionParent'  => 'Y',
+    'categoryPermissionOther'   => 'Y',
+];
+
+$actionRows[] = [
+    'name'                      => 'Credits & Licensing',
+    'precedence'                => '0',
+    'category'                  => 'Other',
+    'description'               => 'Allows a user to view image credits for licensed images.',
+    'URLList'                   => 'logo_credits.php',
+    'entryURL'                  => 'logo_credits.php',
     'entrySidebar'              => 'Y',
     'menuShow'                  => 'Y',
     'defaultPermissionAdmin'    => 'Y',

@@ -43,7 +43,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         'name'                      => $_POST['name'] ?? '',
         'description'               => $_POST['description'] ?? '',
         'active'                    => $_POST['active'] ?? '',
+        'creditLicensing'           => $_POST['creditLicensing'] ?? '',
     ];
+
+
 
     // Validate the required values are present
     if (empty($data['masteryTranscriptDomainID']) || empty($data['name'])) {

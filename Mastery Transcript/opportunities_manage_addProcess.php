@@ -43,6 +43,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
         'description'               => $_POST['description'] ?? '',
         'active'                    => $_POST['active'] ?? '',
         'gibbonYearGroupIDList'     => (isset($_POST['gibbonYearGroupIDList']) && is_array($_POST['gibbonYearGroupIDList'])) ? implode(',', $_POST['gibbonYearGroupIDList']) : '',
+        'creditLicensing'           => $_POST['creditLicensing'] ?? '',
     ];
 
     // Validate the required values are present

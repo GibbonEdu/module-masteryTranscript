@@ -78,6 +78,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         $row->addFileUpload('file')->accepts($fileUploader->getFileExtensions('Graphics/Design'));
 
     $row = $form->addRow();
+        $row->addLabel('creditLicensing', __m('Logo Credits & Licensing'));
+        $row->addTextArea('creditLicensing');
+
+    $row = $form->addRow();
         $row->addLabel('gibbonPersonID', __('Mentor'))->description(__m('Which staff can be selected as a mentor for this credit?'));
         $row->addSelectStaff('gibbonPersonID')->selectMultiple();
 

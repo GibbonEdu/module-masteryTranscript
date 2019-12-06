@@ -42,6 +42,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
         'active'            => $_POST['active'] ?? '',
         'backgroundColour'  => $_POST['backgroundColour'] ?? '',
         'accentColour'      => $_POST['accentColour'] ?? '',
+        'creditLicensing'   => $_POST['creditLicensing'] ?? '',
     ];
 
     // Validate the required values are present

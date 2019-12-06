@@ -90,7 +90,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         $row->addFileUpload('file')
             ->setAttachment('logo', $_SESSION[$guid]['absoluteURL'], $values['logo'])
             ->accepts($fileUploader->getFileExtensions('Graphics/Design'));
-            
+
+    $row = $form->addRow();
+        $row->addLabel('creditLicensing', __m('Logo Credits & Licensing'));
+        $row->addTextArea('creditLicensing');
+
     $gibbonPersonIDList = array();
     $people = $container->get(CreditMentorGateway::class)->selectMentorsByCredit($masteryTranscriptCreditID);
     while ($person = $people->fetch()) {
