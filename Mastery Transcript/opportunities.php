@@ -77,7 +77,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
 
 
             $return .= "<div class='text-xs italic pt-2'>";
-                $return .= $values['yearGroups']."<br/>";
+                $return .= "<div class='w-1/2 p-2 my-1 mx-auto'>";
+                $return .= (!empty($values['gibbonYearGroupIDList'])) ? $values['yearGroups'] : __('N/A') ;
+                $return .= "</div>";
                 $credits = $opportunityCreditGateway->selectCreditsByOpportunity($values['masteryTranscriptOpportunityID']);
                 while ($credit = $credits->fetch()) {
                     $background = ($credit['backgroundColour']) ? "; background-color: #".$credit['backgroundColour'] : '';
