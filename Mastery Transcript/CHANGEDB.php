@@ -38,5 +38,8 @@ INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`
 ALTER TABLE `masteryTranscriptDomain` ADD `creditLicensing` text NOT NULL;end
 ALTER TABLE `masteryTranscriptCredit` ADD `creditLicensing` text NOT NULL;end
 ALTER TABLE `masteryTranscriptOpportunity` ADD `creditLicensing` text NOT NULL;end
-
 ";
+
+//v0.2.02
+$sql[$count][0] = '0.2.02';
+$sql[$count][1] = "";

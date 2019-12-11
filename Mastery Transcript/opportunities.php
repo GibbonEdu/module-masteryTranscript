@@ -22,6 +22,7 @@ use Gibbon\Tables\DataTable;
 use Gibbon\Tables\View\GridView;
 use Gibbon\Services\Format;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
+use Gibbon\Module\MasteryTranscript\Domain\OpportunityCreditGateway;
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportunities.php') == false) {
     // Access denied
@@ -51,6 +52,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
 
     // Query categories
     $opportunityGateway = $container->get(OpportunityGateway::class);
+    $opportunityCreditGateway = $container->get(opportunityCreditGateway::class);
 
     $criteria = $opportunityGateway->newQueryCriteria()
         ->searchBy($opportunityGateway->getSearchableColumns(), $search)
@@ -67,11 +69,23 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
 
     $table->addColumn('logo', __('Logo'))
     ->notSortable()
-    ->format(function($values) use ($guid) {
+    ->format(function($values) use ($guid, $opportunityCreditGateway) {
         $return = null;
-        $return .= "<div title='".str_replace("'", "&#39;", $values['description'])."' class='text-center pb-8'>";
-        $return .= ($values['logo'] != '') ? "<img class='pt-10 pb-2 max-w-sm' style='max-width: 65px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/><br/>":"<img class='pt-10 pb-2 max-w-sm' style='max-width: 65px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
+        $return .= "<div title='".str_replace("'", "&#39;", $values['description'])."' class='text-center pb-2'>";
+        $return .= ($values['logo'] != '') ? "<img class='pt-10 pb-2 max-w-sm' style='max-width: 105px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/><br/>":"<img class='pt-10 pb-2 max-w-sm' style='max-width: 105px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
         $return .= "<span class='font-bold'>".$values['name']."</span><br/>";
+
+        $credits = $opportunityCreditGateway->selectCreditsByOpportunity($values['masteryTranscriptOpportunityID']);
+        if ($credits->rowCount() > 0) {
+            $return .= "<div class='text-xs italic pt-2'>";
+            while ($credit = $credits->fetch()) {
+                $background = ($credit['backgroundColour']) ? "; background-color: #".$credit['backgroundColour'] : '';
+                $border = ($credit['accentColour']) ? "; border: 1px solid #".$credit['accentColour'] : '';
+                $font = ($credit['accentColour']) ? "color: #".$credit['accentColour'] : '';
+                $return .= "<div class='w-1/2 p-2 my-1 mx-auto' style='".$font.$background.$border."'>".$credit['name']."</div>";
+            }
+            $return .= "</div>";
+        }
         $return .= "</div>";
 
         return $return;

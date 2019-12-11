@@ -1,14 +1,18 @@
 CHANGELOG
 =========
 
+v0.2.03
+-------
+Addition of credits to Browse Opportunities
+
 v0.2.01
 -------
 Icon credits and licenses
 
 v0.2.00
 -------
-View Credits
-View Opportunities
+Browse Credits
+Browse Opportunities
 
 v0.1.00
 -------

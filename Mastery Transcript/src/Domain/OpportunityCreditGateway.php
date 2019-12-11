@@ -38,10 +38,13 @@ class OpportunityCreditGateway extends QueryableGateway
     {
         $query = $this
             ->newQuery()
-            ->cols(['masteryTranscriptCreditID'])
+            ->cols(['masteryTranscriptOpportunityCredit.masteryTranscriptCreditID', 'masteryTranscriptCredit.name', 'backgroundColour', 'accentColour'])
             ->from($this->getTableName())
+            ->innerJoin('masteryTranscriptCredit', 'masteryTranscriptOpportunityCredit.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID')
+            ->innerJoin('masteryTranscriptDomain', 'masteryTranscriptCredit.masteryTranscriptDomainID=masteryTranscriptDomain.masteryTranscriptDomainID')
             ->where('masteryTranscriptOpportunityID=:masteryTranscriptOpportunityID')
-            ->bindValue('masteryTranscriptOpportunityID', $masteryTranscriptOpportunityID);
+            ->bindValue ('masteryTranscriptOpportunityID', $masteryTranscriptOpportunityID)
+            ->orderBy(['masteryTranscriptDomain.sequenceNumber', 'masteryTranscriptDomain.name', 'masteryTranscriptCredit.name']);
 
         return $this->runSelect($query);
     }

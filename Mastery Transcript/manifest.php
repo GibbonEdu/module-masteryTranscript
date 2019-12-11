@@ -25,7 +25,7 @@ $description = 'This module implements the Mastery Transcript (https://mastery.o
 $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '0.2.00';
+$version = '0.2.02';
 $author = 'Ross Parker';
 $url = 'https://gibbonedu.org';
 
