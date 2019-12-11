@@ -72,20 +72,20 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
     ->format(function($values) use ($guid, $opportunityCreditGateway) {
         $return = null;
         $return .= "<div title='".str_replace("'", "&#39;", $values['description'])."' class='text-center pb-2'>";
-        $return .= ($values['logo'] != '') ? "<img class='pt-10 pb-2 max-w-sm' style='max-width: 105px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/><br/>":"<img class='pt-10 pb-2 max-w-sm' style='max-width: 105px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
-        $return .= "<span class='font-bold'>".$values['name']."</span><br/>";
+            $return .= ($values['logo'] != '') ? "<img class='pt-10 pb-2 max-w-sm' style='max-width: 105px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/><br/>":"<img class='pt-10 pb-2 max-w-sm' style='max-width: 105px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
+            $return .= "<span class='font-bold'>".$values['name']."</span><br/>";
 
-        $credits = $opportunityCreditGateway->selectCreditsByOpportunity($values['masteryTranscriptOpportunityID']);
-        if ($credits->rowCount() > 0) {
+
             $return .= "<div class='text-xs italic pt-2'>";
-            while ($credit = $credits->fetch()) {
-                $background = ($credit['backgroundColour']) ? "; background-color: #".$credit['backgroundColour'] : '';
-                $border = ($credit['accentColour']) ? "; border: 1px solid #".$credit['accentColour'] : '';
-                $font = ($credit['accentColour']) ? "color: #".$credit['accentColour'] : '';
-                $return .= "<div class='w-1/2 p-2 my-1 mx-auto' style='".$font.$background.$border."'>".$credit['name']."</div>";
-            }
+                $return .= $values['yearGroups']."<br/>";
+                $credits = $opportunityCreditGateway->selectCreditsByOpportunity($values['masteryTranscriptOpportunityID']);
+                while ($credit = $credits->fetch()) {
+                    $background = ($credit['backgroundColour']) ? "; background-color: #".$credit['backgroundColour'] : '';
+                    $border = ($credit['accentColour']) ? "; border: 1px solid #".$credit['accentColour'] : '';
+                    $font = ($credit['accentColour']) ? "color: #".$credit['accentColour'] : '';
+                    $return .= "<div class='w-1/2 p-2 my-1 mx-auto' style='".$font.$background.$border."'>".$credit['name']."</div>";
+                }
             $return .= "</div>";
-        }
         $return .= "</div>";
 
         return $return;

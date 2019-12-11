@@ -40,7 +40,7 @@ class OpportunityGateway extends QueryableGateway
     {
         $query = $this
             ->newQuery()
-            ->cols(['*'])
+            ->cols(['*', '(SELECT GROUP_CONCAT(gibbonYearGroup.nameShort ORDER BY gibbonYearGroup.sequenceNumber SEPARATOR \', \') FROM gibbonYearGroup WHERE FIND_IN_SET(gibbonYearGroup.gibbonYearGroupID, masteryTranscriptOpportunity.gibbonYearGroupIDList)) as yearGroups'])
             ->from($this->getTableName());
 
         if (!$all) {
