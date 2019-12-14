@@ -25,7 +25,7 @@ $description = 'This module implements the Mastery Transcript (https://mastery.o
 $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '0.2.02';
+$version = '0.5.00';
 $author = 'Ross Parker';
 $url = 'https://gibbonedu.org';
 
@@ -84,6 +84,26 @@ $moduleTables[] = "CREATE TABLE `masteryTranscriptOpportunityCredit` (
   `masteryTranscriptOpportunityID` int(4) unsigned zerofill NOT NULL,
   `masteryTranscriptCreditID` int(4) unsigned zerofill NOT NULL,
   PRIMARY KEY (`masteryTranscriptOpportunityCreditID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
+$moduleTables[] = "CREATE TABLE `masteryTranscriptJourney` (
+`masteryTranscriptJourneyID` int(12) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `gibbonPersonIDStudent` int(10) unsigned zerofill NULL DEFAULT NULL,
+  `gibbonSchoolYearID` INT(3) UNSIGNED ZEROFILL NULL DEFAULT NULL,
+  `type` enum('Credit','Opportunity') NOT NULL DEFAULT 'Credit',
+  `masteryTranscriptOpportunityID` int(4) unsigned zerofill NULL DEFAULT NULL,
+  `masteryTranscriptCreditID` int(4) unsigned zerofill NULL DEFAULT NULL,
+  `gibbonPersonIDSchoolMentor` int(10) unsigned zerofill NULL DEFAULT NULL,
+  `status` enum('Current','Current - Pending','Complete - Pending','Complete - Approved','Exempt','Evidence Not Yet Approved') NOT NULL DEFAULT 'Current',
+  `timestampJoined` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `timestampCompletePending` timestamp NULL DEFAULT NULL,
+  `timestampCompleteApproved` timestamp NULL DEFAULT NULL,
+  `gibbonPersonIDApproval` int(10) unsigned zerofill NULL DEFAULT NULL,
+  `evidenceType` enum('File','Link') NULL DEFAULT NULL,
+  `evidenceLocation` text NULL DEFAULT NULL,
+  PRIMARY KEY (`masteryTranscriptJourneyID`),
+  INDEX(`gibbonPersonIDStudent`),
+  INDEX(`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 //Settings - none
@@ -228,4 +248,24 @@ $actionRows[] = [
     'categoryPermissionStudent' => 'Y',
     'categoryPermissionParent'  => 'Y',
     'categoryPermissionOther'   => 'Y',
+];
+
+$actionRows[] = [
+    'name'                      => 'Journey',
+    'precedence'                => '0',
+    'category'                  => 'Record Journey',
+    'description'               => 'Allows a student to record steps in their journey to mastery.',
+    'URLList'                   => 'journey_record.php,journey_record_add.php,journey_record_edit.php,journey_record_delete.php',
+    'entryURL'                  => 'journey_record.php',
+    'entrySidebar'              => 'Y',
+    'menuShow'                  => 'Y',
+    'defaultPermissionAdmin'    => 'N',
+    'defaultPermissionTeacher'  => 'N',
+    'defaultPermissionStudent'  => 'Y',
+    'defaultPermissionParent'   => 'N',
+    'defaultPermissionSupport'  => 'N',
+    'categoryPermissionStaff'   => 'N',
+    'categoryPermissionStudent' => 'Y',
+    'categoryPermissionParent'  => 'N',
+    'categoryPermissionOther'   => 'N',
 ];
