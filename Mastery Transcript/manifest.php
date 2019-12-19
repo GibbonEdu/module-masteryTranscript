@@ -251,9 +251,9 @@ $actionRows[] = [
 ];
 
 $actionRows[] = [
-    'name'                      => 'Journey',
+    'name'                      => 'Record Journey',
     'precedence'                => '0',
-    'category'                  => 'Record Journey',
+    'category'                  => 'Journey',
     'description'               => 'Allows a student to record steps in their journey to mastery.',
     'URLList'                   => 'journey_record.php,journey_record_add.php,journey_record_edit.php,journey_record_delete.php',
     'entryURL'                  => 'journey_record.php',
@@ -266,6 +266,46 @@ $actionRows[] = [
     'defaultPermissionSupport'  => 'N',
     'categoryPermissionStaff'   => 'N',
     'categoryPermissionStudent' => 'Y',
+    'categoryPermissionParent'  => 'N',
+    'categoryPermissionOther'   => 'N',
+];
+
+$actionRows[] = [
+    'name'                      => 'Manage Journey_all',
+    'precedence'                => '1',
+    'category'                  => 'Journey',
+    'description'               => 'Allows a member of staff to interact with all student journey records.',
+    'URLList'                   => 'journey_manage.php,journey_manage_edit.php,journey_manage_delete.php,journey_manage_commit.php',
+    'entryURL'                  => 'journey_manage.php',
+    'entrySidebar'              => 'Y',
+    'menuShow'                  => 'Y',
+    'defaultPermissionAdmin'    => 'Y',
+    'defaultPermissionTeacher'  => 'N',
+    'defaultPermissionStudent'  => 'N',
+    'defaultPermissionParent'   => 'N',
+    'defaultPermissionSupport'  => 'N',
+    'categoryPermissionStaff'   => 'Y',
+    'categoryPermissionStudent' => 'N',
+    'categoryPermissionParent'  => 'N',
+    'categoryPermissionOther'   => 'N',
+];
+
+$actionRows[] = [
+    'name'                      => 'Manage Journey_my',
+    'precedence'                => '0',
+    'category'                  => 'Journey',
+    'description'               => 'Allows a member of staff to interact with journey records of students they mentor.',
+    'URLList'                   => 'journey_manage.php,journey_manage_edit.php,journey_manage_delete.php,journey_manage_commit.php',
+    'entryURL'                  => 'journey_manage.php',
+    'entrySidebar'              => 'Y',
+    'menuShow'                  => 'Y',
+    'defaultPermissionAdmin'    => 'N',
+    'defaultPermissionTeacher'  => 'Y',
+    'defaultPermissionStudent'  => 'N',
+    'defaultPermissionParent'   => 'N',
+    'defaultPermissionSupport'  => 'N',
+    'categoryPermissionStaff'   => 'Y',
+    'categoryPermissionStudent' => 'N',
     'categoryPermissionParent'  => 'N',
     'categoryPermissionOther'   => 'N',
 ];

@@ -31,11 +31,6 @@ class JourneyGateway extends QueryableGateway
     private static $primaryKey = 'masteryTranscriptJourneyID';
     private static $searchableColumns = ['name'];
 
-    /**
-     * @param QueryCriteria $criteria
-     * @param int $gibbonPersonID
-     * @return DataSet
-     */
     public function selectJourneyByStudent(QueryCriteria $criteria, $gibbonPersonID)
     {
         $query = $this
@@ -56,5 +51,27 @@ class JourneyGateway extends QueryableGateway
             ->bindValue('gibbonPersonID', $gibbonPersonID);
 
         return $this->runQuery($query, $criteria);
+    }
+
+    public function selectJourneyByID($masteryTranscriptJourneyID)
+    {
+        $query = $this
+            ->newQuery()
+            ->cols(['masteryTranscriptJourney.*', '\'Credit\' AS type', 'masteryTranscriptCredit.name AS name', 'logo', 'surname', 'preferredName'])
+            ->from($this->getTableName())
+            ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
+            ->innerJoin('masteryTranscriptCredit','masteryTranscriptJourney.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID AND type=\'Credit\'')
+            ->where('masteryTranscriptJourneyID = :masteryTranscriptJourneyID')
+            ->bindValue('masteryTranscriptJourneyID', $masteryTranscriptJourneyID);
+
+        $query->unionAll()
+            ->cols(['masteryTranscriptJourney.*', '\'Opportunity\' AS type', 'masteryTranscriptOpportunity.name AS name', 'logo', 'surname', 'preferredName'])
+            ->from($this->getTableName())
+            ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
+            ->innerJoin('masteryTranscriptOpportunity','masteryTranscriptJourney.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID AND type=\'Opportunity\'')
+            ->where('masteryTranscriptJourneyID = :masteryTranscriptJourneyID')
+            ->bindValue('masteryTranscriptJourneyID', $masteryTranscriptJourneyID);
+
+        return $this->runSelect($query);
     }
 }

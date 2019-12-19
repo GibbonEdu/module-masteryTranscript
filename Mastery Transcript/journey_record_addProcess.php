@@ -74,7 +74,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $notificationGateway = new NotificationGateway($pdo);
     $notificationSender = new NotificationSender($notificationGateway, $gibbon->session);
     $notificationString = __('{student} has requested Mastery Trascript mentorship for the {type} {name}.', ['student' => Format::name('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', true, true), 'type' => strtolower($data['type']), 'name' => $name]);
-    $notificationSender->addNotification($data['gibbonPersonIDSchoolMentor'], $notificationString, "Mastery Transcript", "/index.php?q=/modules/Mastery Transcript/journey_mentor_commit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID");
+    $notificationSender->addNotification($data['gibbonPersonIDSchoolMentor'], $notificationString, "Mastery Transcript", "/index.php?q=/modules/Mastery Transcript/journey_manage_commit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID");
     $notificationSender->sendNotifications();
 
     if ($masteryTranscriptJourneyID) {

@@ -34,7 +34,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
 } else {
 
     // Proceed!
-    $domainGateway = $container->get(domainGateway::class);
+    $domainGateway = $container->get(DomainGateway::class);
 
     $data = [
         'name'              => $_POST['name'] ?? '',
