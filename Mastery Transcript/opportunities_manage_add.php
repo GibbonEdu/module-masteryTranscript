@@ -51,6 +51,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
 
     $form->addHiddenValue('address', $gibbon->session->get('address'));
 
+    $row = $form->addRow()->addHeading(__('Basic Information'));
+
     $row = $form->addRow();
         $row->addLabel('name', __('Name'))->description(__('Must be unique.'));
         $row->addTextField('name')->required()->maxLength(50);
@@ -59,18 +61,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
         $row->addLabel('description', __('Description'));
         $row->addTextArea('description');
 
+    $sql = "SELECT masteryTranscriptCreditID AS value, masteryTranscriptCredit.name, masteryTranscriptDomain.name AS groupBy FROM masteryTranscriptCredit INNER JOIN masteryTranscriptDomain ON (masteryTranscriptCredit.masteryTranscriptDomainID=masteryTranscriptDomain.masteryTranscriptDomainID) WHERE masteryTranscriptCredit.active='Y' ORDER BY masteryTranscriptDomain.sequenceNumber, masteryTranscriptDomain.name, masteryTranscriptCredit.name";
+    $row = $form->addRow();
+        $row->addLabel('masteryTranscriptCreditID', __m('Available Credits'))->description(__m('Which credits might a student be eligible for?'));
+        $row->addSelect('masteryTranscriptCreditID')->selectMultiple()->fromQuery($pdo, $sql, array(), 'groupBy');
+
     $row = $form->addRow();
         $row->addLabel('active', __('Active'));
         $row->addYesNo('active')->required();
 
-    $fileUploader = new FileUploader($pdo, $gibbon->session);
-    $row = $form->addRow();
-        $row->addLabel('file', __('Logo'));
-        $row->addFileUpload('file')->accepts($fileUploader->getFileExtensions('Graphics/Design'));
-
-    $row = $form->addRow();
-        $row->addLabel('creditLicensing', __m('Logo Credits & Licensing'));
-        $row->addTextArea('creditLicensing');
+    $row = $form->addRow()->addHeading(__m('Enrolment, Mentorship & Completion'));
 
     $row = $form->addRow();
         $row->addLabel('gibbonYearGroupIDList', __('Year Groups'))->description(__('Relevant student year groups'));
@@ -80,10 +80,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
         $row->addLabel('gibbonPersonID', __m('Mentor'))->description(__m('Which staff can be selected as a mentor for this opportunity?'));
         $row->addSelectStaff('gibbonPersonID')->selectMultiple();
 
-    $sql = "SELECT masteryTranscriptCreditID AS value, masteryTranscriptCredit.name, masteryTranscriptDomain.name AS groupBy FROM masteryTranscriptCredit INNER JOIN masteryTranscriptDomain ON (masteryTranscriptCredit.masteryTranscriptDomainID=masteryTranscriptDomain.masteryTranscriptDomainID) WHERE masteryTranscriptCredit.active='Y' ORDER BY masteryTranscriptDomain.sequenceNumber, masteryTranscriptDomain.name, masteryTranscriptCredit.name";
     $row = $form->addRow();
-        $row->addLabel('masteryTranscriptCreditID', __m('Available Credits'))->description(__m('Which credits might a student be eligible for?'));
-        $row->addSelect('masteryTranscriptCreditID')->selectMultiple()->fromQuery($pdo, $sql, array(), 'groupBy');
+        $column = $row->addColumn();
+        $column->addLabel('outcomes', __m('Indicative Outcomes & Criteria'))->description('How can students and mentor judge progress towards completion?');
+        $column->addEditor('outcomes', $guid)->setRows(15)->showMedia();
+
+    $row = $form->addRow()->addHeading(__('Logo'));
+
+    $fileUploader = new FileUploader($pdo, $gibbon->session);
+    $row = $form->addRow();
+        $row->addLabel('file', __('Logo'));
+        $row->addFileUpload('file')->accepts($fileUploader->getFileExtensions('Graphics/Design'));
+
+    $row = $form->addRow();
+        $row->addLabel('creditLicensing', __m('Logo Credits & Licensing'));
+        $row->addTextArea('creditLicensing');
 
     $row = $form->addRow();
         $row->addFooter();

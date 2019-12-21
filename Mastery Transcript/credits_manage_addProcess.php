@@ -42,6 +42,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         'masteryTranscriptDomainID' => $_POST['masteryTranscriptDomainID'] ?? '',
         'name'                      => $_POST['name'] ?? '',
         'description'               => $_POST['description'] ?? '',
+        'outcomes'                  => $_POST['outcomes'] ?? '',
         'active'                    => $_POST['active'] ?? '',
         'creditLicensing'           => $_POST['creditLicensing'] ?? '',
     ];

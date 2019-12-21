@@ -38,10 +38,12 @@ class CreditMentorGateway extends QueryableGateway
     {
         $query = $this
             ->newQuery()
-            ->cols(['gibbonPersonID'])
+            ->cols(['masteryTranscriptCreditMentor.gibbonPersonID', 'title', 'surname', 'preferredName'])
             ->from($this->getTableName())
+            ->innerJoin('gibbonPerson', 'masteryTranscriptCreditMentor.gibbonPersonID=gibbonPerson.gibbonPersonID')
             ->where('masteryTranscriptCreditID=:masteryTranscriptCreditID')
-            ->bindValue('masteryTranscriptCreditID', $masteryTranscriptCreditID);
+            ->bindValue('masteryTranscriptCreditID', $masteryTranscriptCreditID)
+            ->orderBy(['surname', 'preferredName']);
 
         return $this->runSelect($query);
     }

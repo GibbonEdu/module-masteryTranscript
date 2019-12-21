@@ -19,32 +19,31 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\FileUploader;
 use Gibbon\Services\Format;
-use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
-use Gibbon\Module\MasteryTranscript\Domain\CreditMentorGateway;
+use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
+use Gibbon\Module\MasteryTranscript\Domain\OpportunityMentorGateway;
+use Gibbon\Module\MasteryTranscript\Domain\OpportunityCreditGateway;
 
 require_once '../../gibbon.php';
 
-$masteryTranscriptCreditID = $_POST['masteryTranscriptCreditID'] ?? '';
-$masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
+$masteryTranscriptOpportunityID = $_POST['masteryTranscriptOpportunityID'] ?? '';
 $search = $_GET['search'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_manage_edit.php&masteryTranscriptCreditID=$masteryTranscriptCreditID&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search";
+$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptOpportunityID=$masteryTranscriptOpportunityID&search=$search";
 
-if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits_manage_edit.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_record_edit.php') == false) {
     $URL .= '&return=error0';
     header("Location: {$URL}");
     exit;
 } else {
 
     // Proceed!
-    $creditGateway = $container->get(CreditGateway::class);
+    $opportunityGateway = $container->get(OpportunityGateway::class);
 
     $data = [
-        'masteryTranscriptDomainID' => $_POST['masteryTranscriptDomainID'] ?? '',
         'name'                      => $_POST['name'] ?? '',
         'description'               => $_POST['description'] ?? '',
-        'outcomes'                  => $_POST['outcomes'] ?? '',
         'active'                    => $_POST['active'] ?? '',
+        'gibbonYearGroupIDList'     => (isset($_POST['gibbonYearGroupIDList']) && is_array($_POST['gibbonYearGroupIDList'])) ? implode(',', $_POST['gibbonYearGroupIDList']) : '',
         'creditLicensing'           => $_POST['creditLicensing'] ?? '',
     ];
 
@@ -56,7 +55,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     }
 
     // Validate that this record is unique
-    if (!$creditGateway->unique($data, ['name'], $masteryTranscriptCreditID)) {
+    if (!$opportunityGateway->unique($data, ['name'], $masteryTranscriptOpportunityID)) {
         $URL .= '&return=error7';
         header("Location: {$URL}");
         exit;
@@ -66,7 +65,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     $data['logo'] = $_POST['logo'];
     if (!empty($_FILES['file']['tmp_name'])) {
         $fileUploader = new FileUploader($pdo, $gibbon->session);
-        $logo = $fileUploader->uploadFromPost($_FILES['file'], 'masteryTranscript_domainLogo_'.$data['name']);
+        $logo = $fileUploader->uploadFromPost($_FILES['file'], 'masteryTranscript_opportunityLogo_'.$data['name']);
 
         if (empty($logo)) {
             $partialFail = true;
@@ -77,21 +76,39 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     }
 
     // Update the record
-    $updated = $creditGateway->update($masteryTranscriptCreditID, $data);
+    $updated = $opportunityGateway->update($masteryTranscriptOpportunityID, $data);
 
     //Deal with mentors
-    $creditMentorGateway = $container->get(CreditMentorGateway::class);
-    if (!$creditMentorGateway->deleteMentorsByCredit($masteryTranscriptCreditID)) {
+    $opportunityMentorGateway = $container->get(OpportunityMentorGateway::class);
+    if (!$opportunityMentorGateway->deleteMentorsByOpportunity($masteryTranscriptOpportunityID)) {
         $partialFail = true;
     }
     $gibbonPersonIDs = (isset($_POST['gibbonPersonID']) && is_array($_POST['gibbonPersonID'])) ? $_POST['gibbonPersonID'] : array();
     if (count($gibbonPersonIDs) > 0) {
         foreach ($gibbonPersonIDs as $gibbonPersonID) {
             $data = [
-                'masteryTranscriptCreditID' => $masteryTranscriptCreditID,
+                'masteryTranscriptOpportunityID' => $masteryTranscriptOpportunityID,
                 'gibbonPersonID'            => $gibbonPersonID
             ];
-            if (!$creditMentorGateway->insert($data)) {
+            if (!$opportunityMentorGateway->insert($data)) {
+                $partialFail = true;
+            }
+        }
+    }
+
+    //Deal with credits
+    $opportunityCreditGateway = $container->get(OpportunityCreditGateway::class);
+    if (!$opportunityCreditGateway->deleteCreditsByOpportunity($masteryTranscriptOpportunityID)) {
+        $partialFail = true;
+    }
+    $masteryTranscriptCreditIDs = (isset($_POST['masteryTranscriptCreditID']) && is_array($_POST['masteryTranscriptCreditID'])) ? $_POST['masteryTranscriptCreditID'] : array();
+    if (count($masteryTranscriptCreditIDs) > 0) {
+        foreach ($masteryTranscriptCreditIDs as $masteryTranscriptCreditID) {
+            $data = [
+                'masteryTranscriptOpportunityID' => $masteryTranscriptOpportunityID,
+                'masteryTranscriptCreditID'      => $masteryTranscriptCreditID
+            ];
+            if (!$opportunityCreditGateway->insert($data)) {
                 $partialFail = true;
             }
         }

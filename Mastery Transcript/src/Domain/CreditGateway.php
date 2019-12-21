@@ -59,4 +59,17 @@ class CreditGateway extends QueryableGateway
 
         return $this->runQuery($query, $criteria);
     }
+
+    public function selectCreditByID(int $masteryTranscriptCreditID)
+    {
+        $query = $this
+            ->newQuery()
+            ->cols(['masteryTranscriptCredit.*', 'masteryTranscriptDomain.name AS domain', 'backgroundColour', 'accentColour'])
+            ->from($this->getTableName())
+            ->innerJoin('masteryTranscriptDomain', 'masteryTranscriptCredit.masteryTranscriptDomainID=masteryTranscriptDomain.masteryTranscriptDomainID')
+            ->where('masteryTranscriptCredit.masteryTranscriptCreditID = :masteryTranscriptCreditID')
+            ->bindValue('masteryTranscriptCreditID', $masteryTranscriptCreditID);
+
+        return $this->runSelect($query);
+    }
 }

@@ -48,7 +48,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $values = $result->fetch();
 
-    if ($highestAction == 'Manage Journey_my' && $values['gibbonPersonIDSchoolMentor'] != $gibbon->session->get('gibbonPersonID')) {
+    if ($highestAction != 'Manage Journey_all' && $values['gibbonPersonIDSchoolMentor'] != $gibbon->session->get('gibbonPersonID')) {
         $page->addError(__('The specified record does not exist or you do not have access to it.'));
         return;
     }

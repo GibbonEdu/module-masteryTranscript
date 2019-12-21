@@ -77,15 +77,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
     $table->addColumn('logo', __('Logo'))
     ->notSortable()
-    ->format(function($values) use ($guid) {
+    ->format(function($values) use ($guid, $gibbon, $search, $masteryTranscriptDomainID) {
         $return = null;
         $background = ($values['backgroundColour']) ? "; background-color: #".$values['backgroundColour'] : '';
         $font = ($values['accentColour']) ? "color: #".$values['accentColour'] : '';
-        $return .= "<div title='".str_replace("'", "&#39;", $values['description'])."' class='text-center pb-8' style='".$background."'>";
+        $return .= "<a class='text-black no-underline' href='".$gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_detail.php&masteryTranscriptCreditID=".$values['masteryTranscriptCreditID']."&search=$search&$masteryTranscriptDomainID=$masteryTranscriptDomainID'><div title='".str_replace("'", "&#39;", $values['description'])."' class='text-center pb-8' style='".$background."'>";
         $return .= ($values['logo'] != '') ? "<img class='pt-10 pb-2' style='max-width: 65px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/><br/>":"<img class='pt-10 pb-2' style='max-width: 65px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
-        $return .= "<span class='font-bold'>".$values['name']."</span><br/>";
+        $return .= "<span class='font-bold underline'>".$values['name']."</span><br/>";
         $return .= "<span class='text-sm italic' style='$font'>".$values['domain']."</span><br/>";
-        $return .= "</div>";
+        $return .= "</div></a>";
 
         return $return;
     });

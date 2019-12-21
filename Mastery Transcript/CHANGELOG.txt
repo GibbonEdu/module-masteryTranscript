@@ -2,7 +2,8 @@ CHANGELOG
 =========
 v0.5.00
 -------
-Journey
+Record Journey for students
+Manage Journey for staff
 
 v0.2.03
 -------

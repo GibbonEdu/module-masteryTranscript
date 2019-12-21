@@ -41,6 +41,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
     $data = [
         'name'                      => $_POST['name'] ?? '',
         'description'               => $_POST['description'] ?? '',
+        'outcomes'                  => $_POST['outcomes'] ?? '',
         'active'                    => $_POST['active'] ?? '',
         'gibbonYearGroupIDList'     => (isset($_POST['gibbonYearGroupIDList']) && is_array($_POST['gibbonYearGroupIDList'])) ? implode(',', $_POST['gibbonYearGroupIDList']) : '',
         'creditLicensing'           => $_POST['creditLicensing'] ?? '',

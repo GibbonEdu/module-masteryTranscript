@@ -38,10 +38,12 @@ class OpportunityMentorGateway extends QueryableGateway
     {
         $query = $this
             ->newQuery()
-            ->cols(['gibbonPersonID'])
+            ->cols(['masteryTranscriptOpportunityMentor.gibbonPersonID', 'title', 'surname', 'preferredName'])
             ->from($this->getTableName())
+            ->innerJoin('gibbonPerson', 'masteryTranscriptOpportunityMentor.gibbonPersonID=gibbonPerson.gibbonPersonID')
             ->where('masteryTranscriptOpportunityID=:masteryTranscriptOpportunityID')
-            ->bindValue('masteryTranscriptOpportunityID', $masteryTranscriptOpportunityID);
+            ->bindValue('masteryTranscriptOpportunityID', $masteryTranscriptOpportunityID)
+            ->orderBy(['surname', 'preferredName']);
 
         return $this->runSelect($query);
     }

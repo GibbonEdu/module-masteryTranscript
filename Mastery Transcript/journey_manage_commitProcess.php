@@ -19,6 +19,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
 
+$_POST['address'] = '/modules/Mastery Transcript/journey_manage_commitProcess.php';
+
 require_once '../../gibbon.php';
 
 $search = $_GET['search'] ?? '';
@@ -53,7 +55,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $values = $result->fetch();
 
-    if ($highestAction == 'Manage Journey_my' && $values['gibbonPersonIDSchoolMentor'] != $gibbon->session->get('gibbonPersonID')) {
+    if ($highestAction != 'Manage Journey_all' && $values['gibbonPersonIDSchoolMentor'] != $gibbon->session->get('gibbonPersonID')) {
         $URL .= '&return=error0';
         header("Location: {$URL}");
         exit();
@@ -68,7 +70,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
         //Notify student
         $notificationText = __m('Your mentorship request for the Mastery Transcript {type} {name} has been accepted.', array('type' => strtolower($values['type']), 'name' => $values['name']));
-        setNotification($connection2, $guid, $row['gibbonPersonIDStudent'], $notificationText, 'Mastery Transcript', "/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID");
+        setNotification($connection2, $guid, $values['gibbonPersonIDStudent'], $notificationText, 'Mastery Transcript', "/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID");
 
         //Return to thanks page
         $URL .= "&return=success0&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
@@ -80,7 +82,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
         //Notify student
         $notificationText = __m('Your mentorship request for the Mastery Transcript {type} {name} has been declined. Your enrolment has been deleted.', array('type' => strtolower($values['type']), 'name' => $values['name']));
-        setNotification($connection2, $guid, $row['gibbonPersonIDStudent'], $notificationText, 'Mastery Transcript', "/index.php?q=/modules/Mastery Transcript/journey_record.php");
+        setNotification($connection2, $guid, $values['gibbonPersonIDStudent'], $notificationText, 'Mastery Transcript', "/index.php?q=/modules/Mastery Transcript/journey_record.php");
 
         //Return to thanks page
         $URL .= "&return=success1&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";

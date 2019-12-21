@@ -69,12 +69,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
 
     $table->addColumn('logo', __('Logo'))
     ->notSortable()
-    ->format(function($values) use ($guid, $opportunityCreditGateway) {
+    ->format(function($values) use ($guid, $gibbon, $search, $opportunityCreditGateway) {
         $return = null;
         $return .= "<div title='".str_replace("'", "&#39;", $values['description'])."' class='text-center pb-2'>";
+            $return .= "<a class='text-black no-underline' href='".$gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_detail.php&masteryTranscriptOpportunityID=".$values['masteryTranscriptOpportunityID']."&search=$search'>";
             $return .= ($values['logo'] != '') ? "<img class='pt-10 pb-2 max-w-sm' style='max-width: 105px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/><br/>":"<img class='pt-10 pb-2 max-w-sm' style='max-width: 105px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
-            $return .= "<span class='font-bold'>".$values['name']."</span><br/>";
-
+            $return .= "<span class='font-bold underline'>".$values['name']."</span></a><br/>";
 
             $return .= "<div class='text-xs italic pt-2'>";
                 $return .= "<div class='w-1/2 p-2 my-1 mx-auto'>";

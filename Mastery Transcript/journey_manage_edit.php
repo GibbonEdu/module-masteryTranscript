@@ -24,7 +24,7 @@ use Gibbon\Module\MasteryTranscript\Domain\OpportunityMentorGateway;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityCreditGateway;
 use Gibbon\FileUploader;
 
-if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportunities_manage_edit.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_record_edit.php') == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
@@ -33,7 +33,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
     $search = $_GET['search'] ?? '';
 
     $page->breadcrumbs
-        ->add(__m('Manage Opportunities'), 'opportunities_manage.php')
+        ->add(__m('Manage Opportunities'), 'journey_record.php')
         ->add(__m('Edit Opportunity'));
 
     if (isset($_GET['return'])) {
@@ -54,17 +54,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
 
     if ($search !='') {
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/opportunities_manage.php&search=$search'>".('Back to Search Results')."</a>";
+        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/journey_record.php&search=$search'>".('Back to Search Results')."</a>";
         echo "</div>";
     }
 
-    $form = Form::create('category', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/opportunities_manage_editProcess.php?search=$search");
+    $form = Form::create('category', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/journey_record_editProcess.php?search=$search");
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
     $form->addHiddenValue('address', $gibbon->session->get('address'));
     $form->addHiddenValue('masteryTranscriptOpportunityID', $masteryTranscriptOpportunityID);
-
-    $row = $form->addRow()->addHeading(__('Basic Information'));
 
     $row = $form->addRow();
         $row->addLabel('name', __('Name'))->description(__('Must be unique.'));
@@ -74,21 +72,20 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
         $row->addLabel('description', __('Description'));
         $row->addTextArea('description');
 
-    $masteryTranscriptCreditIDList = array();
-    $credits = $container->get(OpportunityCreditGateway::class)->selectCreditsByOpportunity($masteryTranscriptOpportunityID);
-    while ($credit = $credits->fetch()) {
-        $masteryTranscriptCreditIDList[] = $credit['masteryTranscriptCreditID'];
-    }
-    $sql = "SELECT masteryTranscriptCreditID AS value, masteryTranscriptCredit.name, masteryTranscriptDomain.name AS groupBy FROM masteryTranscriptCredit INNER JOIN masteryTranscriptDomain ON (masteryTranscriptCredit.masteryTranscriptDomainID=masteryTranscriptDomain.masteryTranscriptDomainID) WHERE masteryTranscriptCredit.active='Y' ORDER BY masteryTranscriptDomain.sequenceNumber, masteryTranscriptDomain.name, masteryTranscriptCredit.name";
-    $row = $form->addRow();
-        $row->addLabel('masteryTranscriptCreditID', __m('Available Credits'))->description(__m('Which credits might a student be eligible for?'));
-        $row->addSelect('masteryTranscriptCreditID')->selectMultiple()->fromQuery($pdo, $sql, array(), 'groupBy')->selected($masteryTranscriptCreditIDList);
-
     $row = $form->addRow();
         $row->addLabel('active', __('Active'));
         $row->addYesNo('active')->required();
 
-    $row = $form->addRow()->addHeading(__m('Enrolment, Mentorship & Completion'));
+    $fileUploader = new FileUploader($pdo, $gibbon->session);
+    $row = $form->addRow();
+        $row->addLabel('file', __('Logo'));
+        $row->addFileUpload('file')
+            ->setAttachment('logo', $_SESSION[$guid]['absoluteURL'], $values['logo'])
+            ->accepts($fileUploader->getFileExtensions('Graphics/Design'));
+
+    $row = $form->addRow();
+        $row->addLabel('creditLicensing', __m('Logo Credits & Licensing'));
+        $row->addTextArea('creditLicensing');
 
     $row = $form->addRow();
         $row->addLabel('gibbonYearGroupIDList', __('Year Groups'))->description(__('Relevant student year groups'));
@@ -103,23 +100,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
         $row->addLabel('gibbonPersonID', __m('Mentor'))->description(__m('Which staff can be selected as a mentor for this opportunity?'));
         $row->addSelectStaff('gibbonPersonID')->selectMultiple()->selected($gibbonPersonIDList);
 
+    $masteryTranscriptCreditIDList = array();
+    $credits = $container->get(OpportunityCreditGateway::class)->selectCreditsByOpportunity($masteryTranscriptOpportunityID);
+    while ($credit = $credits->fetch()) {
+        $masteryTranscriptCreditIDList[] = $credit['masteryTranscriptCreditID'];
+    }
+    $sql = "SELECT masteryTranscriptCreditID AS value, masteryTranscriptCredit.name, masteryTranscriptDomain.name AS groupBy FROM masteryTranscriptCredit INNER JOIN masteryTranscriptDomain ON (masteryTranscriptCredit.masteryTranscriptDomainID=masteryTranscriptDomain.masteryTranscriptDomainID) WHERE masteryTranscriptCredit.active='Y' ORDER BY masteryTranscriptDomain.sequenceNumber, masteryTranscriptDomain.name, masteryTranscriptCredit.name";
     $row = $form->addRow();
-        $column = $row->addColumn();
-        $column->addLabel('outcomes', __m('Indicative Outcomes & Criteria'))->description('How can students and mentor judge progress towards completion?');
-        $column->addEditor('outcomes', $guid)->setRows(15)->showMedia();
-
-    $row = $form->addRow()->addHeading(__('Logo'));
-
-    $fileUploader = new FileUploader($pdo, $gibbon->session);
-    $row = $form->addRow();
-        $row->addLabel('file', __('Logo'));
-        $row->addFileUpload('file')
-            ->setAttachment('logo', $_SESSION[$guid]['absoluteURL'], $values['logo'])
-            ->accepts($fileUploader->getFileExtensions('Graphics/Design'));
-
-    $row = $form->addRow();
-        $row->addLabel('creditLicensing', __m('Logo Credits & Licensing'));
-        $row->addTextArea('creditLicensing');
+        $row->addLabel('masteryTranscriptCreditID', __m('Available Credits'))->description(__m('Which credits might a student be eligible for?'));
+        $row->addSelect('masteryTranscriptCreditID')->selectMultiple()->fromQuery($pdo, $sql, array(), 'groupBy')->selected($masteryTranscriptCreditIDList);
 
     $row = $form->addRow();
         $row->addFooter();

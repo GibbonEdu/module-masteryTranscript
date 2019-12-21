@@ -68,6 +68,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     $domainGateway = $container->get(DomainGateway::class);
     $domains = $domainGateway->selectActiveDomains()->fetchKeyPair();
 
+    $row = $form->addRow()->addHeading(__('Basic Information'));
+
     $row = $form->addRow();
         $row->addLabel('masteryTranscriptDomainID', __('Domain'))->description(__('Must be unique.'));
         $row->addSelect('masteryTranscriptDomainID')->required()->fromArray($domains)->placeholder();
@@ -84,6 +86,24 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         $row->addLabel('active', __('Active'));
         $row->addYesNo('active')->required();
 
+    $row = $form->addRow()->addHeading(__m('Mentorship & Completion'));
+
+    $gibbonPersonIDList = array();
+    $people = $container->get(CreditMentorGateway::class)->selectMentorsByCredit($masteryTranscriptCreditID);
+    while ($person = $people->fetch()) {
+        $gibbonPersonIDList[] = $person['gibbonPersonID'];
+    }
+    $row = $form->addRow();
+        $row->addLabel('gibbonPersonID', __('Mentor'))->description(__m('Which staff can be selected as a mentor for this credit?'));
+        $row->addSelectStaff('gibbonPersonID')->selectMultiple()->selected($gibbonPersonIDList);
+
+    $row = $form->addRow();
+        $column = $row->addColumn();
+        $column->addLabel('outcomes', __m('Indicative Outcomes & Criteria'))->description('How can students and mentor judge progress towards completion?');
+        $column->addEditor('outcomes', $guid)->setRows(15)->showMedia();
+
+    $row = $form->addRow()->addHeading(__('Logo'));
+
     $fileUploader = new FileUploader($pdo, $gibbon->session);
     $row = $form->addRow();
         $row->addLabel('file', __('Logo'));
@@ -94,15 +114,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     $row = $form->addRow();
         $row->addLabel('creditLicensing', __m('Logo Credits & Licensing'));
         $row->addTextArea('creditLicensing');
-
-    $gibbonPersonIDList = array();
-    $people = $container->get(CreditMentorGateway::class)->selectMentorsByCredit($masteryTranscriptCreditID);
-    while ($person = $people->fetch()) {
-        $gibbonPersonIDList[] = $person['gibbonPersonID'];
-    }
-    $row = $form->addRow();
-        $row->addLabel('gibbonPersonID', __('Mentor'))->description(__m('Which staff can be selected as a mentor for this credit?'));
-        $row->addSelectStaff('gibbonPersonID')->selectMultiple()->selected($gibbonPersonIDList);
 
     $row = $form->addRow();
         $row->addFooter();

@@ -53,6 +53,42 @@ class JourneyGateway extends QueryableGateway
         return $this->runQuery($query, $criteria);
     }
 
+    public function selectJourneyByStaff(QueryCriteria $criteria, $gibbonPersonID, $highestAction)
+    {
+        if ($highestAction == 'Manage Journey_all') {
+            $query = $this
+                ->newQuery()
+                ->cols(['masteryTranscriptJourney.*', '\'Credit\' AS type', 'masteryTranscriptCredit.name AS name', 'logo', 'surname', 'preferredName'])
+                ->from($this->getTableName())
+                ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
+                ->innerJoin('masteryTranscriptCredit','masteryTranscriptJourney.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID AND type=\'Credit\'')
+                ->unionAll()
+                ->cols(['masteryTranscriptJourney.*', '\'Opportunity\' AS type', 'masteryTranscriptOpportunity.name AS name', 'logo', 'surname', 'preferredName'])
+                ->from($this->getTableName())
+                ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
+                ->innerJoin('masteryTranscriptOpportunity','masteryTranscriptJourney.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID AND type=\'Opportunity\'');
+        }
+        else {
+            $query = $this
+                ->newQuery()
+                ->cols(['masteryTranscriptJourney.*', '\'Credit\' AS type', 'masteryTranscriptCredit.name AS name', 'logo', 'surname', 'preferredName'])
+                ->from($this->getTableName())
+                ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
+                ->innerJoin('masteryTranscriptCredit','masteryTranscriptJourney.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID AND type=\'Credit\'')
+                ->where('masteryTranscriptJourney.gibbonPersonIDSchoolMentor = :gibbonPersonID')
+                ->bindValue('gibbonPersonID', $gibbonPersonID)
+                ->unionAll()
+                ->cols(['masteryTranscriptJourney.*', '\'Opportunity\' AS type', 'masteryTranscriptOpportunity.name AS name', 'logo', 'surname', 'preferredName'])
+                ->from($this->getTableName())
+                ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
+                ->innerJoin('masteryTranscriptOpportunity','masteryTranscriptJourney.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID AND type=\'Opportunity\'')
+                ->where('masteryTranscriptJourney.gibbonPersonIDSchoolMentor = :gibbonPersonID')
+                ->bindValue('gibbonPersonID', $gibbonPersonID);
+        }
+
+        return $this->runQuery($query, $criteria);
+    }
+
     public function selectJourneyByID($masteryTranscriptJourneyID)
     {
         $query = $this

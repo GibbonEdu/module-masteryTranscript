@@ -50,4 +50,16 @@ class OpportunityGateway extends QueryableGateway
 
         return $this->runQuery($query, $criteria);
     }
+
+    public function selectOpportunityByID(int $masteryTranscriptOpportunityID)
+    {
+        $query = $this
+            ->newQuery()
+            ->cols(['*', '(SELECT GROUP_CONCAT(gibbonYearGroup.nameShort ORDER BY gibbonYearGroup.sequenceNumber SEPARATOR \', \') FROM gibbonYearGroup WHERE FIND_IN_SET(gibbonYearGroup.gibbonYearGroupID, masteryTranscriptOpportunity.gibbonYearGroupIDList)) as yearGroups'])
+            ->from($this->getTableName())
+            ->where('masteryTranscriptOpportunity.masteryTranscriptOpportunityID = :masteryTranscriptOpportunityID')
+            ->bindValue('masteryTranscriptOpportunityID', $masteryTranscriptOpportunityID);
+
+        return $this->runSelect($query);
+    }
 }
