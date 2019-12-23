@@ -67,11 +67,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     // Render table
     $table = DataTable::createPaginated('opportunities', $criteria);
 
-    $table->addHeaderAction('add', __('Add'))
-        ->addParam('search', $search)
-        ->setURL('/modules/Mastery Transcript/journey_manage_add.php')
-        ->displayLabel();
-
     //Apply colours from Free Learning
     $journey->transform(function (&$journey) {
         switch ($journey['status']) {
