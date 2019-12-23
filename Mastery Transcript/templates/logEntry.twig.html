@@ -1,0 +1,46 @@
+{#<!--
+Gibbon, Flexible & Open School System
+Copyright (C) 2010, Ross Parker
+
+This is a Gibbon template file, written in HTML and Twig syntax.
+For info about editing, see: https://twig.symfony.com/doc/2.x/
+-->#}
+    {% if log.type == 'Complete - Approved' %}
+        <div class="flex bg-white p-4 sm:px-5 sm:py-6 font-sans border-b bg-green-200 border-green-700 text-green-700">
+    {% elseif log.type == 'Evidence Not Yet Approved' %}
+        <div class="flex bg-white p-4 sm:px-5 sm:py-6 font-sans border-b bg-red-200 border-red-700 text-red-700">
+    {% elseif log.type == 'Evidence' %}
+        <div class="flex bg-white p-4 sm:px-5 sm:py-6 font-sans border-b bg-purple-200 border-purple-700 text-purple-700">
+    {% else %}
+        <div class="flex bg-white p-4 sm:px-5 sm:py-6 font-sans border-b }}">
+    {% endif %}
+
+        <aside class="w-8 sm:w-12 mr-3 sm:mr-4 ">
+            <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-gray-200 overflow-hidden flex items-start justify-center">
+                <img class="w-full" src="{{ absoluteURL }}/{{ log.image_240 }}" onerror="this.src='{{ absoluteURL }}/themes/{{ gibbonThemeName }}/img/anonymous_125.jpg'" />
+            </div>
+        </aside>
+
+        <section class="w-full">
+            <header class="-mt-px mb-2 text-sm leading-none">
+                <div class="font-semibold no-underline text-gray-800">{{ formatUsing('name', log.title, log.preferredName, log.surname, 'Staff', false, true) }}</div>
+                <span class="text-gray-600">{{ formatUsing('relativeTime', log.timestamp) }}</span>
+            </header>
+
+            <div class="text-gray-700 leading-tight text-sm sm:text-base sm:mr-3">
+                {{ log.comment|raw }}
+            </div>
+
+            {% if log.type == 'Evidence' %}
+                {% if log.evidenceType == 'Link' %}
+                    <a target="_blank" href="{{ log.evidenceLocation }}">View Evidence</a>
+                {% endif %}
+                {% if log.evidenceType == 'File' %}
+                    <a target="_blank" href="{{ absoluteURL }}/{{ log.evidenceLocation }}">View Evidence</a>
+                {% endif %}
+            {% endif %}
+
+            <footer></footer>
+        </section>
+
+    </div>

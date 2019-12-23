@@ -19,102 +19,81 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\FileUploader;
 use Gibbon\Services\Format;
-use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
-use Gibbon\Module\MasteryTranscript\Domain\OpportunityMentorGateway;
-use Gibbon\Module\MasteryTranscript\Domain\OpportunityCreditGateway;
+use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
+use Gibbon\Module\MasteryTranscript\Domain\JourneyLogGateway;
+use Gibbon\Comms\NotificationSender;
+use Gibbon\Domain\System\NotificationGateway;
 
 require_once '../../gibbon.php';
 
-$masteryTranscriptOpportunityID = $_POST['masteryTranscriptOpportunityID'] ?? '';
+$masteryTranscriptJourneyID = $_GET['masteryTranscriptJourneyID'] ?? '';
 $search = $_GET['search'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptOpportunityID=$masteryTranscriptOpportunityID&search=$search";
+$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_edit.php&search=$search&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
 
-if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_record_edit.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_manage_edit.php') == false) {
     $URL .= '&return=error0';
     header("Location: {$URL}");
     exit;
+} elseif (empty($masteryTranscriptJourneyID)) {
+    $URL .= '&return=error1';
+    header("Location: {$URL}");
+    exit;
 } else {
-
     // Proceed!
-    $opportunityGateway = $container->get(OpportunityGateway::class);
+    $journeyGateway = $container->get(JourneyGateway::class);
+    $result = $container->get(JourneyGateway::class)->selectJourneyByID($masteryTranscriptJourneyID);
+
+    if ($result->rowCount() != 1) {
+        $URL .= '&return=error2';
+        header("Location: {$URL}");
+        exit;
+    }
+
+    $values = $result->fetch();
+
+    $journeyLogGateway = $container->get(JourneyLogGateway::class);
 
     $data = [
-        'name'                      => $_POST['name'] ?? '',
-        'description'               => $_POST['description'] ?? '',
-        'active'                    => $_POST['active'] ?? '',
-        'gibbonYearGroupIDList'     => (isset($_POST['gibbonYearGroupIDList']) && is_array($_POST['gibbonYearGroupIDList'])) ? implode(',', $_POST['gibbonYearGroupIDList']) : '',
-        'creditLicensing'           => $_POST['creditLicensing'] ?? '',
+        'masteryTranscriptJourneyID'    => $masteryTranscriptJourneyID,
+        'gibbonPersonID'                => $gibbon->session->get('gibbonPersonID'),
+        'comment'                       => $_POST['comment'] ?? '',
+        'type'                          => $_POST['status'] ?? 'Comment',
     ];
 
     // Validate the required values are present
-    if (empty($data['name']) || empty($data['active'])) {
+    if (empty($data['comment']) || ($values['status'] == 'Complete - Pending' && $data['type'] == 'Comment')) {
         $URL .= '&return=error1';
         header("Location: {$URL}");
         exit;
     }
 
-    // Validate that this record is unique
-    if (!$opportunityGateway->unique($data, ['name'], $masteryTranscriptOpportunityID)) {
-        $URL .= '&return=error7';
-        header("Location: {$URL}");
-        exit;
-    }
+    // Insert the record
+    $inserted = $journeyLogGateway->insert($data);
 
-    //Deal with file upload
-    $data['logo'] = $_POST['logo'];
-    if (!empty($_FILES['file']['tmp_name'])) {
-        $fileUploader = new FileUploader($pdo, $gibbon->session);
-        $logo = $fileUploader->uploadFromPost($_FILES['file'], 'masteryTranscript_opportunityLogo_'.$data['name']);
+    //Update the journey
+    $dataJourney = [
+        'status'    => ($data['type'] == 'Comment') ? $values['status'] : $data['type']
+    ];
+    $updated = $journeyGateway->update($masteryTranscriptJourneyID, $dataJourney);
 
-        if (empty($logo)) {
-            $partialFail = true;
-        }
-        else {
-            $data['logo'] = $logo;
-        }
+    //Notify student
+    $notificationGateway = new NotificationGateway($pdo);
+    $notificationSender = new NotificationSender($notificationGateway, $gibbon->session);
+    if ($data['type'] == 'Complete - Approved') {
+        $notificationString = __m('{mentor} has approved your request for completion of {type} {name}.', ['mentor' => Format::name('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']]);
     }
+    else if ($data['type'] == 'Evidence Not Yet Approved') {
+        $notificationString = __m('{mentor} has responded to your request for completion of {type} {name}, but your evidence has not been approved.', ['mentor' => Format::name('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']]);
+    }
+    else {
+        $notificationString = __m('{mentor} has added to the journey log for the {type} {name}.', ['mentor' => Format::name('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']]);
+    }
+    $notificationSender->addNotification($values['gibbonPersonIDStudent'], $notificationString, "Mastery Transcript", "/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID");
+    $notificationSender->sendNotifications();
 
-    // Update the record
-    $updated = $opportunityGateway->update($masteryTranscriptOpportunityID, $data);
 
-    //Deal with mentors
-    $opportunityMentorGateway = $container->get(OpportunityMentorGateway::class);
-    if (!$opportunityMentorGateway->deleteMentorsByOpportunity($masteryTranscriptOpportunityID)) {
-        $partialFail = true;
-    }
-    $gibbonPersonIDs = (isset($_POST['gibbonPersonID']) && is_array($_POST['gibbonPersonID'])) ? $_POST['gibbonPersonID'] : array();
-    if (count($gibbonPersonIDs) > 0) {
-        foreach ($gibbonPersonIDs as $gibbonPersonID) {
-            $data = [
-                'masteryTranscriptOpportunityID' => $masteryTranscriptOpportunityID,
-                'gibbonPersonID'            => $gibbonPersonID
-            ];
-            if (!$opportunityMentorGateway->insert($data)) {
-                $partialFail = true;
-            }
-        }
-    }
-
-    //Deal with credits
-    $opportunityCreditGateway = $container->get(OpportunityCreditGateway::class);
-    if (!$opportunityCreditGateway->deleteCreditsByOpportunity($masteryTranscriptOpportunityID)) {
-        $partialFail = true;
-    }
-    $masteryTranscriptCreditIDs = (isset($_POST['masteryTranscriptCreditID']) && is_array($_POST['masteryTranscriptCreditID'])) ? $_POST['masteryTranscriptCreditID'] : array();
-    if (count($masteryTranscriptCreditIDs) > 0) {
-        foreach ($masteryTranscriptCreditIDs as $masteryTranscriptCreditID) {
-            $data = [
-                'masteryTranscriptOpportunityID' => $masteryTranscriptOpportunityID,
-                'masteryTranscriptCreditID'      => $masteryTranscriptCreditID
-            ];
-            if (!$opportunityCreditGateway->insert($data)) {
-                $partialFail = true;
-            }
-        }
-    }
-
-    $URL .= !$updated
+    $URL .= !$inserted && !$updated
         ? "&return=error2"
         : "&return=success0";
 

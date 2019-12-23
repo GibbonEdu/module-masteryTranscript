@@ -19,102 +19,93 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
-use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
-use Gibbon\Module\MasteryTranscript\Domain\OpportunityMentorGateway;
-use Gibbon\Module\MasteryTranscript\Domain\OpportunityCreditGateway;
+use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
+use Gibbon\Module\MasteryTranscript\Domain\JourneyLogGateway;
 use Gibbon\FileUploader;
 
-if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_record_edit.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_manage_edit.php') == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
     // Proceed!
-    $masteryTranscriptOpportunityID = $_GET['masteryTranscriptOpportunityID'] ?? '';
+    $masteryTranscriptJourneyID = $_GET['masteryTranscriptJourneyID'] ?? '';
     $search = $_GET['search'] ?? '';
 
     $page->breadcrumbs
-        ->add(__m('Manage Opportunities'), 'journey_record.php')
-        ->add(__m('Edit Opportunity'));
+        ->add(__m('Record Journey'), 'journey_manage.php');
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    if (empty($masteryTranscriptOpportunityID)) {
+    $search = $_GET['search'] ?? '';
+
+    if (empty($masteryTranscriptJourneyID)) {
         $page->addError(__('You have not specified one or more required parameters.'));
         return;
     }
 
-    $values = $container->get(OpportunityGateway::class)->getByID($masteryTranscriptOpportunityID);
+    $result = $container->get(JourneyGateway::class)->selectJourneyByID($masteryTranscriptJourneyID);
 
-    if (empty($values)) {
+    if ($result->rowCount() != 1) {
         $page->addError(__('The specified record cannot be found.'));
         return;
     }
 
+    $values = $result->fetch();
+
+    $page->breadcrumbs
+        ->add($values['name']." (".$values['status'].")");
+
     if ($search !='') {
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/journey_record.php&search=$search'>".('Back to Search Results')."</a>";
+        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/journey_manage.php&search=$search'>".('Back to Search Results')."</a>";
         echo "</div>";
     }
 
-    $form = Form::create('category', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/journey_record_editProcess.php?search=$search");
-    $form->setFactory(DatabaseFormFactory::create($pdo));
-
-    $form->addHiddenValue('address', $gibbon->session->get('address'));
-    $form->addHiddenValue('masteryTranscriptOpportunityID', $masteryTranscriptOpportunityID);
-
-    $row = $form->addRow();
-        $row->addLabel('name', __('Name'))->description(__('Must be unique.'));
-        $row->addTextField('name')->required()->maxLength(50);
-
-    $row = $form->addRow();
-        $row->addLabel('description', __('Description'));
-        $row->addTextArea('description');
-
-    $row = $form->addRow();
-        $row->addLabel('active', __('Active'));
-        $row->addYesNo('active')->required();
-
-    $fileUploader = new FileUploader($pdo, $gibbon->session);
-    $row = $form->addRow();
-        $row->addLabel('file', __('Logo'));
-        $row->addFileUpload('file')
-            ->setAttachment('logo', $_SESSION[$guid]['absoluteURL'], $values['logo'])
-            ->accepts($fileUploader->getFileExtensions('Graphics/Design'));
-
-    $row = $form->addRow();
-        $row->addLabel('creditLicensing', __m('Logo Credits & Licensing'));
-        $row->addTextArea('creditLicensing');
-
-    $row = $form->addRow();
-        $row->addLabel('gibbonYearGroupIDList', __('Year Groups'))->description(__('Relevant student year groups'));
-        $row->addCheckboxYearGroup('gibbonYearGroupIDList')->addCheckAllNone()->loadFromCSV($values);;
-
-    $gibbonPersonIDList = array();
-    $people = $container->get(OpportunityMentorGateway::class)->selectMentorsByOpportunity($masteryTranscriptOpportunityID);
-    while ($person = $people->fetch()) {
-        $gibbonPersonIDList[] = $person['gibbonPersonID'];
+    //Render log
+    $journeyLogGateway = $container->get(JourneyLogGateway::class);
+    $logs = $journeyLogGateway->selectJourneyLogByJourney($masteryTranscriptJourneyID);
+    if ($logs->rowCount() < 1) {
+        $page->addMessage(__m('The conversation has not yet begun.'), 'warning');
     }
-    $row = $form->addRow();
-        $row->addLabel('gibbonPersonID', __m('Mentor'))->description(__m('Which staff can be selected as a mentor for this opportunity?'));
-        $row->addSelectStaff('gibbonPersonID')->selectMultiple()->selected($gibbonPersonIDList);
-
-    $masteryTranscriptCreditIDList = array();
-    $credits = $container->get(OpportunityCreditGateway::class)->selectCreditsByOpportunity($masteryTranscriptOpportunityID);
-    while ($credit = $credits->fetch()) {
-        $masteryTranscriptCreditIDList[] = $credit['masteryTranscriptCreditID'];
+    else {
+        echo "<h2>".__m('Conversation Log')."</h2>";
+        while ($log = $logs->fetch()) {
+            echo $page->fetchFromTemplate('logEntry.twig.html', [
+                'log' => $log
+            ]);
+        }
     }
-    $sql = "SELECT masteryTranscriptCreditID AS value, masteryTranscriptCredit.name, masteryTranscriptDomain.name AS groupBy FROM masteryTranscriptCredit INNER JOIN masteryTranscriptDomain ON (masteryTranscriptCredit.masteryTranscriptDomainID=masteryTranscriptDomain.masteryTranscriptDomainID) WHERE masteryTranscriptCredit.active='Y' ORDER BY masteryTranscriptDomain.sequenceNumber, masteryTranscriptDomain.name, masteryTranscriptCredit.name";
-    $row = $form->addRow();
-        $row->addLabel('masteryTranscriptCreditID', __m('Available Credits'))->description(__m('Which credits might a student be eligible for?'));
-        $row->addSelect('masteryTranscriptCreditID')->selectMultiple()->fromQuery($pdo, $sql, array(), 'groupBy')->selected($masteryTranscriptCreditIDList);
 
-    $row = $form->addRow();
-        $row->addFooter();
-        $row->addSubmit();
+    //New log form
+    if ($values['status'] != 'Current - Pending') {
+        echo "<h2>".__m('New Entry')."</h2>";
+        $form = Form::create('log', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/journey_manage_editProcess.php?masteryTranscriptJourneyID=$masteryTranscriptJourneyID&search=$search");
+        $form->setFactory(DatabaseFormFactory::create($pdo));
 
-    $form->loadAllValuesFrom($values);
+        $form->addHiddenValue('address', $gibbon->session->get('address'));
 
-    echo $form->getOutput();
+        $row = $form->addRow();
+            $column = $row->addColumn();
+            $column->addLabel('comment', __m('Comment'));
+            $column->addEditor('comment', $guid)->setRows(15)->showMedia()->required();
+
+        if ($values['status'] == 'Complete - Pending') {
+            $statuses = array(
+                'Complete - Approved' => __m('Complete - Approved'),
+                'Evidence Not Yet Approved' => __m('Evidence Not Yet Approved'),
+            );
+            $row = $form->addRow();
+                $row->addLabel('status', __('Approval'));
+                $row->addSelect('status')->fromArray($statuses)->placeholder()->required();
+        }
+
+        $row = $form->addRow();
+            $row->addFooter();
+            $row->addSubmit();
+
+        echo $form->getOutput();
+    }
+
 }

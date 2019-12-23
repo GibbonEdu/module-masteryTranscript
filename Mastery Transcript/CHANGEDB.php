@@ -58,5 +58,5 @@ ALTER TABLE `masteryTranscriptCredit` ADD `outcomes` text NOT NULL AFTER `descri
 ALTER TABLE `masteryTranscriptOpportunity` ADD `outcomes` text NOT NULL AFTER `description`;end
 UPDATE gibbonAction SET URLList='credits.php,credits_detail.php' WHERE name='Browse Credits' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Mastery Transcript');end
 UPDATE gibbonAction SET URLList='opportunities.php,opportunities_detail.php' WHERE name='Browse Opportunities' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Mastery Transcript');end
-
+CREATE TABLE `masteryTranscriptJourneyLog` (`masteryTranscriptJourneyLogID` int(12) unsigned zerofill NOT NULL AUTO_INCREMENT, `masteryTranscriptJourneyID` int(10) unsigned zerofill DEFAULT NULL, `gibbonPersonID` int(10) unsigned zerofill NOT NULL, `type` enum('Comment','Evidence','Complete - Approved','Evidence Not Yet Approved') NOT NULL DEFAULT 'Comment', `comment` text NULL DEFAULT NULL, `evidenceType` enum('File','Link') NULL DEFAULT NULL, `evidenceLocation` text NULL DEFAULT NULL, `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`masteryTranscriptJourneyLogID`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;end
 ";
