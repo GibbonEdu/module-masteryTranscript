@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\FileUploader;
 use Gibbon\Services\Format;
 use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
-use Gibbon\Module\MasteryTranscript\Domain\JourneyLogGateway;
+use Gibbon\Domain\System\DiscussionGateway;
 use Gibbon\Comms\NotificationSender;
 use Gibbon\Domain\System\NotificationGateway;
 
@@ -52,13 +52,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $values = $result->fetch();
 
-    $journeyLogGateway = $container->get(JourneyLogGateway::class);
+    $discussionGateway = $container->get(DiscussionGateway::class);
 
     $data = [
-        'masteryTranscriptJourneyID'    => $masteryTranscriptJourneyID,
-        'gibbonPersonID'                => $gibbon->session->get('gibbonPersonID'),
-        'comment'                       => $_POST['comment'] ?? '',
-        'type'                          => $_POST['status'] ?? 'Comment',
+        'foreignTable'   => 'masteryTranscriptJourney',
+        'foreignTableID' => $masteryTranscriptJourneyID,
+        'gibbonModuleID' => getModuleIDFromName($connection2, 'Mastery Transcript'),
+        'gibbonPersonID' => $gibbon->session->get('gibbonPersonID'),
+        'comment'        => $_POST['comment'] ?? '',
+        'type'           => $_POST['status'] ?? 'Comment',
     ];
 
     // Validate the required values are present
@@ -69,7 +71,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     }
 
     // Insert the record
-    $inserted = $journeyLogGateway->insert($data);
+    $inserted = $discussionGateway->insert($data);
 
     //Update the journey
     $dataJourney = [
