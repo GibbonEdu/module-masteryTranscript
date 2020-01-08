@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v0.5.02
+-------
+Implemented the DiscussionGateway for journey logs
+
 v0.5.01
 -------
 Removed errant Add link in Manage Journey

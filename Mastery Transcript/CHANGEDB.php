@@ -64,3 +64,9 @@ CREATE TABLE `masteryTranscriptJourneyLog` (`masteryTranscriptJourneyLogID` int(
 //v0.5.01
 $sql[$count][0] = '0.5.01';
 $sql[$count][1] = "";
+
+//v0.5.02
+$sql[$count][0] = '0.5.02';
+$sql[$count][1] = "
+INSERT INTO `gibbonDiscussion` (`foreignTable`, `foreignTableID`, `gibbonModuleID`, `gibbonPersonID`, `type`, `comment`, `attachmentType`, `attachmentLocation`, `timestamp`) SELECT 'masteryTranscriptJourney', masteryTranscriptJourneyLogID, (SELECT gibbonModuleID FROM gibbonModule WHERE name='Mastery Transcript'), gibbonPersonID, type, comment, evidenceType, evidenceLocation, timestamp FROM `masteryTranscriptJourneyLog`;end
+DROP TABLE `masteryTranscriptJourneyLog`;end";

@@ -25,7 +25,7 @@ $description = 'This module implements the Mastery Transcript (https://mastery.o
 $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '0.5.01';
+$version = '0.5.02';
 $author = 'Ross Parker';
 $url = 'https://gibbonedu.org';
 
@@ -106,18 +106,6 @@ $moduleTables[] = "CREATE TABLE `masteryTranscriptJourney` (
   PRIMARY KEY (`masteryTranscriptJourneyID`),
   INDEX(`gibbonPersonIDStudent`),
   INDEX(`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-
-$moduleTables[] = "CREATE TABLE `masteryTranscriptJourneyLog` (
-  `masteryTranscriptJourneyLogID` int(12) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `masteryTranscriptJourneyID` int(10) unsigned zerofill DEFAULT NULL,
-  `gibbonPersonID` int(10) unsigned zerofill NOT NULL,
-  `type` enum('Comment','Evidence','Complete - Approved','Evidence Not Yet Approved') NOT NULL DEFAULT 'Comment',
-  `comment` text NULL DEFAULT NULL,
-  `evidenceType` enum('File','Link') NULL DEFAULT NULL,
-  `evidenceLocation` text NULL DEFAULT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`masteryTranscriptJourneyLogID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 //Settings - none

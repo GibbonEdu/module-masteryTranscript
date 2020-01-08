@@ -19,8 +19,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
+use Gibbon\Domain\System\DiscussionGateway;
 use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
-use Gibbon\Module\MasteryTranscript\Domain\JourneyLogGateway;
 use Gibbon\FileUploader;
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_record_edit.php') == false) {
@@ -64,8 +64,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     }
 
     //Render log
-    $journeyLogGateway = $container->get(JourneyLogGateway::class);
-    $logs = $journeyLogGateway->selectJourneyLogByJourney($masteryTranscriptJourneyID);
+    $discussionGateway = $container->get(DiscussionGateway::class);
+    $logs = $discussionGateway->selectDiscussionByContext('masteryTranscriptJourney', $masteryTranscriptJourneyID);
     if ($logs->rowCount() < 1) {
         $page->addMessage(__m('The conversation has not yet begun.'), 'warning');
     }

@@ -32,11 +32,11 @@ For info about editing, see: https://twig.symfony.com/doc/2.x/
             </div>
 
             {% if log.type == 'Evidence' %}
-                {% if log.evidenceType == 'Link' %}
-                    <a target="_blank" href="{{ log.evidenceLocation }}">View Evidence</a>
+                {% if log.attachmentType == 'Link' %}
+                    <a target="_blank" href="{{ log.attachmentLocation }}">View Evidence</a>
                 {% endif %}
-                {% if log.evidenceType == 'File' %}
-                    <a target="_blank" href="{{ absoluteURL }}/{{ log.evidenceLocation }}">View Evidence</a>
+                {% if log.attachmentType == 'File' %}
+                    <a target="_blank" href="{{ absoluteURL }}/{{ log.attachmentLocation }}">View Evidence</a>
                 {% endif %}
             {% endif %}
 
