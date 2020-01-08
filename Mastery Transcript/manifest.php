@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //Basic variables
 $name = 'Mastery Transcript';
-$description = 'This module implements the Mastery Transcript (https://mastery.org), allowing schools to create and issue credits. Students undertake learning opportunities to earn credits, producing an evidenced porfolio, accessible via an online trascript.';
+$description = 'This module implements the Mastery Transcript (https://mastery.org), allowing schools to create and issue credits. Students undertake learning opportunities to earn credits, producing an evidenced portfolio, accessible via an online transcript.';
 $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Assess';

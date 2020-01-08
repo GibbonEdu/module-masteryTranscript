@@ -69,4 +69,11 @@ $sql[$count][1] = "";
 $sql[$count][0] = '0.5.02';
 $sql[$count][1] = "
 INSERT INTO `gibbonDiscussion` (`foreignTable`, `foreignTableID`, `gibbonModuleID`, `gibbonPersonID`, `type`, `comment`, `attachmentType`, `attachmentLocation`, `timestamp`) SELECT 'masteryTranscriptJourney', masteryTranscriptJourneyLogID, (SELECT gibbonModuleID FROM gibbonModule WHERE name='Mastery Transcript'), gibbonPersonID, type, comment, evidenceType, evidenceLocation, timestamp FROM `masteryTranscriptJourneyLog`;end
-DROP TABLE `masteryTranscriptJourneyLog`;end";
+DROP TABLE `masteryTranscriptJourneyLog`;end
+";
+
+//v0.5.03
+$sql[$count][0] = '0.5.03';
+$sql[$count][1] = "
+UPDATE gibbonModule SET description='This module implements the Mastery Transcript (https://mastery.org), allowing schools to create and issue credits. Students undertake learning opportunities to earn credits, producing an evidenced portfolio, accessible via an online transcript.' WHERE name='Mastery Transcript';end
+";
