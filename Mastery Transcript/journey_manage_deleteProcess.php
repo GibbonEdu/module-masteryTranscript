@@ -26,7 +26,7 @@ $search = $_GET['search'] ?? '';
 
 $URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage.php&search=$search";
 
-$highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/journey_manage_commit.php', $connection2);
+$highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/journey_manage_delete.php', $connection2);
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_manage_delete.php') == false || $highestAction == false) {
     $URL .= '&return=error0';

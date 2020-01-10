@@ -63,6 +63,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         echo "</div>";
     }
 
+    if ($values['status'] == 'Current - Pending') {
+        $page->addWarning(__m('This journey is pending mentor agreement, and so cannot be edited at this time.'));
+        return;
+    }
+
     //Render log
     $discussionGateway = $container->get(DiscussionGateway::class);
     $logs = $discussionGateway->selectDiscussionByContext('masteryTranscriptJourney', $masteryTranscriptJourneyID);
@@ -128,5 +133,4 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
         echo $form->getOutput();
     }
-
 }

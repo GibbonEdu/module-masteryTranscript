@@ -31,7 +31,9 @@ $search = $_GET['search'] ?? '';
 
 $URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_edit.php&search=$search&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
 
-if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_manage_edit.php') == false) {
+$highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/journey_manage_edit.php', $connection2);
+
+if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_manage_edit.php') == false || $highestAction == false) {
     $URL .= '&return=error0';
     header("Location: {$URL}");
     exit;
@@ -51,6 +53,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     }
 
     $values = $result->fetch();
+
+    if ($highestAction != 'Manage Journey_all' && $values['gibbonPersonIDSchoolMentor'] != $gibbon->session->get('gibbonPersonID')) {
+        $URL .= '&return=error0';
+        header("Location: {$URL}");
+        exit();
+    }
 
     $discussionGateway = $container->get(DiscussionGateway::class);
 

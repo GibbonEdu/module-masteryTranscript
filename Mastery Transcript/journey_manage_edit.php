@@ -23,7 +23,9 @@ use Gibbon\Domain\System\DiscussionGateway;
 use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
 use Gibbon\FileUploader;
 
-if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_manage_edit.php') == false) {
+$highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/journey_manage_edit.php', $connection2);
+
+if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_manage_edit.php') == false || $highestAction == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
@@ -61,6 +63,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         echo "<div class='linkTop'>";
         echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/journey_manage.php&search=$search'>".('Back to Search Results')."</a>";
         echo "</div>";
+    }
+
+    if ($highestAction != 'Manage Journey_all' && $values['gibbonPersonIDSchoolMentor'] != $gibbon->session->get('gibbonPersonID')) {
+        $page->addError(__('The selected record does not exist, or you do not have access to it.'));
+        return;
+    }
+
+    if ($values['status'] == 'Current - Pending') {
+        $page->addWarning(__m('This journey is pending mentor agreement, and so cannot be edited at this time.'));
+        return;
     }
 
     //Render log
@@ -107,5 +119,4 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
         echo $form->getOutput();
     }
-
 }

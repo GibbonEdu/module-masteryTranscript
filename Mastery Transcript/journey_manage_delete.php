@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\Forms\Prefab\DeleteForm;
 use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
 
-$highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/journey_manage_commit.php', $connection2);
+$highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/journey_manage_delete.php', $connection2);
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_manage_delete.php') == false || $highestAction == false) {
     // Access denied

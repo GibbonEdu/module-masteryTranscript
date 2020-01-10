@@ -52,6 +52,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $values = $result->fetch();
 
+    if ($values['gibbonPersonIDStudent'] != $gibbon->session->get('gibbonPersonID')) {
+        $URL .= '&return=error0';
+        header("Location: {$URL}");
+        exit;
+    }
+
     $discussionGateway = $container->get(DiscussionGateway::class);
 
     $data = [

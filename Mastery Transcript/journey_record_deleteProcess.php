@@ -45,6 +45,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         exit;
     }
 
+    if ($values['gibbonPersonIDStudent'] != $gibbon->session->get('gibbonPersonID')) {
+        $URL .= '&return=error0';
+        header("Location: {$URL}");
+        exit;
+    }
+
     $deleted = $journeyGateway->delete($masteryTranscriptJourneyID);
 
     $URL .= !$deleted

@@ -77,3 +77,7 @@ $sql[$count][0] = '0.5.03';
 $sql[$count][1] = "
 UPDATE gibbonModule SET description='This module implements the Mastery Transcript (https://mastery.org), allowing schools to create and issue credits. Students undertake learning opportunities to earn credits, producing an evidenced portfolio, accessible via an online transcript.' WHERE name='Mastery Transcript';end
 ";
+
+//v0.5.04
+$sql[$count][0] = '0.5.04';
+$sql[$count][1] = "";

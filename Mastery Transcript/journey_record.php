@@ -118,8 +118,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         ->addParam('masteryTranscriptJourneyID')
         ->addParam('search', $search)
         ->format(function ($category, $actions) {
-            $actions->addAction('edit', __('Edit'))
-                    ->setURL('/modules/Mastery Transcript/journey_record_edit.php');
+            if ($category['status'] != 'Current - Pending') {
+                $actions->addAction('edit', __('Edit'))
+                        ->setURL('/modules/Mastery Transcript/journey_record_edit.php');
+            }
 
             $actions->addAction('delete', __('Delete'))
                     ->setURL('/modules/Mastery Transcript/journey_record_delete.php');
