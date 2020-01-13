@@ -42,14 +42,14 @@ class JourneyGateway extends QueryableGateway
             ->where('masteryTranscriptJourney.gibbonPersonIDStudent = :gibbonPersonID')
             ->bindValue('gibbonPersonID', $gibbonPersonID);
 
-        $query->unionAll()
+        $this->unionAllWithCriteria($query, $criteria)
             ->cols(['masteryTranscriptJourney.*', '\'Opportunity\' AS type', 'masteryTranscriptOpportunity.name AS name', 'logo'])
             ->from($this->getTableName())
             ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
             ->innerJoin('masteryTranscriptOpportunity','masteryTranscriptJourney.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID AND type=\'Opportunity\'')
             ->where('masteryTranscriptJourney.gibbonPersonIDStudent = :gibbonPersonID')
             ->bindValue('gibbonPersonID', $gibbonPersonID);
-
+        
         return $this->runQuery($query, $criteria);
     }
 
@@ -61,12 +61,14 @@ class JourneyGateway extends QueryableGateway
                 ->cols(['masteryTranscriptJourney.*', '\'Credit\' AS type', 'masteryTranscriptCredit.name AS name', 'logo', 'surname', 'preferredName'])
                 ->from($this->getTableName())
                 ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
-                ->innerJoin('masteryTranscriptCredit','masteryTranscriptJourney.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID AND type=\'Credit\'')
-                ->unionAll()
+                ->innerJoin('masteryTranscriptCredit','masteryTranscriptJourney.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID AND type=\'Credit\'');
+                
+            $this->unionAllWithCriteria($query, $criteria)
                 ->cols(['masteryTranscriptJourney.*', '\'Opportunity\' AS type', 'masteryTranscriptOpportunity.name AS name', 'logo', 'surname', 'preferredName'])
                 ->from($this->getTableName())
                 ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
                 ->innerJoin('masteryTranscriptOpportunity','masteryTranscriptJourney.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID AND type=\'Opportunity\'');
+                
         }
         else {
             $query = $this
@@ -76,8 +78,9 @@ class JourneyGateway extends QueryableGateway
                 ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
                 ->innerJoin('masteryTranscriptCredit','masteryTranscriptJourney.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID AND type=\'Credit\'')
                 ->where('masteryTranscriptJourney.gibbonPersonIDSchoolMentor = :gibbonPersonID')
-                ->bindValue('gibbonPersonID', $gibbonPersonID)
-                ->unionAll()
+                ->bindValue('gibbonPersonID', $gibbonPersonID);
+
+            $this->unionAllWithCriteria($query, $criteria)
                 ->cols(['masteryTranscriptJourney.*', '\'Opportunity\' AS type', 'masteryTranscriptOpportunity.name AS name', 'logo', 'surname', 'preferredName'])
                 ->from($this->getTableName())
                 ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')

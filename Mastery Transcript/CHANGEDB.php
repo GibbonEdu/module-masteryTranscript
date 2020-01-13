@@ -81,3 +81,7 @@ UPDATE gibbonModule SET description='This module implements the Mastery Transcri
 //v0.5.04
 $sql[$count][0] = '0.5.04';
 $sql[$count][1] = "";
+
+//v0.5.05
+$sql[$count][0] = '0.5.05';
+$sql[$count][1] = "";
