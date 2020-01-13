@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v0.5.05
+-------
+Fixed search in Journey
+
 v0.5.04
 -------
 Improved access controls in Journey
