@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //Basic variables
 $name = 'Mastery Transcript';
-$description = 'This module implements the Mastery Transcript (https://mastery.org), allowing schools to create and issue credits. Students undertake learning opportunities to earn credits, producing an evidenced portfolio, accessible via an online transcript.';
+$description = 'This module allows schools to implement Mastery Transcript (https://mastery.org), with functionality to create, track and issue credits. Students undertake learning opportunities to earn credits, producing an evidenced portfolio within Gibbon. Future releases will integrate with the MTC\'s transcript platform.';
 $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '0.5.05';
+$version = '0.5.06';
 $author = 'Ross Parker';
 $url = 'https://gibbonedu.org';
 

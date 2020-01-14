@@ -85,3 +85,9 @@ $sql[$count][1] = "";
 //v0.5.05
 $sql[$count][0] = '0.5.05';
 $sql[$count][1] = "";
+
+//v0.5.06
+$sql[$count][0] = '0.5.06';
+$sql[$count][1] = "
+UPDATE gibbonModule SET description='This module allows schools to implement Mastery Transcript (https://mastery.org), with functionality to create, track and issue credits. Students undertake learning opportunities to earn credits, producing an evidenced portfolio within Gibbon. Future releases will integrate with the MTC\'s transcript platform.' WHERE name='Mastery Transcript';end
+";
