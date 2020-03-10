@@ -85,6 +85,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         $return .= ($values['logo'] != '') ? "<img class='pt-10 pb-2' style='max-width: 65px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/><br/>":"<img class='pt-10 pb-2' style='max-width: 65px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
         $return .= "<span class='font-bold underline'>".$values['name']."</span><br/>";
         $return .= "<span class='text-sm italic' style='$font'>".$values['domain']."</span><br/>";
+        $return .= "<span class='text-xxs'>".$values['level']."</span><br/>";
         $return .= "</div></a>";
 
         return $return;

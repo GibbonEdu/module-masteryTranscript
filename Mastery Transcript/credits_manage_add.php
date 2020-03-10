@@ -66,6 +66,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         $row->addLabel('name', __('Name'))->description(__('Must be unique.'));
         $row->addTextField('name')->required()->maxLength(50);
 
+    $levels = array('Foundational' => __('Foundational'), 'Advanced' => __('Advanced'));
+    $row = $form->addRow();
+        $row->addLabel('level', __('Level'));
+        $row->addSelect('level')->fromArray($levels)->placeholder()->required();
+
     $row = $form->addRow();
         $row->addLabel('description', __('Description'));
         $row->addTextArea('description');

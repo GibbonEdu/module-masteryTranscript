@@ -25,7 +25,7 @@ $description = 'This module allows schools to implement Mastery Transcript (http
 $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '0.5.06';
+$version = '0.5.07';
 $author = 'Ross Parker';
 $url = 'https://gibbonedu.org';
 
@@ -47,6 +47,7 @@ $moduleTables[] = "CREATE TABLE `masteryTranscriptCredit` (
   `masteryTranscriptCreditID` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
   `masteryTranscriptDomainID` int(3) unsigned zerofill NOT NULL,
   `name` varchar(50) NOT NULL DEFAULT '',
+  `level` enum('Foundational','Advanced') NOT NULL DEFAULT 'Foundational',
   `description` text NOT NULL,
   `outcomes` text NOT NULL,
   `active` enum('Y','N') NOT NULL DEFAULT 'Y',

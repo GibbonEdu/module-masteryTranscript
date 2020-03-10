@@ -41,6 +41,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     $data = [
         'masteryTranscriptDomainID' => $_POST['masteryTranscriptDomainID'] ?? '',
         'name'                      => $_POST['name'] ?? '',
+        'level'                     => $_POST['level'] ?? '',
         'description'               => $_POST['description'] ?? '',
         'outcomes'                  => $_POST['outcomes'] ?? '',
         'active'                    => $_POST['active'] ?? '',
@@ -50,7 +51,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
 
     // Validate the required values are present
-    if (empty($data['masteryTranscriptDomainID']) || empty($data['name'])) {
+    if (empty($data['masteryTranscriptDomainID']) || empty($data['name']) || empty($data['level']) || empty($data['active'])) {
         $URL .= '&return=error1';
         header("Location: {$URL}");
         exit;

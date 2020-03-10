@@ -62,7 +62,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     echo '<tr>';
     echo "<td style='width: 75%; vertical-align: middle'>";
     echo "<span style='font-size: 150%; font-weight: bold'>".$values['name'].'</span><br/>';
-    echo '<i>'.$values['domain'].'<i>';
+    echo '<i>'.$values['domain'].' | '.$values['level'].'<i>';
     echo '</td>';
     echo "<td style='width: 135%!important; vertical-align: top; text-align: right' rowspan=4>";
     if ($values['logo'] == null) {

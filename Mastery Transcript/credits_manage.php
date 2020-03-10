@@ -98,6 +98,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
     $table->addColumn('domain', __('Domain'));
 
+    $table->addColumn('level', __('Level'));
+
     $table->addColumn('name', __('Name'));
 
     $table->addColumn('active', __m('Active'));
