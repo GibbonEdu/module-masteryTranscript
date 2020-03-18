@@ -1,8 +1,13 @@
 CHANGELOG
 =========
+v0.5.08
+-------
+Clarified interface language in credit detail screen
+Added link to Credit/Oppportunity from Manage Journey conversation view
+
 v0.5.07
 -------
-Added Foundational/Advanced level to credit 
+Added Foundational/Advanced level to credit
 
 v0.5.06
 -------

@@ -80,7 +80,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     echo '</tr>';
     echo '<tr>';
     echo "<td style='padding-top: 15px; vertical-align: top'>";
-    echo "<span style='font-size: 115%; font-weight: bold'>".__m('Outcomes').'</span><br/>';
+    echo "<span style='font-size: 115%; font-weight: bold'>".__m('Indicative Outcomes & Criteria').'</span><br/>';
     echo '<i>'.$values['outcomes'].'<i>';
     echo '</td>';
     echo '</tr>';

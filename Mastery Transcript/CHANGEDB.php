@@ -97,3 +97,7 @@ $sql[$count][0] = '0.5.07';
 $sql[$count][1] = "
 ALTER TABLE `masteryTranscriptCredit` ADD `level` enum('Foundational','Advanced') NOT NULL DEFAULT 'Foundational' AFTER `name`;end
 ";
+
+//v0.5.08
+$sql[$count][0] = '0.5.08';
+$sql[$count][1] = "";

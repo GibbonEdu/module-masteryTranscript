@@ -75,6 +75,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         return;
     }
 
+    echo "<div class='linkTop'>";
+        if ($values['type'] == 'Opportunity') {
+            echo "<a href='".$gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_detail.php&masteryTranscriptOpportunityID=".$values['masteryTranscriptOpportunityID']."'>".__m('View Opportunity Details')."</a>" ;
+        }
+        else if ($values['type'] == 'Credit') {
+            echo "<a href='".$gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_detail.php&masteryTranscriptCreditID=".$values['masteryTranscriptCreditID']."'>".__m('View Credit Details')."</a>" ;
+        }
+    echo "</div>";
+
     //Render log
     $discussionGateway = $container->get(DiscussionGateway::class);
     $logs = $discussionGateway->selectDiscussionByContext('masteryTranscriptJourney', $masteryTranscriptJourneyID);
