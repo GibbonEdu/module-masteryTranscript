@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v0.5.09
+-------
+Fixed credit listing visual issue
+
 v0.5.08
 -------
 Clarified interface language in credit detail screen

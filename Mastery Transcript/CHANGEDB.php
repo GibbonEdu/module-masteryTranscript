@@ -101,3 +101,7 @@ ALTER TABLE `masteryTranscriptCredit` ADD `level` enum('Foundational','Advanced'
 //v0.5.08
 $sql[$count][0] = '0.5.08';
 $sql[$count][1] = "";
+
+//v0.5.09
+$sql[$count][0] = '0.5.09';
+$sql[$count][1] = "";
