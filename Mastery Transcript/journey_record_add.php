@@ -69,7 +69,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         $row->addSelect('masteryTranscriptCreditID')->fromQuery($pdo, $sql, array(), 'groupBy')->required()->placeholder();
 
     $data = array();
-    $sql = 'SELECT masteryTranscriptCredit.masteryTranscriptCreditID as chainedTo, gibbonPerson.gibbonPersonID AS value, CONCAT(surname, \', \', preferredName) AS name FROM masteryTranscriptCredit JOIN masteryTranscriptCreditMentor ON (masteryTranscriptCreditMentor.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID) JOIN gibbonPerson ON (masteryTranscriptCreditMentor.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE gibbonPerson.status=\'Full\' ORDER BY surname, preferredname';
+    $sql = 'SELECT masteryTranscriptCredit.masteryTranscriptCreditID as chainedTo, CONCAT(masteryTranscriptCredit.masteryTranscriptCreditID, \'-\', gibbonPerson.gibbonPersonID) AS value, CONCAT(surname, \', \', preferredName) AS name FROM masteryTranscriptCredit JOIN masteryTranscriptCreditMentor ON (masteryTranscriptCreditMentor.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID) JOIN gibbonPerson ON (masteryTranscriptCreditMentor.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE gibbonPerson.status=\'Full\' ORDER BY surname, preferredname';
     $row = $form->addRow()->addClass('credit');
         $row->addLabel('gibbonPersonIDSchoolMentor_credit', __('Mentor'));
         $row->addSelect('gibbonPersonIDSchoolMentor_credit')->setName('gibbonPersonIDSchoolMentor')->fromQueryChained($pdo, $sql, $data, 'masteryTranscriptCreditID')->required()->placeholder();
@@ -85,7 +85,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         $row->addLabel('masteryTranscriptOpportunityID', __m('Available Opportunities'))->description(__m('Which opportunity do you want to apply for?'));
         $row->addSelect('masteryTranscriptOpportunityID')->fromQuery($pdo, $sql, $data)->required()->placeholder();
 
-    $sql = 'SELECT masteryTranscriptOpportunity.masteryTranscriptOpportunityID as chainedTo, gibbonPerson.gibbonPersonID AS value, CONCAT(surname, \', \', preferredName) AS name FROM masteryTranscriptOpportunity JOIN masteryTranscriptOpportunityMentor ON (masteryTranscriptOpportunityMentor.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID) JOIN gibbonPerson ON (masteryTranscriptOpportunityMentor.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE gibbonPerson.status=\'Full\' ORDER BY surname, preferredname';
+    $sql = 'SELECT masteryTranscriptOpportunity.masteryTranscriptOpportunityID as chainedTo, CONCAT(masteryTranscriptCredit.masteryTranscriptOpportunityID, \'-\', gibbonPerson.gibbonPersonID) AS value, CONCAT(surname, \', \', preferredName) AS name FROM masteryTranscriptOpportunity JOIN masteryTranscriptOpportunityMentor ON (masteryTranscriptOpportunityMentor.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID) JOIN gibbonPerson ON (masteryTranscriptOpportunityMentor.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE gibbonPerson.status=\'Full\' ORDER BY surname, preferredname';
     $row = $form->addRow()->addClass('opportunity');
         $row->addLabel('gibbonPersonIDSchoolMentor_opportunity', __('Mentor'));
         $row->addSelect('gibbonPersonIDSchoolMentor_opportunity')->setName('gibbonPersonIDSchoolMentor')->fromQueryChained($pdo, $sql, array(), 'masteryTranscriptOpportunityID')->required()->placeholder();

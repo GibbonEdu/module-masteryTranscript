@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v0.5.10
+-------
+Fixed mentor selection issue 
+
 v0.5.09
 -------
 Fixed credit listing visual issue

@@ -45,7 +45,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         'type'                              => $_POST['type'] ?? '',
         'masteryTranscriptOpportunityID'    => $_POST['masteryTranscriptOpportunityID'] ?? null,
         'masteryTranscriptCreditID'         => $_POST['masteryTranscriptCreditID'] ?? null,
-        'gibbonPersonIDSchoolMentor'        => $_POST['gibbonPersonIDSchoolMentor'] ?? '',
+        'gibbonPersonIDSchoolMentor'        => (!empty($_POST['gibbonPersonIDSchoolMentor'])) ? substr($_POST['gibbonPersonIDSchoolMentor'], (strpos($_POST['gibbonPersonIDSchoolMentor'], "-")+1)) : null,
         'status'                            => 'Current - Pending'
     ];
 
