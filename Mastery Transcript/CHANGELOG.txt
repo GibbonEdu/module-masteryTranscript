@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.0.01
+-------
+Fixed permissions issue in Evidence Pending Approval report
+
 v1.0.00
 -------
 Added Evidence Pending Approval report

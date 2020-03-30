@@ -25,7 +25,7 @@ $description = 'This module allows schools to implement Mastery Transcript (http
 $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '1.0.00';
+$version = '1.0.01';
 $author = 'Ross Parker';
 $url = 'https://gibbonedu.org';
 

@@ -25,7 +25,7 @@ use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
 //Module includes
 include "./modules/" . $_SESSION[$guid]["module"] . "/moduleFunctions.php" ;
 
-$highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/journey_manage_commit.php', $connection2);
+$highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/report_evidencePendingApproval.php', $connection2);
 
 if (isActionAccessible($guid, $connection2, "/modules/Mastery Transcript/report_evidencePendingApproval.php")==FALSE) {
     //Acess denied
@@ -43,10 +43,10 @@ else {
     print "<p>" ;
 
     //Filter
-    $allMentors = (isset($_GET['allMentors']) && $highestAction == 'Manage Journey_all') ? $_GET['allMentors'] : '';
+    $allMentors = (isset($_GET['allMentors']) && $highestAction == 'Evidence Pending Approval_all') ? $_GET['allMentors'] : '';
     $search = $_GET['search'] ?? '';
 
-    if ($highestAction == 'Manage Journey_all') {
+    if ($highestAction == 'Evidence Pending Approval_all') {
         $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
         $form->setTitle(__('Filter'));
         $form->setClass('noIntBorder fullWidth');

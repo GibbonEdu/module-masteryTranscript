@@ -110,7 +110,6 @@ $sql[$count][1] = "";
 $sql[$count][0] = '0.5.10';
 $sql[$count][1] = "";
 
-
 //v1.0.00
 $sql[$count][0] = '1.0.00';
 $sql[$count][1] = "
@@ -120,3 +119,7 @@ INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`
 INSERT INTO `gibbonAction` (`gibbonModuleID`, `name`, `precedence`, `category`, `description`, `URLList`, `entryURL`, `defaultPermissionAdmin`, `defaultPermissionTeacher`, `defaultPermissionStudent`, `defaultPermissionParent`, `defaultPermissionSupport`, `categoryPermissionStaff`, `categoryPermissionStudent`, `categoryPermissionParent`, `categoryPermissionOther`) VALUES ((SELECT gibbonModuleID FROM gibbonModule WHERE name='Mastery Transcript'), 'Evidence Pending Approval_my', 0, 'Reports', 'Allows a user to see evidence awaiting their feedback.', 'report_evidencePendingApproval.php', 'report_evidencePendingApproval.php', 'N', 'Y', 'N', 'N', 'N', 'Y', 'N', 'N', 'N') ;end
 INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`) VALUES (NULL , '2', (SELECT gibbonActionID FROM gibbonAction JOIN gibbonModule ON (gibbonAction.gibbonModuleID=gibbonModule.gibbonModuleID) WHERE gibbonModule.name='Mastery Transcript' AND gibbonAction.name='Evidence Pending Approval_my'));end
 ";
+
+//v1.0.01
+$sql[$count][0] = '1.0.01';
+$sql[$count][1] = "";
