@@ -25,7 +25,7 @@ $description = 'This module allows schools to implement Mastery Transcript (http
 $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '0.5.10';
+$version = '1.0.00';
 $author = 'Ross Parker';
 $url = 'https://gibbonedu.org';
 
@@ -97,6 +97,7 @@ $moduleTables[] = "CREATE TABLE `masteryTranscriptJourney` (
   `masteryTranscriptOpportunityID` int(4) unsigned zerofill NULL DEFAULT NULL,
   `masteryTranscriptCreditID` int(4) unsigned zerofill NULL DEFAULT NULL,
   `gibbonPersonIDSchoolMentor` int(10) unsigned zerofill NULL DEFAULT NULL,
+  `statusKey` varchar(20) DEFAULT NULL,
   `status` enum('Current','Current - Pending','Complete - Pending','Complete - Approved','Exempt','Evidence Not Yet Approved') NOT NULL DEFAULT 'Current',
   `timestampJoined` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `timestampCompletePending` timestamp NULL DEFAULT NULL,
@@ -300,6 +301,46 @@ $actionRows[] = [
     'description'               => 'Allows a member of staff to interact with journey records of students they mentor.',
     'URLList'                   => 'journey_manage.php,journey_manage_edit.php,journey_manage_delete.php,journey_manage_commit.php',
     'entryURL'                  => 'journey_manage.php',
+    'entrySidebar'              => 'Y',
+    'menuShow'                  => 'Y',
+    'defaultPermissionAdmin'    => 'N',
+    'defaultPermissionTeacher'  => 'Y',
+    'defaultPermissionStudent'  => 'N',
+    'defaultPermissionParent'   => 'N',
+    'defaultPermissionSupport'  => 'N',
+    'categoryPermissionStaff'   => 'Y',
+    'categoryPermissionStudent' => 'N',
+    'categoryPermissionParent'  => 'N',
+    'categoryPermissionOther'   => 'N',
+];
+
+$actionRows[] = [
+    'name'                      => 'Evidence Pending Approval_all',
+    'precedence'                => '1',
+    'category'                  => 'Reports',
+    'description'               => 'Allows a user to see all evidence awaiting feedback.',
+    'URLList'                   => 'report_evidencePendingApproval.php',
+    'entryURL'                  => 'report_evidencePendingApproval.php',
+    'entrySidebar'              => 'Y',
+    'menuShow'                  => 'Y',
+    'defaultPermissionAdmin'    => 'Y',
+    'defaultPermissionTeacher'  => 'N',
+    'defaultPermissionStudent'  => 'N',
+    'defaultPermissionParent'   => 'N',
+    'defaultPermissionSupport'  => 'N',
+    'categoryPermissionStaff'   => 'Y',
+    'categoryPermissionStudent' => 'N',
+    'categoryPermissionParent'  => 'N',
+    'categoryPermissionOther'   => 'N',
+];
+
+$actionRows[] = [
+    'name'                      => 'Evidence Pending Approval_my',
+    'precedence'                => '0',
+    'category'                  => 'Reports',
+    'description'               => 'Allows a user to see evidence awaiting their feedback.',
+    'URLList'                   => 'report_evidencePendingApproval.php',
+    'entryURL'                  => 'report_evidencePendingApproval.php',
     'entrySidebar'              => 'Y',
     'menuShow'                  => 'Y',
     'defaultPermissionAdmin'    => 'N',

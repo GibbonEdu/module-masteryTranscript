@@ -25,67 +25,57 @@ require_once '../../gibbon.php';
 
 $search = $_GET['search'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage.php&search=$search";
+// Proceed!
+$masteryTranscriptJourneyID = $_GET['masteryTranscriptJourneyID'] ?? '';
+$statusKey = $_GET['statusKey'] ?? '';
+$response = $_GET['response'] ?? '';
 
-$highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/journey_manage_commit.php', $connection2);
+$URLRedirect = $URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_edit.php&search=$search&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
+if (empty($gibbon->session->get('username'))) {
+    $URLRedirect = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_commit_thanks.php";
+}
 
-if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_manage_commit.php') == false || $highestAction == false) {
+if (empty($masteryTranscriptJourneyID) || empty($statusKey) || ($response != 'Y' && $response !='N')) {
+    $URL .= '&return=error1';
+    header("Location: {$URL}");
+    exit;
+}
+
+$journeyGateway = $container->get(JourneyGateway::class);
+$result = $journeyGateway->selectJourneyByID($masteryTranscriptJourneyID, $statusKey);
+
+if ($result->rowCount() != 1) {
     $URL .= '&return=error0';
     header("Location: {$URL}");
     exit();
-} else {
-    // Proceed!
-    $masteryTranscriptJourneyID = $_GET['masteryTranscriptJourneyID'] ?? '';
-    $response = $_GET['response'] ?? '';
+}
 
-    if (empty($masteryTranscriptJourneyID) || ($response != 'Y' && $response !='N')) {
-        $URL .= '&return=error1';
-        header("Location: {$URL}");
-        exit;
-    }
+$values = $result->fetch();
 
-    $journeyGateway = $container->get(JourneyGateway::class);
-    $result = $journeyGateway->selectJourneyByID($masteryTranscriptJourneyID);
+if ($response == 'Y') {
+    //Update record
+    $data = array(
+        'status' => 'Current',
+    );
+    $updated = $journeyGateway->update($masteryTranscriptJourneyID, $data);
 
-    if (empty($result)) {
-        $URL .= '&return=error0';
-        header("Location: {$URL}");
-        exit();
-    }
+    //Notify student
+    $notificationText = __m('Your mentorship request for the Mastery Transcript {type} {name} has been accepted.', array('type' => strtolower($values['type']), 'name' => $values['name']));
+    setNotification($connection2, $guid, $values['gibbonPersonIDStudent'], $notificationText, 'Mastery Transcript', "/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID");
 
-    $values = $result->fetch();
+    //Return to thanks page
+    $URLRedirect .= "&return=success0&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
+    header("Location: {$URLRedirect}");
+}
+else {
+    //Delete record
+    $deleted = $journeyGateway->delete($masteryTranscriptJourneyID);
 
-    if ($highestAction != 'Manage Journey_all' && $values['gibbonPersonIDSchoolMentor'] != $gibbon->session->get('gibbonPersonID')) {
-        $URL .= '&return=error0';
-        header("Location: {$URL}");
-        exit();
-    }
+    //Notify student
+    $notificationText = __m('Your mentorship request for the Mastery Transcript {type} {name} has been declined. Your enrolment has been deleted.', array('type' => strtolower($values['type']), 'name' => $values['name']));
+    setNotification($connection2, $guid, $values['gibbonPersonIDStudent'], $notificationText, 'Mastery Transcript', "/index.php?q=/modules/Mastery Transcript/journey_record.php");
 
-    if ($response == 'Y') {
-        //Update record
-        $data = array(
-            'status' => 'Current',
-        );
-        $updated = $journeyGateway->update($masteryTranscriptJourneyID, $data);
-
-        //Notify student
-        $notificationText = __m('Your mentorship request for the Mastery Transcript {type} {name} has been accepted.', array('type' => strtolower($values['type']), 'name' => $values['name']));
-        setNotification($connection2, $guid, $values['gibbonPersonIDStudent'], $notificationText, 'Mastery Transcript', "/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID");
-
-        //Return to thanks page
-        $URL .= "&return=success0&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
-        header("Location: {$URL}");
-    }
-    else {
-        //Delete record
-        $deleted = $journeyGateway->delete($masteryTranscriptJourneyID);
-
-        //Notify student
-        $notificationText = __m('Your mentorship request for the Mastery Transcript {type} {name} has been declined. Your enrolment has been deleted.', array('type' => strtolower($values['type']), 'name' => $values['name']));
-        setNotification($connection2, $guid, $values['gibbonPersonIDStudent'], $notificationText, 'Mastery Transcript', "/index.php?q=/modules/Mastery Transcript/journey_record.php");
-
-        //Return to thanks page
-        $URL .= "&return=success1&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
-        header("Location: {$URL}");
-    }
+    //Return to thanks page
+    $URLRedirect .= "&return=success1&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
+    header("Location: {$URLRedirect}");
 }

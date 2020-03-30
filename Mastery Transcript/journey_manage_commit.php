@@ -31,6 +31,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 } else {
     // Proceed!
     $masteryTranscriptJourneyID = $_GET['masteryTranscriptJourneyID'] ?? '';
+    $statusKey = $_GET['statusKey'] ?? '';
     $search = $_GET['search'] ?? '';
 
     if (empty($masteryTranscriptJourneyID)) {
@@ -39,9 +40,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     }
 
     $journeyGateway = $container->get(JourneyGateway::class);
-    $result = $journeyGateway->selectJourneyByID($masteryTranscriptJourneyID);
+    $result = $journeyGateway->selectJourneyByID($masteryTranscriptJourneyID, $statusKey);
 
-    if (empty($result)) {
+    if ($result->rowCount() != 1) {
         $page->addError(__('The specified record cannot be found.'));
         return;
     }
@@ -62,7 +63,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     echo '<p style=\'margin-top: 20px\'>';
     echo __m('{student} has requested your help as mentor of the {type} {name}.', array('student' => Format::name('', $values['preferredName'], $values['surname'], 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']))."<br/><br/>";
-    echo __m('Please {link1} if you are able to get involved, or, {link2} if you not in a position to help.', array('link1' => "<a class='p-1 border border-solid border-green-500 text-green-500 bg-green-200' href='".$_SESSION[$guid]['absoluteURL']."/modules/Mastery Transcript/journey_manage_commitProcess.php?response=Y&masteryTranscriptJourneyID=$masteryTranscriptJourneyID&search=$search'>click here</a>", 'link2' => "<a class='p-1 border border-solid border-red-500 text-red-500 bg-red-200' href='".$_SESSION[$guid]['absoluteURL']."/modules/Mastery Transcript/journey_manage_commitProcess.php?response=N&masteryTranscriptJourneyID=$masteryTranscriptJourneyID&search=$search'>click here</a>"));
+    echo __m('Please {link1} if you are able to get involved, or, {link2} if you not in a position to help.', array('link1' => "<a class='p-1 border border-solid border-green-500 text-green-500 bg-green-200' href='".$_SESSION[$guid]['absoluteURL']."/modules/Mastery Transcript/journey_manage_commitProcess.php?response=Y&masteryTranscriptJourneyID=$masteryTranscriptJourneyID&statusKey=$statusKey&search=$search'>click here</a>", 'link2' => "<a class='p-1 border border-solid border-red-500 text-red-500 bg-red-200' href='".$_SESSION[$guid]['absoluteURL']."/modules/Mastery Transcript/journey_manage_commitProcess.php?response=N&masteryTranscriptJourneyID=$masteryTranscriptJourneyID&statusKey=$statusKey&search=$search'>click here</a>"));
     echo '</p>';
 }
 

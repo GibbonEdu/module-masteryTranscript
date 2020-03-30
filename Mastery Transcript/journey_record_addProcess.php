@@ -46,7 +46,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         'masteryTranscriptOpportunityID'    => $_POST['masteryTranscriptOpportunityID'] ?? null,
         'masteryTranscriptCreditID'         => $_POST['masteryTranscriptCreditID'] ?? null,
         'gibbonPersonIDSchoolMentor'        => (!empty($_POST['gibbonPersonIDSchoolMentor'])) ? substr($_POST['gibbonPersonIDSchoolMentor'], (strpos($_POST['gibbonPersonIDSchoolMentor'], "-")+1)) : null,
-        'status'                            => 'Current - Pending'
+        'status'                            => 'Current - Pending',
+        'statusKey'                         => $confirmationKey = randomPassword(20)
     ];
 
     // Validate the required values are present
@@ -74,7 +75,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $notificationGateway = new NotificationGateway($pdo);
     $notificationSender = new NotificationSender($notificationGateway, $gibbon->session);
     $notificationString = __m('{student} has requested Mastery Trascript mentorship for the {type} {name}.', ['student' => Format::name('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', true, true), 'type' => strtolower($data['type']), 'name' => $name]);
-    $notificationSender->addNotification($data['gibbonPersonIDSchoolMentor'], $notificationString, "Mastery Transcript", "/index.php?q=/modules/Mastery Transcript/journey_manage_commit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID");
+    $notificationSender->addNotification($data['gibbonPersonIDSchoolMentor'], $notificationString, "Mastery Transcript", "/index.php?q=/modules/Mastery Transcript/journey_manage_commit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID&statusKey=".$data['statusKey']);
     $notificationSender->sendNotifications();
 
     if ($masteryTranscriptJourneyID) {

@@ -109,3 +109,14 @@ $sql[$count][1] = "";
 //v0.5.10
 $sql[$count][0] = '0.5.10';
 $sql[$count][1] = "";
+
+
+//v1.0.00
+$sql[$count][0] = '1.0.00';
+$sql[$count][1] = "
+ALTER TABLE `masteryTranscriptJourney` ADD `statusKey` varchar(20) DEFAULT NULL AFTER `gibbonPersonIDSchoolMentor`;end
+INSERT INTO `gibbonAction` (`gibbonModuleID`, `name`, `precedence`, `category`, `description`, `URLList`, `entryURL`, `defaultPermissionAdmin`, `defaultPermissionTeacher`, `defaultPermissionStudent`, `defaultPermissionParent`, `defaultPermissionSupport`, `categoryPermissionStaff`, `categoryPermissionStudent`, `categoryPermissionParent`, `categoryPermissionOther`) VALUES ((SELECT gibbonModuleID FROM gibbonModule WHERE name='Mastery Transcript'), 'Evidence Pending Approval_all', 1, 'Reports', 'Allows a user to see all evidence awaiting feedback.', 'report_evidencePendingApproval.php', 'report_evidencePendingApproval.php', 'Y', 'N', 'N', 'N', 'N', 'Y', 'N', 'N', 'N') ;end
+INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`) VALUES (NULL , '1', (SELECT gibbonActionID FROM gibbonAction JOIN gibbonModule ON (gibbonAction.gibbonModuleID=gibbonModule.gibbonModuleID) WHERE gibbonModule.name='Mastery Transcript' AND gibbonAction.name='Evidence Pending Approval_all'));end
+INSERT INTO `gibbonAction` (`gibbonModuleID`, `name`, `precedence`, `category`, `description`, `URLList`, `entryURL`, `defaultPermissionAdmin`, `defaultPermissionTeacher`, `defaultPermissionStudent`, `defaultPermissionParent`, `defaultPermissionSupport`, `categoryPermissionStaff`, `categoryPermissionStudent`, `categoryPermissionParent`, `categoryPermissionOther`) VALUES ((SELECT gibbonModuleID FROM gibbonModule WHERE name='Mastery Transcript'), 'Evidence Pending Approval_my', 0, 'Reports', 'Allows a user to see evidence awaiting their feedback.', 'report_evidencePendingApproval.php', 'report_evidencePendingApproval.php', 'N', 'Y', 'N', 'N', 'N', 'Y', 'N', 'N', 'N') ;end
+INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`) VALUES (NULL , '2', (SELECT gibbonActionID FROM gibbonAction JOIN gibbonModule ON (gibbonAction.gibbonModuleID=gibbonModule.gibbonModuleID) WHERE gibbonModule.name='Mastery Transcript' AND gibbonAction.name='Evidence Pending Approval_my'));end
+";

@@ -1,8 +1,13 @@
 CHANGELOG
 =========
+v1.0.00
+-------
+Added Evidence Pending Approval report
+Added token to mentor approval, to avoid need to be logged in
+
 v0.5.10
 -------
-Fixed mentor selection issue 
+Fixed mentor selection issue
 
 v0.5.09
 -------
