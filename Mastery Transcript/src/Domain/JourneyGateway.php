@@ -138,51 +138,36 @@ class JourneyGateway extends QueryableGateway
 
     public function selectEvidencePending(QueryCriteria $criteria, $gibbonPersonID = null)
     {
-        if (is_null($gibbonPersonID)) {
-            $query = $this
-                ->newQuery()
-                ->cols(['masteryTranscriptJourneyID', 'student.surname AS studentsurname', 'student.preferredName AS studentpreferredName', 'mentor.title AS mentortitle', 'mentor.surname AS mentorsurname', 'mentor.preferredName AS mentorpreferredName', 'masteryTranscriptCredit.logo', 'masteryTranscriptCredit.name', 'timestampJoined', 'type'])
-                ->from($this->getTableName())
-                ->innerJoin('masteryTranscriptCredit', 'masteryTranscriptJourney.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID')
-                ->innerJoin('gibbonPerson AS student','masteryTranscriptJourney.gibbonPersonIDStudent=student.gibbonPersonID')
-                ->innerJoin('gibbonPerson AS mentor','masteryTranscriptJourney.gibbonPersonIDSchoolMentor=mentor.gibbonPersonID')
-                ->where('type=\'Credit\' AND masteryTranscriptJourney.status=\'Complete - Pending\' AND student.status=\'Full\' AND (student.dateStart IS NULL OR student.dateStart<=:date) AND (student.dateEnd IS NULL OR student.dateEnd>=:date)')
-                ->bindValue('gibbonPersonID', $gibbonPersonID)
-                ->bindValue('date', date("Y-m-d"));
+        $query = $this
+            ->newQuery()
+            ->cols(['masteryTranscriptJourneyID', 'student.surname AS studentsurname', 'student.preferredName AS studentpreferredName', 'mentor.title AS mentortitle', 'mentor.surname AS mentorsurname', 'mentor.preferredName AS mentorpreferredName', 'masteryTranscriptCredit.logo', 'masteryTranscriptCredit.name', 'timestampCompletePending', 'type'])
+            ->from($this->getTableName())
+            ->innerJoin('masteryTranscriptCredit', 'masteryTranscriptJourney.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID')
+            ->innerJoin('gibbonPerson AS student','masteryTranscriptJourney.gibbonPersonIDStudent=student.gibbonPersonID')
+            ->innerJoin('gibbonPerson AS mentor','masteryTranscriptJourney.gibbonPersonIDSchoolMentor=mentor.gibbonPersonID')
+            ->where('type=\'Credit\' AND masteryTranscriptJourney.status=\'Complete - Pending\' AND student.status=\'Full\' AND (student.dateStart IS NULL OR student.dateStart<=:date) AND (student.dateEnd IS NULL OR student.dateEnd>=:date)')
+            ->bindValue('gibbonPersonID', $gibbonPersonID)
+            ->bindValue('date', date("Y-m-d"));
 
-            $this->unionAllWithCriteria($query, $criteria)
-                ->cols(['masteryTranscriptJourneyID', 'student.surname AS studentsurname', 'student.preferredName AS studentpreferredName', 'mentor.title AS mentortitle', 'mentor.surname AS mentorsurname', 'mentor.preferredName AS mentorpreferredName', 'masteryTranscriptOpportunity.logo', 'masteryTranscriptOpportunity.name', 'timestampJoined', 'type'])
-                ->from($this->getTableName())
-                ->innerJoin('masteryTranscriptOpportunity', 'masteryTranscriptJourney.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID')
-                ->innerJoin('gibbonPerson AS student','masteryTranscriptJourney.gibbonPersonIDStudent=student.gibbonPersonID')
-                ->innerJoin('gibbonPerson AS mentor','masteryTranscriptJourney.gibbonPersonIDSchoolMentor=mentor.gibbonPersonID')
-                ->where('type=\'Opportunity\' AND masteryTranscriptJourney.status=\'Complete - Pending\' AND student.status=\'Full\' AND (student.dateStart IS NULL OR student.dateStart<=:date) AND (student.dateEnd IS NULL OR student.dateEnd>=:date)')
-                ->bindValue('gibbonPersonID', $gibbonPersonID)
-                ->bindValue('date', date("Y-m-d"));
+        if (!is_null($gibbonPersonID)) {
+            $query->where('masteryTranscriptJourney.gibbonPersonIDSchoolMentor=:gibbonPersonIDSchoolMentor')
+                ->bindValue('gibbonPersonID', $gibbonPersonID);
         }
-        else {
-            $query = $this
-                ->newQuery()
-                ->cols(['masteryTranscriptJourneyID', 'student.surname AS studentsurname', 'student.preferredName AS studentpreferredName', 'mentor.title AS mentortitle', 'mentor.surname AS mentorsurname', 'mentor.preferredName AS mentorpreferredName', 'masteryTranscriptCredit.logo', 'masteryTranscriptCredit.name', 'timestampJoined', 'type'])
-                ->from($this->getTableName())
-                ->innerJoin('masteryTranscriptCredit', 'masteryTranscriptJourney.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID')
-                ->innerJoin('gibbonPerson AS student','masteryTranscriptJourney.gibbonPersonIDStudent=student.gibbonPersonID')
-                ->innerJoin('gibbonPerson AS mentor','masteryTranscriptJourney.gibbonPersonIDSchoolMentor=mentor.gibbonPersonID')
-                ->where('type=\'Credit\' AND masteryTranscriptJourney.status=\'Complete - Pending\' AND student.status=\'Full\' AND (student.dateStart IS NULL OR student.dateStart<=:date) AND (student.dateEnd IS NULL OR student.dateEnd>=:date) AND gibbonPersonIDSchoolMentor=:gibbonPersonIDSchoolMentor')
-                ->bindValue('gibbonPersonID', $gibbonPersonID)
-                ->bindValue('date', date("Y-m-d"))
-                ->bindValue('gibbonPersonIDSchoolMentor', $gibbonPersonID);
 
-            $this->unionAllWithCriteria($query, $criteria)
-                ->cols(['masteryTranscriptJourneyID', 'student.surname AS studentsurname', 'student.preferredName AS studentpreferredName', 'mentor.title AS mentortitle', 'mentor.surname AS mentorsurname', 'mentor.preferredName AS mentorpreferredName', 'masteryTranscriptOpportunity.logo', 'masteryTranscriptOpportunity.name', 'timestampJoined', 'type'])
-                ->from($this->getTableName())
-                ->innerJoin('masteryTranscriptOpportunity', 'masteryTranscriptJourney.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID')
-                ->innerJoin('gibbonPerson AS student','masteryTranscriptJourney.gibbonPersonIDStudent=student.gibbonPersonID')
-                ->innerJoin('gibbonPerson AS mentor','masteryTranscriptJourney.gibbonPersonIDSchoolMentor=mentor.gibbonPersonID')
-                ->where('type=\'Opportunity\' AND masteryTranscriptJourney.status=\'Complete - Pending\' AND student.status=\'Full\' AND (student.dateStart IS NULL OR student.dateStart<=:date) AND (student.dateEnd IS NULL OR student.dateEnd>=:date) AND gibbonPersonIDSchoolMentor=:gibbonPersonIDSchoolMentor')
-                ->bindValue('gibbonPersonID', $gibbonPersonID)
-                ->bindValue('date', date("Y-m-d"))
-                ->bindValue('gibbonPersonIDSchoolMentor', $gibbonPersonID);
+        $this->unionAllWithCriteria($query, $criteria)
+            ->cols(['masteryTranscriptJourneyID', 'student.surname AS studentsurname', 'student.preferredName AS studentpreferredName', 'mentor.title AS mentortitle', 'mentor.surname AS mentorsurname', 'mentor.preferredName AS mentorpreferredName', 'masteryTranscriptOpportunity.logo', 'masteryTranscriptOpportunity.name', 'timestampCompletePending', 'type'])
+            ->from($this->getTableName())
+            ->innerJoin('masteryTranscriptOpportunity', 'masteryTranscriptJourney.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID')
+            ->innerJoin('gibbonPerson AS student','masteryTranscriptJourney.gibbonPersonIDStudent=student.gibbonPersonID')
+            ->innerJoin('gibbonPerson AS mentor','masteryTranscriptJourney.gibbonPersonIDSchoolMentor=mentor.gibbonPersonID')
+            ->where('type=\'Opportunity\' AND masteryTranscriptJourney.status=\'Complete - Pending\' AND student.status=\'Full\' AND (student.dateStart IS NULL OR student.dateStart<=:date) AND (student.dateEnd IS NULL OR student.dateEnd>=:date)')
+            ->bindValue('gibbonPersonID', $gibbonPersonID)
+            ->bindValue('date', date("Y-m-d"))
+            ->bindValue('gibbonPersonIDSchoolMentor', $gibbonPersonID);
+
+        if (!is_null($gibbonPersonID)) {
+            $query->where('gibbonPersonIDSchoolMentor=:gibbonPersonIDSchoolMentor')
+                ->bindValue('gibbonPersonID', $gibbonPersonID);
         }
 
         return $this->runQuery($query, $criteria);

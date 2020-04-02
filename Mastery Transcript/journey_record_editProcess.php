@@ -94,7 +94,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     //Update the journey
     $data = [
-        'status'                        => ($data['type'] == 'Comment') ? $values['status'] : 'Complete - Pending'
+        'status'                        => ($data['type'] == 'Comment') ? $values['status'] : 'Complete - Pending',
+        'timestampCompletePending'      => ($data['type'] == 'Comment') ? null : date('Y-m-d H:i:s')
     ];
     $updated = $journeyGateway->update($masteryTranscriptJourneyID, $data);
 

@@ -35,7 +35,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $editLink = '';
     if (isset($_GET['editID'])) {
-        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptOpportunityID='.$_GET['editID']."&search=$search";
+        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptJourneyID='.$_GET['editID']."&search=$search";
     }
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], $editLink, null);

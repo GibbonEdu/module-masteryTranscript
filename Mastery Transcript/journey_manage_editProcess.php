@@ -71,6 +71,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         'type'           => $_POST['status'] ?? 'Comment',
     ];
 
+    //If approved, get last evidence to store in journey later
+    if ($data['type'] == 'Complete - Approved') {
+        $logs = $discussionGateway->selectDiscussionByContext('masteryTranscriptJourney', $masteryTranscriptJourneyID, 'Evidence', 'DESC');
+        if ($logs->rowCount() > 0) {
+            $log = $logs->fetch();
+            $evidenceType = $log['attachmentType'];
+            $evidenceLocation = $log['attachmentLocation'];
+        }
+    }
+
     // Validate the required values are present
     if (empty($data['comment']) || ($values['status'] == 'Complete - Pending' && $data['type'] == 'Comment')) {
         $URL .= '&return=error1';
@@ -83,7 +93,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     //Update the journey
     $dataJourney = [
-        'status'    => ($data['type'] == 'Comment') ? $values['status'] : $data['type']
+        'status'                        => ($data['type'] == 'Comment') ? $values['status'] : $data['type'],
+        'timestampCompleteApproved'     => ($data['type'] == 'Complete - Approved') ? date('Y-m-d H:i:s') : null,
+        'gibbonPersonIDApproval'        => ($data['type'] == 'Complete - Approved') ? $gibbon->session->get('gibbonPersonID'): null,
+        'evidenceType'                  => (!empty($evidenceType)) ? $evidenceType : null,
+        'evidenceLocation'              => (!empty($evidenceLocation)) ? $evidenceLocation : null
     ];
     $updated = $journeyGateway->update($masteryTranscriptJourneyID, $dataJourney);
 

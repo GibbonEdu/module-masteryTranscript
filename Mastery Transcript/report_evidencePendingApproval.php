@@ -68,7 +68,7 @@ else {
 
     $criteria = $journeyGateway->newQueryCriteria()
         ->searchBy($journeyGateway->getSearchableColumns(), $search)
-        ->sortBy('timestampJoined', 'DESC')
+        ->sortBy('timestampCompletePending')
         ->fromPOST();
 
     if (!empty($allMentors)) {
@@ -113,6 +113,11 @@ else {
                 return Format::name($values['mentortitle'], $values['mentorpreferredName'], $values['mentorsurname'], 'Staff', false, true);
             });
     }
+
+    $table->addColumn('timestampCompletePending', __('Submitted'))
+        ->format(function($values) use ($guid) {
+            return Format::date($values['timestampCompletePending']);
+        });
 
     // ACTIONS
     $table->addActionColumn()

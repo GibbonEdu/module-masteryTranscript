@@ -1,5 +1,10 @@
 CHANGELOG
 =========
+v1.0.02
+-------
+Fixed Journey logging
+Improved Journey SQL 
+
 v1.0.01
 -------
 Fixed permissions issue in Evidence Pending Approval report
