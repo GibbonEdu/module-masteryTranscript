@@ -22,6 +22,7 @@ use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Domain\System\DiscussionGateway;
 use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
 use Gibbon\FileUploader;
+use Gibbon\View\View;
 
 $highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/journey_manage_edit.php', $connection2);
 
@@ -92,6 +93,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     }
     else {
         echo "<h2>".__m('Conversation Log')."</h2>";
+
+        //Legend
+        $templateView = new View($container->get('twig'));
+        echo $templateView->fetchFromTemplate('legend.twig.html');
+        
         while ($log = $logs->fetch()) {
             echo $page->fetchFromTemplate('logEntry.twig.html', [
                 'log' => $log

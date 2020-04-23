@@ -21,6 +21,7 @@ use Gibbon\Forms\Form;
 use Gibbon\Tables\DataTable;
 use Gibbon\Services\Format;
 use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
+use Gibbon\View\View;
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_record.php') == false) {
     // Access denied
@@ -52,6 +53,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     echo $form->getOutput();
 
+    //Legend
+    $templateView = new View($container->get('twig'));
+    echo $templateView->fetchFromTemplate('legend.twig.html', [
+        'view' => 'table'
+    ]);
+
     // Query categories
     $journeyGateway = $container->get(JourneyGateway::class);
 
@@ -78,16 +85,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
                 $journey['statusClass'] = 'success';
                 break;
             case 'Current':
-                $journey['statusClass'] = 'warning';
+                $journey['statusClass'] = 'currentUnit';
                 break;
             case 'Current - Pending':
-                $journey['statusClass'] = 'warning';
+                $journey['statusClass'] = 'currentPending';
                 break;
             case 'Complete - Pending':
                 $journey['statusClass'] = 'pending';
                 break;
             case 'Evidence Not Yet Approved':
-                $journey['statusClass'] = 'error';
+                $journey['statusClass'] = 'warning';
                 break;
             default:
                 $journey['statusClass']  = '';

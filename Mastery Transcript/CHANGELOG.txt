@@ -1,9 +1,15 @@
 CHANGELOG
 =========
+v1.1.00
+-------
+Implmented new Journey colouring, based on Free Learning
+Added accept icon to Manage Journey
+Added Mentor column to Manage Journey_all
+
 v1.0.02
 -------
 Fixed Journey logging
-Improved Journey SQL 
+Improved Journey SQL
 
 v1.0.01
 -------

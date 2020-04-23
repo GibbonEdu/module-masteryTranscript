@@ -58,16 +58,18 @@ class JourneyGateway extends QueryableGateway
         if ($highestAction == 'Manage Journey_all') {
             $query = $this
                 ->newQuery()
-                ->cols(['masteryTranscriptJourney.*', '\'Credit\' AS type', 'masteryTranscriptCredit.name AS name', 'logo', 'surname', 'preferredName'])
+                ->cols(['masteryTranscriptJourney.*', '\'Credit\' AS type', 'masteryTranscriptCredit.name AS name', 'logo', 'student.surname', 'student.preferredName', 'mentor.surname AS mentorsurname', 'mentor.preferredName AS mentorpreferredName'])
                 ->from($this->getTableName())
-                ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
-                ->innerJoin('masteryTranscriptCredit','masteryTranscriptJourney.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID AND type=\'Credit\'');
+                ->innerJoin('gibbonPerson AS student', 'masteryTranscriptJourney.gibbonPersonIDStudent=student.gibbonPersonID')
+                ->innerJoin('masteryTranscriptCredit','masteryTranscriptJourney.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID AND type=\'Credit\'')
+                ->innerJoin('gibbonPerson AS mentor', 'masteryTranscriptJourney.gibbonPersonIDSchoolMentor=mentor.gibbonPersonID');
 
             $this->unionAllWithCriteria($query, $criteria)
-                ->cols(['masteryTranscriptJourney.*', '\'Opportunity\' AS type', 'masteryTranscriptOpportunity.name AS name', 'logo', 'surname', 'preferredName'])
+                ->cols(['masteryTranscriptJourney.*', '\'Opportunity\' AS type', 'masteryTranscriptOpportunity.name AS name', 'logo', 'student.surname', 'student.preferredName', 'mentor.surname AS mentorsurname', 'mentor.preferredName AS mentorpreferredName'])
                 ->from($this->getTableName())
-                ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
-                ->innerJoin('masteryTranscriptOpportunity','masteryTranscriptJourney.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID AND type=\'Opportunity\'');
+                ->innerJoin('gibbonPerson AS student', 'masteryTranscriptJourney.gibbonPersonIDStudent=student.gibbonPersonID')
+                ->innerJoin('masteryTranscriptOpportunity','masteryTranscriptJourney.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID AND type=\'Opportunity\'')
+                ->innerJoin('gibbonPerson AS mentor', 'masteryTranscriptJourney.gibbonPersonIDSchoolMentor=mentor.gibbonPersonID');
 
         }
         else {

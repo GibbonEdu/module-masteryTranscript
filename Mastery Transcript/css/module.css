@@ -17,8 +17,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+.currentUnit {
+    border-color: #B84EE4;
+    background-color: #FDE2FF;
+    color: #A93CB3;
+}
+
 .pending {
-    border-color: #6B46C1;
-    background-color: #E9D8FD;
-    color: #6B46C1;
+    border-color: #78529e;
+    background-color: #dcc5f4;
+    color: #633f86;
+}
+
+.currentPending {
+    border-color: #d69e2e;
+    background-color: #faf089;
+    color: #d69e2e;
 }

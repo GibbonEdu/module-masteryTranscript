@@ -21,6 +21,7 @@ use Gibbon\Forms\Form;
 use Gibbon\Tables\DataTable;
 use Gibbon\Services\Format;
 use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
+use Gibbon\View\View;
 
 $highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/journey_manage_commit.php', $connection2);
 
@@ -54,6 +55,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     echo $form->getOutput();
 
+    //Legend
+    $templateView = new View($container->get('twig'));
+    echo $templateView->fetchFromTemplate('legend.twig.html', [
+        'view' => 'table'
+    ]);
+
     // Query categories
     $journeyGateway = $container->get(JourneyGateway::class);
 
@@ -75,16 +82,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
                 $journey['statusClass'] = 'success';
                 break;
             case 'Current':
-                $journey['statusClass'] = 'warning';
+                $journey['statusClass'] = 'currentUnit';
                 break;
             case 'Current - Pending':
-                $journey['statusClass'] = 'warning';
+                $journey['statusClass'] = 'currentPending';
                 break;
             case 'Complete - Pending':
                 $journey['statusClass'] = 'pending';
                 break;
             case 'Evidence Not Yet Approved':
-                $journey['statusClass'] = 'error';
+                $journey['statusClass'] = 'warning';
                 break;
             default:
                 $journey['statusClass']  = '';
@@ -115,16 +122,29 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
             return Format::name('', $values['preferredName'], $values['surname'], 'Student', false, true);
         });
 
+    if ($highestAction == 'Manage Journey_all') {
+        $table->addColumn('mentor', __('Mentor'))
+            ->notSortable()
+            ->format(function($values) use ($guid) {
+                return Format::name('', $values['mentorpreferredName'], $values['mentorsurname'], 'Student', false, true);
+            });
+    }
+
     $table->addColumn('status', __m('Status'));
 
     // ACTIONS
     $table->addActionColumn()
         ->addParam('masteryTranscriptJourneyID')
+        ->addParam('statusKey')
         ->addParam('search', $search)
         ->format(function ($category, $actions) {
             if ($category['status'] != 'Current - Pending') {
                 $actions->addAction('edit', __('Edit'))
                     ->setURL('/modules/Mastery Transcript/journey_manage_edit.php');
+            }
+            else {
+                $actions->addAction('accept', __('Accept'))
+                    ->setURL('/modules/Mastery Transcript/journey_manage_commit.php');
             }
 
             $actions->addAction('delete', __('Delete'))
