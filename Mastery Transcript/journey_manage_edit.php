@@ -35,7 +35,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $search = $_GET['search'] ?? '';
 
     $page->breadcrumbs
-        ->add(__m('Record Journey'), 'journey_manage.php');
+        ->add(__m('Manage Journey'), 'journey_manage.php');
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
@@ -97,7 +97,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         //Legend
         $templateView = new View($container->get('twig'));
         echo $templateView->fetchFromTemplate('legend.twig.html');
-        
+
         while ($log = $logs->fetch()) {
             echo $page->fetchFromTemplate('logEntry.twig.html', [
                 'log' => $log
