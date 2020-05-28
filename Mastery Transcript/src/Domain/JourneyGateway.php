@@ -91,6 +91,14 @@ class JourneyGateway extends QueryableGateway
                 ->bindValue('gibbonPersonID', $gibbonPersonID);
         }
 
+        $criteria->addFilterRules([
+            'student' => function ($query, $gibbonPersonIDStudent) {
+                return $query
+                    ->where('masteryTranscriptJourney.gibbonPersonIDStudent = :gibbonPersonIDStudent')
+                    ->bindValue('gibbonPersonIDStudent', $gibbonPersonIDStudent);
+            }
+        ]);
+
         return $this->runQuery($query, $criteria);
     }
 

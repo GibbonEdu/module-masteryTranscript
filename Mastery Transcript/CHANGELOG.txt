@@ -1,12 +1,16 @@
 CHANGELOG
 =========
+v1.1.02
+-------
+Improved Manage Journey filters
+
 v1.1.01
 -------
 Fixed interface string issue in Manage Journey > Edit
 
 v1.1.00
 -------
-Implemented new Journey colouring, based on Free Learning
+Implmented new Journey colouring, based on Free Learning
 Added accept icon to Manage Journey
 Added Mentor column to Manage Journey_all
 
