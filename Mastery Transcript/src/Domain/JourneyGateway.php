@@ -55,6 +55,20 @@ class JourneyGateway extends QueryableGateway
 
     public function selectJourneyByStaff(QueryCriteria $criteria, $gibbonPersonID, $highestAction)
     {
+
+        $criteria->addFilterRules([
+            'student' => function ($query, $gibbonPersonIDStudent) {
+                return $query
+                    ->where('masteryTranscriptJourney.gibbonPersonIDStudent = :gibbonPersonIDStudent')
+                    ->bindValue('gibbonPersonIDStudent', $gibbonPersonIDStudent);
+            },
+            'status' => function ($query, $status) {
+                return $query
+                    ->where('masteryTranscriptJourney.status = :status')
+                    ->bindValue('status', $status);
+            }
+        ]);
+
         if ($highestAction == 'Manage Journey_all') {
             $query = $this
                 ->newQuery()

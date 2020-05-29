@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\Forms\Form;
+use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Tables\DataTable;
 use Gibbon\Services\Format;
 use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
@@ -39,16 +40,34 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     //Filter
     $search = $_GET['search'] ?? '';
+    $status = $_GET['status'] ?? '';
+    $gibbonPersonIDStudent = isset($_GET['gibbonPersonIDStudent'])? $_GET['gibbonPersonIDStudent'] : '';
 
     $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
     $form->setTitle(__('Filter'));
     $form->setClass('noIntBorder fullWidth');
+    $form->setFactory(DatabaseFormFactory::create($pdo));
 
     $form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/journey_manage.php');
 
     $row = $form->addRow();
         $row->addLabel('search', __('Search'));
         $row->addTextField('search')->setValue($search);
+
+    $statuses = array(
+        'Current - Pending' => __m('Current - Pending'),
+        'Current' => __m('Current'),
+        'Complete - Pending' => __m('Complete - Pending'),
+        'Evidence Not Yet Approved' => __m('Evidence Not Yet Approved'),
+        'Complete - Approved' => __m('Complete - Approved'),
+    );
+    $row = $form->addRow();
+        $row->addLabel('status', __('Status'));
+        $row->addSelect('status')->fromArray($statuses)->selected($status)->placeholder();
+
+    $row = $form->addRow();
+        $row->addLabel('gibbonPersonIDStudent',__('Student'));
+        $row->addSelectStudent('gibbonPersonIDStudent', $_SESSION[$guid]['gibbonSchoolYearID'])->selected($gibbonPersonIDStudent)->placeholder();
 
     $row = $form->addRow();
         $row->addSearchSubmit($gibbon->session, __('Clear Search'));
@@ -66,6 +85,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $criteria = $journeyGateway->newQueryCriteria()
         ->searchBy($journeyGateway->getSearchableColumns(), $search)
+        ->filterBy('student', $gibbonPersonIDStudent)
+        ->filterBy('status', $status)
         ->sortBy('timestampJoined', 'DESC')
         ->fromPOST();
 
