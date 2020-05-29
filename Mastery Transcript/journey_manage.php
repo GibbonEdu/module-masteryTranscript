@@ -40,6 +40,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     //Filter
     $search = $_GET['search'] ?? '';
+    $status = $_GET['status'] ?? '';
     $gibbonPersonIDStudent = isset($_GET['gibbonPersonIDStudent'])? $_GET['gibbonPersonIDStudent'] : '';
 
     $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
@@ -52,6 +53,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $row = $form->addRow();
         $row->addLabel('search', __('Search'));
         $row->addTextField('search')->setValue($search);
+
+    $statuses = array(
+        'Current - Pending' => __m('Current - Pending'),
+        'Current' => __m('Current'),
+        'Complete - Pending' => __m('Complete - Pending'),
+        'Evidence Not Yet Approved' => __m('Evidence Not Yet Approved'),
+        'Complete - Approved' => __m('Complete - Approved'),
+    );
+    $row = $form->addRow();
+        $row->addLabel('status', __('Status'));
+        $row->addSelect('status')->fromArray($statuses)->selected($status)->placeholder();
 
     $row = $form->addRow();
         $row->addLabel('gibbonPersonIDStudent',__('Student'));
@@ -74,6 +86,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $criteria = $journeyGateway->newQueryCriteria()
         ->searchBy($journeyGateway->getSearchableColumns(), $search)
         ->filterBy('student', $gibbonPersonIDStudent)
+        ->filterBy('status', $status)
         ->sortBy('timestampJoined', 'DESC')
         ->fromPOST();
 
