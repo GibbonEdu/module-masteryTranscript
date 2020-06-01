@@ -72,8 +72,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         $row->addSelect('level')->fromArray($levels)->placeholder()->required();
 
     $row = $form->addRow();
-        $row->addLabel('description', __('Description'));
-        $row->addTextArea('description');
+        $column = $row->addColumn();
+        $column->addLabel('description', __('Description'));
+        $column->addCommentEditor('description')
+            ->maxLength(300);
 
     $row = $form->addRow();
         $row->addLabel('active', __('Active'));

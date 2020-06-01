@@ -1,5 +1,12 @@
 CHANGELOG
 =========
+
+v1.2.00
+-------
+Improved Record Journey table
+Credit description character limit
+Student total Complete - Approved count
+
 v1.1.03
 -------
 Improved Manage Journey indication of Foundational/Advanced

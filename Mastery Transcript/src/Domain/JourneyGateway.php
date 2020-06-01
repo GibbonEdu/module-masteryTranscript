@@ -35,7 +35,7 @@ class JourneyGateway extends QueryableGateway
     {
         $query = $this
             ->newQuery()
-            ->cols(['masteryTranscriptJourney.*', '\'Credit\' AS type', 'masteryTranscriptCredit.name AS name', 'logo'])
+            ->cols(['masteryTranscriptJourney.*', '\'Credit\' AS type', 'level', 'masteryTranscriptCredit.name AS name', 'logo'])
             ->from($this->getTableName())
             ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
             ->innerJoin('masteryTranscriptCredit','masteryTranscriptJourney.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID AND type=\'Credit\'')
@@ -43,7 +43,7 @@ class JourneyGateway extends QueryableGateway
             ->bindValue('gibbonPersonID', $gibbonPersonID);
 
         $this->unionAllWithCriteria($query, $criteria)
-            ->cols(['masteryTranscriptJourney.*', '\'Opportunity\' AS type', 'masteryTranscriptOpportunity.name AS name', 'logo'])
+            ->cols(['masteryTranscriptJourney.*', '\'Opportunity\' AS type', 'null AS level', 'masteryTranscriptOpportunity.name AS name', 'logo'])
             ->from($this->getTableName())
             ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
             ->innerJoin('masteryTranscriptOpportunity','masteryTranscriptJourney.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID AND type=\'Opportunity\'')
