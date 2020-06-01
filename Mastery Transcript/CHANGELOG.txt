@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.1.03
+-------
+Improved Manage Journey indication of Foundational/Advanced
+
 v1.1.02
 -------
 Improved Manage Journey filters

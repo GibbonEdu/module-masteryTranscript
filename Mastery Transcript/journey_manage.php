@@ -80,6 +80,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         'view' => 'table'
     ]);
 
+    //Counters
+    $foundational = 0;
+    $advanced = 0;
+
     // Query categories
     $journeyGateway = $container->get(JourneyGateway::class);
 
@@ -128,11 +132,20 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $table->addColumn('logo', __('Name'))
         ->notSortable()
-        ->format(function($values) use ($guid) {
+        ->format(function($values) use ($guid, &$foundational, &$advanced) {
             $return = null;
             $return .= "<div class='text-center'>";
             $return .= ($values['logo'] != '') ? "<img class='user' style='max-width: 75px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/><br/>":"<img class='user' style='max-width: 75px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
             $return .= "<div class='mt-1 font-bold'>".$values['name']."</div>";
+            if ($values['type'] == 'Credit') {
+                $return .= Format::small($values['level']);
+                if ($values['level'] == 'Foundational') {
+                    $foundational++ ;
+                }
+                else if ($values['level'] == 'Advanced') {
+                    $advanced++ ;
+                }
+            }
             $return .= "</div>";
             return $return;
         });
@@ -173,4 +186,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         });
 
     echo $table->render($journey);
+
+    echo "<div class='message text-right'>";
+        echo __m('Foundational').": ".$foundational."<br/>";
+        echo __m('Advanced').": ".$advanced;
+    echo "</div>";
+
 }
