@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+v1.2.01
+-------
+Prevent delete of Complete - Approved
+Improved stats in Manage and Record Journey
+
 v1.2.00
 -------
 Improved Record Journey table

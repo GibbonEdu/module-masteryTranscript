@@ -83,8 +83,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     //Counters
     $foundational = 0;
     $advanced = 0;
-    $total = 0;
-    $complete = 0;
+    $foundationalComplete = 0;
+    $advancedComplete = 0;
 
     // Query categories
     $journeyGateway = $container->get(JourneyGateway::class);
@@ -134,7 +134,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $table->addColumn('logo', __('Name'))
         ->notSortable()
-        ->format(function($values) use ($guid, &$foundational, &$advanced, &$total, &$complete) {
+        ->format(function($values) use ($guid, &$foundational, &$advanced, &$foundationalComplete, &$advancedComplete) {
             $return = null;
             $return .= "<div class='text-center'>";
             $return .= ($values['logo'] != '') ? "<img class='user' style='max-width: 75px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/><br/>":"<img class='user' style='max-width: 75px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
@@ -145,13 +145,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
                 //Update counters
                 if ($values['level'] == 'Foundational') {
                     $foundational++;
+                    if ($values['status'] == 'Complete - Approved') {
+                        $foundationalComplete++;
+                    }
                 }
                 else if ($values['level'] == 'Advanced') {
                     $advanced++;
-                }
-                $total++;
-                if ($values['status'] == 'Complete - Approved') {
-                    $complete++;
+                    if ($values['status'] == 'Complete - Approved') {
+                        $advancedComplete++;
+                    }
                 }
             }
             $return .= "</div>";
@@ -188,17 +190,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
                 $actions->addAction('accept', __('Accept'))
                     ->setURL('/modules/Mastery Transcript/journey_manage_commit.php');
             }
-
-            $actions->addAction('delete', __('Delete'))
+            if ($category['status'] != 'Complete - Approved') {
+                $actions->addAction('delete', __('Delete'))
                     ->setURL('/modules/Mastery Transcript/journey_manage_delete.php');
+            }
         });
 
     echo $table->render($journey);
 
     echo "<div class='message text-right'>";
-        echo __m('Foundational').": ".$foundational."<br/>";
-        echo __m('Advanced').": ".$advanced."<br/>";
-        echo __m('Current Credit Completion').": ".$complete."/".$total;
+        echo "<b>".__m('Foundational')."</b>: ".$foundationalComplete." of ".$foundational." complete<br/>";
+        echo "<b>".__m('Advanced')."</b>: ".$advancedComplete." of ".$advanced." complete<br/>";
     echo "</div>";
 
 }
