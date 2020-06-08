@@ -181,6 +181,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         ->addParam('masteryTranscriptJourneyID')
         ->addParam('statusKey')
         ->addParam('search', $search)
+        ->addParam('status', $status)
+        ->addParam('gibbonPersonIDStudent', $gibbonPersonIDStudent)
         ->format(function ($category, $actions) {
             if ($category['status'] != 'Current - Pending') {
                 $actions->addAction('edit', __('Edit'))

@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+v1.2.02
+-------
+Manage Journey filter persistence
+
 v1.2.01
 -------
 Prevent delete of Complete - Approved

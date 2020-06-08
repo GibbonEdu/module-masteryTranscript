@@ -33,6 +33,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     // Proceed!
     $masteryTranscriptJourneyID = $_GET['masteryTranscriptJourneyID'] ?? '';
     $search = $_GET['search'] ?? '';
+    $status = $_GET['status'] ?? '';
+    $gibbonPersonIDStudent = isset($_GET['gibbonPersonIDStudent'])? $_GET['gibbonPersonIDStudent'] : '';
 
     $page->breadcrumbs
         ->add(__m('Manage Journey'), 'journey_manage.php');
@@ -40,8 +42,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
     }
-
-    $search = $_GET['search'] ?? '';
 
     if (empty($masteryTranscriptJourneyID)) {
         $page->addError(__('You have not specified one or more required parameters.'));
@@ -60,9 +60,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $page->breadcrumbs
         ->add($values['name']." (".$values['status'].")");
 
-    if ($search !='') {
+    if ($search !='' || $status !='' || $gibbonPersonIDStudent !='') {
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/journey_manage.php&search=$search'>".('Back to Search Results')."</a>";
+        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/journey_manage.php&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent'>".('Back to Search Results')."</a>";
         echo "</div>";
     }
 
@@ -108,7 +108,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     //New log form
     if ($values['status'] != 'Current - Pending') {
         echo "<h2>".__m('New Entry')."</h2>";
-        $form = Form::create('log', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/journey_manage_editProcess.php?masteryTranscriptJourneyID=$masteryTranscriptJourneyID&search=$search");
+        $form = Form::create('log', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/journey_manage_editProcess.php?masteryTranscriptJourneyID=$masteryTranscriptJourneyID&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent");
         $form->setFactory(DatabaseFormFactory::create($pdo));
 
         $form->addHiddenValue('address', $gibbon->session->get('address'));

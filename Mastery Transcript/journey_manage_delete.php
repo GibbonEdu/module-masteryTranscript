@@ -29,6 +29,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     // Proceed!
     $masteryTranscriptJourneyID = $_GET['masteryTranscriptJourneyID'] ?? '';
     $search = $_GET['search'] ?? '';
+    $status = $_GET['status'] ?? '';
+    $gibbonPersonIDStudent = isset($_GET['gibbonPersonIDStudent'])? $_GET['gibbonPersonIDStudent'] : '';
 
     if (empty($masteryTranscriptJourneyID)) {
         $page->addError(__('You have not specified one or more required parameters.'));
@@ -47,6 +49,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         return;
     }
 
-    $form = DeleteForm::createForm($gibbon->session->get('absoluteURL')."/modules/Mastery Transcript/journey_manage_deleteProcess.php?search=$search");
+    $form = DeleteForm::createForm($gibbon->session->get('absoluteURL')."/modules/Mastery Transcript/journey_manage_deleteProcess.php?search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent");
     echo $form->getOutput();
 }

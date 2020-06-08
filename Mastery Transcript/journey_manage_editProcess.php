@@ -28,8 +28,10 @@ require_once '../../gibbon.php';
 
 $masteryTranscriptJourneyID = $_GET['masteryTranscriptJourneyID'] ?? '';
 $search = $_GET['search'] ?? '';
+$status = $_GET['status'] ?? '';
+$gibbonPersonIDStudent = isset($_GET['gibbonPersonIDStudent'])? $_GET['gibbonPersonIDStudent'] : '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_edit.php&search=$search&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
+$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_edit.php&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
 
 $highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/journey_manage_edit.php', $connection2);
 

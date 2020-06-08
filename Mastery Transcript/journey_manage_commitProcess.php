@@ -24,13 +24,15 @@ $_POST['address'] = '/modules/Mastery Transcript/journey_manage_commitProcess.ph
 require_once '../../gibbon.php';
 
 $search = $_GET['search'] ?? '';
+$status = $_GET['status'] ?? '';
+$gibbonPersonIDStudent = isset($_GET['gibbonPersonIDStudent'])? $_GET['gibbonPersonIDStudent'] : '';
 
 // Proceed!
 $masteryTranscriptJourneyID = $_GET['masteryTranscriptJourneyID'] ?? '';
 $statusKey = $_GET['statusKey'] ?? '';
 $response = $_GET['response'] ?? '';
 
-$URLRedirect = $URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_edit.php&search=$search&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
+$URLRedirect = $URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_edit.php&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
 if (empty($gibbon->session->get('username'))) {
     $URLRedirect = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_commit_thanks.php";
 }
