@@ -155,3 +155,11 @@ $sql[$count][1] = "";
 //v1.2.02
 $sql[$count][0] = '1.2.02';
 $sql[$count][1] = "";
+
+//v1.3.00
+$sql[$count][0] = '1.3.00';
+$sql[$count][1] = "
+CREATE TABLE `masteryTranscriptTranscript` (`masteryTranscriptTranscriptID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,`gibbonPersonIDStudent` int(10) unsigned zerofill NULL DEFAULT NULL, `gibbonSchoolYearID` INT(3) UNSIGNED ZEROFILL NULL DEFAULT NULL, `status` enum('Complete') NOT NULL DEFAULT 'Complete', `code` varchar(10) NOT NULL, `date` date NOT NULL, PRIMARY KEY (`masteryTranscriptTranscriptID`), INDEX(`gibbonPersonIDStudent`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;end
+INSERT INTO `gibbonAction` (`gibbonModuleID`, `name`, `precedence`, `category`, `description`, `URLList`, `entryURL`, `defaultPermissionAdmin`, `defaultPermissionTeacher`, `defaultPermissionStudent`, `defaultPermissionParent`, `defaultPermissionSupport`, `categoryPermissionStaff`, `categoryPermissionStudent`, `categoryPermissionParent`, `categoryPermissionOther`) VALUES ((SELECT gibbonModuleID FROM gibbonModule WHERE name='Mastery Transcript'), 'Manage Transcripts', 0, 'Manage', 'Manage and maintain a list of issued transcripts.', 'transcripts_manage.php,transcripts_manage_add.php,transcripts_manage_edit.php,transcripts_manage_delete.php', 'transcripts_manage.php', 'Y', 'N', 'N', 'N', 'N', 'Y', 'N', 'N', 'N');end
+INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`) VALUES (NULL , '1', (SELECT gibbonActionID FROM gibbonAction JOIN gibbonModule ON (gibbonAction.gibbonModuleID=gibbonModule.gibbonModuleID) WHERE gibbonModule.name='Mastery Transcript' AND gibbonAction.name='Manage Transcripts'));end
+";

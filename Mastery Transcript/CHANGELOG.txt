@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+v1.3.00
+-------
+Added ability to track issues transcripts
+
 v1.2.02
 -------
 Manage Journey filter persistence

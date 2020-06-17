@@ -25,7 +25,7 @@ $description = 'This module allows schools to implement Mastery Transcript (http
 $entryURL = 'index.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '1.2.02';
+$version = '1.3.00';
 $author = 'Ross Parker';
 $url = 'https://gibbonedu.org';
 
@@ -108,6 +108,17 @@ $moduleTables[] = "CREATE TABLE `masteryTranscriptJourney` (
   PRIMARY KEY (`masteryTranscriptJourneyID`),
   INDEX(`gibbonPersonIDStudent`),
   INDEX(`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
+$moduleTables[] = "CREATE TABLE `masteryTranscriptTranscript` (
+`masteryTranscriptTranscriptID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `gibbonPersonIDStudent` int(10) unsigned zerofill NULL DEFAULT NULL,
+  `gibbonSchoolYearID` INT(3) UNSIGNED ZEROFILL NULL DEFAULT NULL,
+  `status` enum('Complete') NOT NULL DEFAULT 'Complete',
+  `code` varchar(10) NOT NULL,
+  `date` date NOT NULL,
+  PRIMARY KEY (`masteryTranscriptTranscriptID`),
+  INDEX(`gibbonPersonIDStudent`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 //Settings - none
@@ -345,6 +356,26 @@ $actionRows[] = [
     'menuShow'                  => 'Y',
     'defaultPermissionAdmin'    => 'N',
     'defaultPermissionTeacher'  => 'Y',
+    'defaultPermissionStudent'  => 'N',
+    'defaultPermissionParent'   => 'N',
+    'defaultPermissionSupport'  => 'N',
+    'categoryPermissionStaff'   => 'Y',
+    'categoryPermissionStudent' => 'N',
+    'categoryPermissionParent'  => 'N',
+    'categoryPermissionOther'   => 'N',
+];
+
+$actionRows[] = [
+    'name'                      => 'Manage Transcripts',
+    'precedence'                => '0',
+    'category'                  => 'Manage',
+    'description'               => 'Manage and maintain a list of issued transcripts.',
+    'URLList'                   => 'transcripts_manage.php,transcripts_manage_add.php,transcripts_manage_edit.php,transcripts_manage_delete.php',
+    'entryURL'                  => 'transcripts_manage.php',
+    'entrySidebar'              => 'Y',
+    'menuShow'                  => 'Y',
+    'defaultPermissionAdmin'    => 'Y',
+    'defaultPermissionTeacher'  => 'N',
     'defaultPermissionStudent'  => 'N',
     'defaultPermissionParent'   => 'N',
     'defaultPermissionSupport'  => 'N',

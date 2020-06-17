@@ -39,8 +39,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    $search = $_GET['search'] ?? '';
-
     if (empty($masteryTranscriptJourneyID)) {
         $page->addError(__('You have not specified one or more required parameters.'));
         return;
