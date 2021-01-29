@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-v1.3.01
+v1.4.00
 -------
 Added gibbonPersonIDTarget to discussion items
 

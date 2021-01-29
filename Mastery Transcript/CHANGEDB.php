@@ -164,8 +164,8 @@ INSERT INTO `gibbonAction` (`gibbonModuleID`, `name`, `precedence`, `category`, 
 INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`) VALUES (NULL , '1', (SELECT gibbonActionID FROM gibbonAction JOIN gibbonModule ON (gibbonAction.gibbonModuleID=gibbonModule.gibbonModuleID) WHERE gibbonModule.name='Mastery Transcript' AND gibbonAction.name='Manage Transcripts'));end
 ";
 
-//v1.3.01
-$sql[$count][0] = '1.3.01';
+//v1.4.00
+$sql[$count][0] = '1.4.00';
 $sql[$count][1] = "
 UPDATE gibbonDiscussion JOIN masteryTranscriptJourney ON (gibbonDiscussion.foreignTableID=masteryTranscriptJourney.masteryTranscriptJourneyID) SET gibbonDiscussion.gibbonPersonIDTarget=masteryTranscriptJourney.gibbonPersonIDStudent WHERE gibbonDiscussion.foreignTable='masteryTranscriptJourney';end
 ";
