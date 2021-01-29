@@ -163,3 +163,9 @@ CREATE TABLE `masteryTranscriptTranscript` (`masteryTranscriptTranscriptID` int(
 INSERT INTO `gibbonAction` (`gibbonModuleID`, `name`, `precedence`, `category`, `description`, `URLList`, `entryURL`, `defaultPermissionAdmin`, `defaultPermissionTeacher`, `defaultPermissionStudent`, `defaultPermissionParent`, `defaultPermissionSupport`, `categoryPermissionStaff`, `categoryPermissionStudent`, `categoryPermissionParent`, `categoryPermissionOther`) VALUES ((SELECT gibbonModuleID FROM gibbonModule WHERE name='Mastery Transcript'), 'Manage Transcripts', 0, 'Manage', 'Manage and maintain a list of issued transcripts.', 'transcripts_manage.php,transcripts_manage_add.php,transcripts_manage_edit.php,transcripts_manage_delete.php', 'transcripts_manage.php', 'Y', 'N', 'N', 'N', 'N', 'Y', 'N', 'N', 'N');end
 INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`) VALUES (NULL , '1', (SELECT gibbonActionID FROM gibbonAction JOIN gibbonModule ON (gibbonAction.gibbonModuleID=gibbonModule.gibbonModuleID) WHERE gibbonModule.name='Mastery Transcript' AND gibbonAction.name='Manage Transcripts'));end
 ";
+
+//v1.3.01
+$sql[$count][0] = '1.3.01';
+$sql[$count][1] = "
+UPDATE gibbonDiscussion JOIN masteryTranscriptJourney ON (gibbonDiscussion.foreignTableID=masteryTranscriptJourney.masteryTranscriptJourneyID) SET gibbonDiscussion.gibbonPersonIDTarget=masteryTranscriptJourney.gibbonPersonIDStudent WHERE gibbonDiscussion.foreignTable='masteryTranscriptJourney';end
+";

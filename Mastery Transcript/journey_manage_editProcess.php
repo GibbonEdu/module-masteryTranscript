@@ -65,12 +65,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $discussionGateway = $container->get(DiscussionGateway::class);
 
     $data = [
-        'foreignTable'   => 'masteryTranscriptJourney',
-        'foreignTableID' => $masteryTranscriptJourneyID,
-        'gibbonModuleID' => getModuleIDFromName($connection2, 'Mastery Transcript'),
-        'gibbonPersonID' => $gibbon->session->get('gibbonPersonID'),
-        'comment'        => $_POST['comment'] ?? '',
-        'type'           => $_POST['status'] ?? 'Comment',
+        'foreignTable'         => 'masteryTranscriptJourney',
+        'foreignTableID'       => $masteryTranscriptJourneyID,
+        'gibbonModuleID'       => getModuleIDFromName($connection2, 'Mastery Transcript'),
+        'gibbonPersonID'       => $gibbon->session->get('gibbonPersonID'),
+        'gibbonPersonIDTarget' => $values['gibbonPersonIDStudent'],
+        'comment'              => $_POST['comment'] ?? '',
+        'type'                 => $_POST['status'] ?? 'Comment',
     ];
 
     //If approved, get last evidence to store in journey later
