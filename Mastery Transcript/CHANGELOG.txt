@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+v1.4.00
+-------
+Added gibbonPersonIDTarget to discussion items
+
 v1.3.00
 -------
 Added ability to track issues transcripts

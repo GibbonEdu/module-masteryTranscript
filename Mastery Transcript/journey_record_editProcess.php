@@ -61,15 +61,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $discussionGateway = $container->get(DiscussionGateway::class);
 
     $data = [
-        'foreignTable'       => 'masteryTranscriptJourney',
-        'foreignTableID'     => $masteryTranscriptJourneyID,
-        'gibbonModuleID'     => getModuleIDFromName($connection2, 'Mastery Transcript'),
-        'gibbonPersonID'     => $gibbon->session->get('gibbonPersonID'),
-        'comment'            => $_POST['comment'] ?? '',
-        'type'               => $_POST['type'] ?? '',
-        'comment'            => $_POST['comment'] ?? '',
-        'attachmentType'     => $_POST['evidenceType'] ?? null,
-        'attachmentLocation' => $_POST['evidenceLink'] ?? null,
+        'foreignTable'         => 'masteryTranscriptJourney',
+        'foreignTableID'       => $masteryTranscriptJourneyID,
+        'gibbonModuleID'       => getModuleIDFromName($connection2, 'Mastery Transcript'),
+        'gibbonPersonID'       => $gibbon->session->get('gibbonPersonID'),
+        'gibbonPersonIDTarget' => $gibbon->session->get('gibbonPersonID'),
+        'comment'              => $_POST['comment'] ?? '',
+        'type'                 => $_POST['type'] ?? '',
+        'comment'              => $_POST['comment'] ?? '',
+        'attachmentType'       => $_POST['evidenceType'] ?? null,
+        'attachmentLocation'   => $_POST['evidenceLink'] ?? null,
     ];
 
     //Deal with file upload
