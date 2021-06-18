@@ -26,7 +26,7 @@ require_once '../../gibbon.php';
 $masteryTranscriptOpportunityID = $_POST['masteryTranscriptOpportunityID'] ?? '';
 $search = $_GET['search'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_manage.php&search=$search";
+$URL = $session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_manage.php&search=$search";
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportunities_manage_delete.php') == false) {
     $URL .= '&return=error0';

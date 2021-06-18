@@ -23,7 +23,7 @@ require_once '../../gibbon.php';
 
 $masteryTranscriptDomainID = $_POST['masteryTranscriptDomainID'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/domains_manage.php';
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/domains_manage.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains_manage_delete.php') == false) {
     $URL .= '&return=error0';

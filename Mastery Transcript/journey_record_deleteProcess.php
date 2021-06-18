@@ -24,7 +24,7 @@ require_once '../../gibbon.php';
 $masteryTranscriptJourneyID = $_POST['masteryTranscriptJourneyID'] ?? '';
 $search = $_GET['search'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_record.php&search=$search";
+$URL = $session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_record.php&search=$search";
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_record_delete.php') == false) {
     $URL .= '&return=error0';
@@ -45,7 +45,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         exit;
     }
 
-    if ($values['gibbonPersonIDStudent'] != $gibbon->session->get('gibbonPersonID')) {
+    if ($values['gibbonPersonIDStudent'] != $session->get('gibbonPersonID')) {
         $URL .= '&return=error0';
         header("Location: {$URL}");
         exit;

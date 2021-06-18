@@ -26,7 +26,7 @@ $search = $_GET['search'] ?? '';
 $status = $_GET['status'] ?? '';
 $gibbonPersonIDStudent = isset($_GET['gibbonPersonIDStudent'])? $_GET['gibbonPersonIDStudent'] : '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage.php&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent";
+$URL = $session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage.php&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent";
 
 $highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/journey_manage_delete.php', $connection2);
 
@@ -51,7 +51,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $values = $result->fetch();
 
-    if ($highestAction != 'Manage Journey_all' && $values['gibbonPersonIDSchoolMentor'] != $gibbon->session->get('gibbonPersonID')) {
+    if ($highestAction != 'Manage Journey_all' && $values['gibbonPersonIDSchoolMentor'] != $session->get('gibbonPersonID')) {
         $URL .= '&return=error0';
         header("Location: {$URL}");
         exit();

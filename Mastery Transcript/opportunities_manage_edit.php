@@ -54,14 +54,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
 
     if ($search !='') {
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/opportunities_manage.php&search=$search'>".('Back to Search Results')."</a>";
+        echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_manage.php&search=$search'>".('Back to Search Results')."</a>";
         echo "</div>";
     }
 
-    $form = Form::create('category', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/opportunities_manage_editProcess.php?search=$search");
+    $form = Form::create('category', $session->get('absoluteURL').'/modules/'.$session->get('module')."/opportunities_manage_editProcess.php?search=$search");
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
-    $form->addHiddenValue('address', $gibbon->session->get('address'));
+    $form->addHiddenValue('address', $session->get('address'));
     $form->addHiddenValue('masteryTranscriptOpportunityID', $masteryTranscriptOpportunityID);
 
     $row = $form->addRow()->addHeading(__('Basic Information'));
@@ -110,11 +110,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
 
     $row = $form->addRow()->addHeading(__('Logo'));
 
-    $fileUploader = new FileUploader($pdo, $gibbon->session);
+    $fileUploader = new FileUploader($pdo, $session);
     $row = $form->addRow();
         $row->addLabel('file', __('Logo'));
         $row->addFileUpload('file')
-            ->setAttachment('logo', $_SESSION[$guid]['absoluteURL'], $values['logo'])
+            ->setAttachment('logo', $session->get('absoluteURL'), $values['logo'])
             ->accepts($fileUploader->getFileExtensions('Graphics/Design'));
 
     $row = $form->addRow();

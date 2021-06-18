@@ -29,7 +29,7 @@ require_once '../../gibbon.php';
 $masteryTranscriptJourneyID = $_GET['masteryTranscriptJourneyID'] ?? '';
 $search = $_GET['search'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&search=$search&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
+$URL = $session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&search=$search&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_record_edit.php') == false) {
     $URL .= '&return=error0';
@@ -52,7 +52,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $values = $result->fetch();
 
-    if ($values['gibbonPersonIDStudent'] != $gibbon->session->get('gibbonPersonID')) {
+    if ($values['gibbonPersonIDStudent'] != $session->get('gibbonPersonID')) {
         $URL .= '&return=error0';
         header("Location: {$URL}");
         exit;
@@ -64,8 +64,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         'foreignTable'         => 'masteryTranscriptJourney',
         'foreignTableID'       => $masteryTranscriptJourneyID,
         'gibbonModuleID'       => getModuleIDFromName($connection2, 'Mastery Transcript'),
-        'gibbonPersonID'       => $gibbon->session->get('gibbonPersonID'),
-        'gibbonPersonIDTarget' => $gibbon->session->get('gibbonPersonID'),
+        'gibbonPersonID'       => $session->get('gibbonPersonID'),
+        'gibbonPersonIDTarget' => $session->get('gibbonPersonID'),
         'comment'              => $_POST['comment'] ?? '',
         'type'                 => $_POST['type'] ?? '',
         'comment'              => $_POST['comment'] ?? '',
@@ -75,8 +75,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     //Deal with file upload
     if ($data['attachmentType'] == 'File' && !empty($_FILES['evidenceFile']['tmp_name'])) {
-        $fileUploader = new FileUploader($pdo, $gibbon->session);
-        $logo = $fileUploader->uploadFromPost($_FILES['evidenceFile'], 'masteryTranscript_evidence_'.$gibbon->session->get('gibbonPersonID'));
+        $fileUploader = new FileUploader($pdo, $session);
+        $logo = $fileUploader->uploadFromPost($_FILES['evidenceFile'], 'masteryTranscript_evidence_'.$session->get('gibbonPersonID'));
 
         if (!empty($logo)) {
             $data['attachmentLocation'] = $logo;
@@ -102,12 +102,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     //Notify mentor
     $notificationGateway = new NotificationGateway($pdo);
-    $notificationSender = new NotificationSender($notificationGateway, $gibbon->session);
+    $notificationSender = new NotificationSender($notificationGateway, $session);
     if ($data['status'] == 'Complete - Pending') {
-        $notificationString = __m('{student} has requested approval for the {type} {name}.', ['student' => Format::name('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']]);
+        $notificationString = __m('{student} has requested approval for the {type} {name}.', ['student' => Format::name('', $session->get('preferredName'), $session->get('surname'), 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']]);
     }
     else {
-        $notificationString = __m('{student} has added to the journey log for the {type} {name}.', ['student' => Format::name('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']]);
+        $notificationString = __m('{student} has added to the journey log for the {type} {name}.', ['student' => Format::name('', $session->get('preferredName'), $session->get('surname'), 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']]);
     }
     $notificationSender->addNotification($values['gibbonPersonIDSchoolMentor'], $notificationString, "Mastery Transcript", "/index.php?q=/modules/Mastery Transcript/journey_manage_edit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID");
     $notificationSender->sendNotifications();

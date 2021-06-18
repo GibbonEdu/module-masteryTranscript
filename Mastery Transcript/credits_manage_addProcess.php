@@ -27,7 +27,7 @@ require_once '../../gibbon.php';
 $masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
 $search = $_GET['search'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_manage_add.php&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search";
+$URL = $session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_manage_add.php&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search";
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits_manage_add.php') == false) {
     $URL .= '&return=error0';
@@ -66,7 +66,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
     //Deal with file upload
     if (!empty($_FILES['file']['tmp_name'])) {
-        $fileUploader = new FileUploader($pdo, $gibbon->session);
+        $fileUploader = new FileUploader($pdo, $session);
         $logo = $fileUploader->uploadFromPost($_FILES['file'], 'masteryTranscript_creditLogo_'.$data['name']);
 
         if (empty($logo)) {

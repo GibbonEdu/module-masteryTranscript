@@ -36,7 +36,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
     $editLink = '';
     if (isset($_GET['editID'])) {
-        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Mastery Transcript/credits_manage_edit.php&masteryTranscriptCreditID='.$_GET['editID']."&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search";
+        $editLink = $session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/credits_manage_edit.php&masteryTranscriptCreditID='.$_GET['editID']."&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search";
     }
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], $editLink, null);
@@ -44,14 +44,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
     if ($masteryTranscriptDomainID != '' || $search !='') {
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/credits_manage.php&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search'>".('Back to Search Results')."</a>";
+        echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_manage.php&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search'>".('Back to Search Results')."</a>";
         echo "</div>";
     }
 
-    $form = Form::create('domain', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/credits_manage_addProcess.php?masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search");
+    $form = Form::create('domain', $session->get('absoluteURL').'/modules/'.$session->get('module')."/credits_manage_addProcess.php?masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search");
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
-    $form->addHiddenValue('address', $gibbon->session->get('address'));
+    $form->addHiddenValue('address', $session->get('address'));
 
     $domainGateway = $container->get(DomainGateway::class);
     $domains = $domainGateway->selectActiveDomains()->fetchKeyPair();
@@ -94,7 +94,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
     $row = $form->addRow()->addHeading(__('Logo'));
 
-    $fileUploader = new FileUploader($pdo, $gibbon->session);
+    $fileUploader = new FileUploader($pdo, $session);
     $row = $form->addRow();
         $row->addLabel('file', __('Logo'));
         $row->addFileUpload('file')->accepts($fileUploader->getFileExtensions('Graphics/Design'));

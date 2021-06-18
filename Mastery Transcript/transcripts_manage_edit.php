@@ -49,15 +49,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/transcr
         return;
     }
 
-    $form = Form::create('domain', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/transcripts_manage_editProcess.php");
+    $form = Form::create('domain', $session->get('absoluteURL').'/modules/'.$session->get('module')."/transcripts_manage_editProcess.php");
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
-    $form->addHiddenValue('address', $gibbon->session->get('address'));
+    $form->addHiddenValue('address', $session->get('address'));
     $form->addHiddenValue('masteryTranscriptTranscriptID', $masteryTranscriptTranscriptID);
 
     $row = $form->addRow();
         $row->addLabel('gibbonPersonIDStudent',__('Student'));
-        $row->addSelectStudent('gibbonPersonIDStudent', $gibbon->session->get('gibbonSchoolYearID'))->required()->readonly();;
+        $row->addSelectStudent('gibbonPersonIDStudent', $session->get('gibbonSchoolYearID'))->required()->readonly();;
 
     $row = $form->addRow();
         $row->addLabel('status', __('Status'));

@@ -41,6 +41,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         return;
     }
 
-    $form = DeleteForm::createForm($gibbon->session->get('absoluteURL')."/modules/Mastery Transcript/credits_manage_deleteProcess.php?masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search");
+    $form = DeleteForm::createForm($session->get('absoluteURL')."/modules/Mastery Transcript/credits_manage_deleteProcess.php?masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search");
     echo $form->getOutput();
 }

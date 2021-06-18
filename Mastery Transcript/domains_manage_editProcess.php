@@ -25,7 +25,7 @@ require_once '../../gibbon.php';
 
 $masteryTranscriptDomainID = $_POST['masteryTranscriptDomainID'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/domains_manage_edit.php&masteryTranscriptDomainID='.$masteryTranscriptDomainID;
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/domains_manage_edit.php&masteryTranscriptDomainID='.$masteryTranscriptDomainID;
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains_manage_edit.php') == false) {
     $URL .= '&return=error0';
@@ -64,7 +64,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
     //Deal with file upload
     $data['logo'] = $_POST['logo'];
     if (!empty($_FILES['file']['tmp_name'])) {
-        $fileUploader = new FileUploader($pdo, $gibbon->session);
+        $fileUploader = new FileUploader($pdo, $session);
         $logo = $fileUploader->uploadFromPost($_FILES['file'], 'masteryTranscript_domainLogo_'.$data['name']);
 
         if (empty($logo)) {

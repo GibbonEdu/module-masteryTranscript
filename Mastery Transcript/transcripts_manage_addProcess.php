@@ -21,7 +21,7 @@ use Gibbon\Module\MasteryTranscript\Domain\TranscriptGateway;
 
 require_once '../../gibbon.php';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/transcripts_manage_add.php";
+$URL = $session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/transcripts_manage_add.php";
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/transcripts_manage_add.php') == false) {
     $URL .= '&return=error0';
@@ -33,7 +33,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/transcr
 
     $data = [
         'gibbonPersonIDStudent'             => $_POST['gibbonPersonIDStudent'] ?? '',
-        'gibbonSchoolYearID'                => $gibbon->session->get('gibbonSchoolYearID'),
+        'gibbonSchoolYearID'                => $session->get('gibbonSchoolYearID'),
         'status'                            => $_POST['status'] ?? '',
         'code'                              => $_POST['code'] ?? '',
         'date'                              => (!empty($_POST['date']))? dateConvert($guid, $_POST['date']) : null

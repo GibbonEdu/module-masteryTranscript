@@ -35,7 +35,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $editLink = '';
     if (isset($_GET['editID'])) {
-        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptJourneyID='.$_GET['editID']."&search=$search";
+        $editLink = $session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptJourneyID='.$_GET['editID']."&search=$search";
     }
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], $editLink, null);
@@ -43,14 +43,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     if ($search !='') {
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/journey_record.php&search=$search'>".('Back to Search Results')."</a>";
+        echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_record.php&search=$search'>".('Back to Search Results')."</a>";
         echo "</div>";
     }
 
-    $form = Form::create('domain', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/journey_record_addProcess.php?search=$search");
+    $form = Form::create('domain', $session->get('absoluteURL').'/modules/'.$session->get('module')."/journey_record_addProcess.php?search=$search");
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
-    $form->addHiddenValue('address', $gibbon->session->get('address'));
+    $form->addHiddenValue('address', $session->get('address'));
 
     $types = array(
         'Credit' => __m('Credit'),
@@ -78,7 +78,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $form->toggleVisibilityByClass('opportunity')->onSelect('type')->when('Opportunity');
 
     $studentGateway = $container->get(StudentGateway::class);
-    $student = $studentGateway->selectActiveStudentByPerson($gibbon->session->get('gibbonSchoolYearID'), $gibbon->session->get('gibbonPersonID'));
+    $student = $studentGateway->selectActiveStudentByPerson($session->get('gibbonSchoolYearID'), $session->get('gibbonPersonID'));
     $data = array('gibbonYearGroupID' => '%'.$student->fetch()['gibbonYearGroupID'].'%');
     $sql = "SELECT masteryTranscriptOpportunityID AS value, masteryTranscriptOpportunity.name FROM masteryTranscriptOpportunity WHERE masteryTranscriptOpportunity.active='Y' AND gibbonYearGroupIDList LIKE :gibbonYearGroupID ORDER BY masteryTranscriptOpportunity.name";
     $row = $form->addRow()->addClass('opportunity');
