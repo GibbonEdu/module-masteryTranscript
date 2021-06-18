@@ -39,6 +39,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
         return;
     }
 
-    $form = DeleteForm::createForm($gibbon->session->get('absoluteURL').'/modules/Mastery Transcript/domains_manage_deleteProcess.php');
+    $form = DeleteForm::createForm($session->get('absoluteURL').'/modules/Mastery Transcript/domains_manage_deleteProcess.php');
     echo $form->getOutput();
 }

@@ -35,18 +35,18 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
     //Filter
     $search = $_GET['search'] ?? '';
 
-    $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
+    $form = Form::create('search', $session->get('absoluteURL').'/index.php', 'get');
     $form->setTitle(__('Filter'));
     $form->setClass('noIntBorder fullWidth');
 
-    $form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/opportunities.php');
+    $form->addHiddenValue('q', '/modules/'.$session->get('module').'/opportunities.php');
 
     $row = $form->addRow();
         $row->addLabel('search', __('Search'));
         $row->addTextField('search')->setValue($search);
 
     $row = $form->addRow();
-        $row->addSearchSubmit($gibbon->session, __('Clear Search'));
+        $row->addSearchSubmit($session, __('Clear Search'));
 
     echo $form->getOutput();
 
@@ -69,11 +69,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
 
     $table->addColumn('logo', __('Logo'))
     ->notSortable()
-    ->format(function($values) use ($guid, $gibbon, $search, $opportunityCreditGateway) {
+    ->format(function($values) use ($session, $gibbon, $search, $opportunityCreditGateway) {
         $return = null;
         $return .= "<div title='".str_replace("'", "&#39;", $values['description'])."' class='text-center pb-2'>";
-            $return .= "<a class='text-black no-underline' href='".$gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_detail.php&masteryTranscriptOpportunityID=".$values['masteryTranscriptOpportunityID']."&search=$search'>";
-            $return .= ($values['logo'] != '') ? "<img class='pt-10 pb-2 max-w-sm' style='max-width: 105px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/><br/>":"<img class='pt-10 pb-2 max-w-sm' style='max-width: 105px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
+            $return .= "<a class='text-black no-underline' href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_detail.php&masteryTranscriptOpportunityID=".$values['masteryTranscriptOpportunityID']."&search=$search'>";
+            $return .= ($values['logo'] != '') ? "<img class='pt-10 pb-2 max-w-sm' style='max-width: 105px' src='".$session->get('absoluteURL').'/'.$values['logo']."'/><br/>":"<img class='pt-10 pb-2 max-w-sm' style='max-width: 105px' src='".$session->get('absoluteURL').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
             $return .= "<span class='font-bold underline'>".$values['name']."</span></a><br/>";
 
             $return .= "<div class='text-xs italic pt-2'>";

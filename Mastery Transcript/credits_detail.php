@@ -54,7 +54,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
     if ($masteryTranscriptDomainID != '' || $search !='') {
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/credits.php&masteryTranscriptDomainID=".$masteryTranscriptDomainID."&search=".$search."'>".('Back to Search Results')."</a>";
+        echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits.php&masteryTranscriptDomainID=".$masteryTranscriptDomainID."&search=".$search."'>".('Back to Search Results')."</a>";
         echo "</div>";
     }
 
@@ -66,7 +66,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     echo '</td>';
     echo "<td style='width: 135%!important; vertical-align: top; text-align: right' rowspan=4>";
     if ($values['logo'] == null) {
-        echo "<img style='margin: 5px; height: 125px; width: 125px' class='user' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_125.jpg'/><br/>";
+        echo "<img style='margin: 5px; height: 125px; width: 125px' class='user' src='".$session->get('absoluteURL').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_125.jpg'/><br/>";
     } else {
         echo "<img style='margin: 5px; height: 125px; width: 125px' class='user' src='".$values['logo']."'/><br/>";
     }

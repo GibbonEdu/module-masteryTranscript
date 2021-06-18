@@ -32,16 +32,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
 
     $editLink = '';
     if (isset($_GET['editID'])) {
-        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Mastery Transcript/domains_manage_edit.php&masteryTranscriptDomainID='.$_GET['editID'];
+        $editLink = $session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/domains_manage_edit.php&masteryTranscriptDomainID='.$_GET['editID'];
     }
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], $editLink, null);
     }
 
-    $form = Form::create('domain', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module').'/domains_manage_addProcess.php');
+    $form = Form::create('domain', $session->get('absoluteURL').'/modules/'.$session->get('module').'/domains_manage_addProcess.php');
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
-    $form->addHiddenValue('address', $gibbon->session->get('address'));
+    $form->addHiddenValue('address', $session->get('address'));
 
     $row = $form->addRow();
         $row->addLabel('name', __('Name'))->description(__('Must be unique.'));
@@ -63,7 +63,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
         $row->addLabel('accentColour', __('Accent Colour'))->description(__('RGB Hex value, without leading #.'));
         $row->addTextField('accentColour')->maxLength(6);
 
-    $fileUploader = new FileUploader($pdo, $gibbon->session);
+    $fileUploader = new FileUploader($pdo, $session);
     $row = $form->addRow();
         $row->addLabel('file', __('Logo'));
         $row->addFileUpload('file')->accepts($fileUploader->getFileExtensions('Graphics/Design'));

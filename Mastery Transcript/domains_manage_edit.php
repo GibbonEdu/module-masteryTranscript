@@ -49,10 +49,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
         return;
     }
 
-    $form = Form::create('category', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module').'/domains_manage_editProcess.php');
+    $form = Form::create('category', $session->get('absoluteURL').'/modules/'.$session->get('module').'/domains_manage_editProcess.php');
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
-    $form->addHiddenValue('address', $gibbon->session->get('address'));
+    $form->addHiddenValue('address', $session->get('address'));
     $form->addHiddenValue('masteryTranscriptDomainID', $masteryTranscriptDomainID);
 
     $row = $form->addRow();
@@ -75,11 +75,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
         $row->addLabel('accentColour', __('Accent Colour'))->description(__('RGB Hex value, without leading #.'));
         $row->addTextField('accentColour')->maxLength(6);
 
-    $fileUploader = new FileUploader($pdo, $gibbon->session);
+    $fileUploader = new FileUploader($pdo, $session);
     $row = $form->addRow();
         $row->addLabel('file', __('Logo'));
         $row->addFileUpload('file')
-            ->setAttachment('logo', $_SESSION[$guid]['absoluteURL'], $values['logo'])
+            ->setAttachment('logo', $session->get('absoluteURL'), $values['logo'])
             ->accepts($fileUploader->getFileExtensions('Graphics/Design'));
 
     $row = $form->addRow();

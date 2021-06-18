@@ -31,7 +31,7 @@ $search = $_GET['search'] ?? '';
 $status = $_GET['status'] ?? '';
 $gibbonPersonIDStudent = isset($_GET['gibbonPersonIDStudent'])? $_GET['gibbonPersonIDStudent'] : '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_edit.php&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
+$URL = $session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_edit.php&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
 
 $highestAction = getHighestGroupedAction($guid, '/modules/Mastery Transcript/journey_manage_edit.php', $connection2);
 
@@ -56,7 +56,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $values = $result->fetch();
 
-    if ($highestAction != 'Manage Journey_all' && $values['gibbonPersonIDSchoolMentor'] != $gibbon->session->get('gibbonPersonID')) {
+    if ($highestAction != 'Manage Journey_all' && $values['gibbonPersonIDSchoolMentor'] != $session->get('gibbonPersonID')) {
         $URL .= '&return=error0';
         header("Location: {$URL}");
         exit();
@@ -68,7 +68,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         'foreignTable'         => 'masteryTranscriptJourney',
         'foreignTableID'       => $masteryTranscriptJourneyID,
         'gibbonModuleID'       => getModuleIDFromName($connection2, 'Mastery Transcript'),
-        'gibbonPersonID'       => $gibbon->session->get('gibbonPersonID'),
+        'gibbonPersonID'       => $session->get('gibbonPersonID'),
         'gibbonPersonIDTarget' => $values['gibbonPersonIDStudent'],
         'comment'              => $_POST['comment'] ?? '',
         'type'                 => $_POST['status'] ?? 'Comment',
@@ -98,7 +98,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $dataJourney = [
         'status'                        => ($data['type'] == 'Comment') ? $values['status'] : $data['type'],
         'timestampCompleteApproved'     => ($data['type'] == 'Complete - Approved') ? date('Y-m-d H:i:s') : null,
-        'gibbonPersonIDApproval'        => ($data['type'] == 'Complete - Approved') ? $gibbon->session->get('gibbonPersonID'): null,
+        'gibbonPersonIDApproval'        => ($data['type'] == 'Complete - Approved') ? $session->get('gibbonPersonID'): null,
         'evidenceType'                  => (!empty($evidenceType)) ? $evidenceType : null,
         'evidenceLocation'              => (!empty($evidenceLocation)) ? $evidenceLocation : null
     ];
@@ -106,15 +106,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     //Notify student
     $notificationGateway = new NotificationGateway($pdo);
-    $notificationSender = new NotificationSender($notificationGateway, $gibbon->session);
+    $notificationSender = new NotificationSender($notificationGateway, $session);
     if ($data['type'] == 'Complete - Approved') {
-        $notificationString = __m('{mentor} has approved your request for completion of {type} {name}.', ['mentor' => Format::name('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']]);
+        $notificationString = __m('{mentor} has approved your request for completion of {type} {name}.', ['mentor' => Format::name('', $session->get('preferredName'), $session->get('surname'), 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']]);
     }
     else if ($data['type'] == 'Evidence Not Yet Approved') {
-        $notificationString = __m('{mentor} has responded to your request for completion of {type} {name}, but your evidence has not been approved.', ['mentor' => Format::name('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']]);
+        $notificationString = __m('{mentor} has responded to your request for completion of {type} {name}, but your evidence has not been approved.', ['mentor' => Format::name('', $session->get('preferredName'), $session->get('surname'), 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']]);
     }
     else {
-        $notificationString = __m('{mentor} has added to the journey log for the {type} {name}.', ['mentor' => Format::name('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']]);
+        $notificationString = __m('{mentor} has added to the journey log for the {type} {name}.', ['mentor' => Format::name('', $session->get('preferredName'), $session->get('surname'), 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']]);
     }
     $notificationSender->addNotification($values['gibbonPersonIDStudent'], $notificationString, "Mastery Transcript", "/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID");
     $notificationSender->sendNotifications();

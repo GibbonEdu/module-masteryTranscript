@@ -36,11 +36,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     $masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
     $search = $_GET['search'] ?? '';
 
-    $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
+    $form = Form::create('search', $session->get('absoluteURL').'/index.php', 'get');
     $form->setTitle(__('Filter'));
     $form->setClass('noIntBorder fullWidth');
 
-    $form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/credits.php');
+    $form->addHiddenValue('q', '/modules/'.$session->get('module').'/credits.php');
 
     $domainGateway = $container->get(DomainGateway::class);
     $domains = $domainGateway->selectActiveDomains()->fetchKeyPair();
@@ -54,7 +54,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         $row->addTextField('search')->setValue($search);
 
     $row = $form->addRow();
-        $row->addSearchSubmit($gibbon->session, __('Clear Search'));
+        $row->addSearchSubmit($session, __('Clear Search'));
 
     echo $form->getOutput();
 
@@ -78,12 +78,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     $table->addColumn('logo', __('Logo'))
     ->notSortable()
     ->addClass('h-full')
-    ->format(function($values) use ($guid, $gibbon, $search, $masteryTranscriptDomainID) {
+    ->format(function($values) use ($session, $gibbon, $search, $masteryTranscriptDomainID) {
         $return = null;
         $background = ($values['backgroundColour']) ? "; background-color: #".$values['backgroundColour'] : '';
         $font = ($values['accentColour']) ? "color: #".$values['accentColour'] : '';
-        $return .= "<a class='h-full block text-black no-underline' href='".$gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_detail.php&masteryTranscriptCreditID=".$values['masteryTranscriptCreditID']."&search=$search&$masteryTranscriptDomainID=$masteryTranscriptDomainID'><div title='".str_replace("'", "&#39;", $values['description'])."' class='h-full text-center pb-8' style='".$background."'>";
-        $return .= ($values['logo'] != '') ? "<img class='pt-10 pb-2' style='max-width: 65px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/><br/>":"<img class='pt-10 pb-2' style='max-width: 65px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
+        $return .= "<a class='h-full block text-black no-underline' href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_detail.php&masteryTranscriptCreditID=".$values['masteryTranscriptCreditID']."&search=$search&$masteryTranscriptDomainID=$masteryTranscriptDomainID'><div title='".str_replace("'", "&#39;", $values['description'])."' class='h-full text-center pb-8' style='".$background."'>";
+        $return .= ($values['logo'] != '') ? "<img class='pt-10 pb-2' style='max-width: 65px' src='".$session->get('absoluteURL').'/'.$values['logo']."'/><br/>":"<img class='pt-10 pb-2' style='max-width: 65px' src='".$session->get('absoluteURL').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
         $return .= "<span class='font-bold underline'>".$values['name']."</span><br/>";
         $return .= "<span class='text-sm italic' style='$font'>".$values['domain']."</span><br/>";
         $return .= "<span class='text-xxs'>".$values['level']."</span><br/>";

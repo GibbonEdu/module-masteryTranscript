@@ -62,11 +62,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     if ($search !='' || $status !='' || $gibbonPersonIDStudent !='') {
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/journey_manage.php&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent'>".('Back to Search Results')."</a>";
+        echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage.php&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent'>".('Back to Search Results')."</a>";
         echo "</div>";
     }
 
-    if ($highestAction != 'Manage Journey_all' && $values['gibbonPersonIDSchoolMentor'] != $gibbon->session->get('gibbonPersonID')) {
+    if ($highestAction != 'Manage Journey_all' && $values['gibbonPersonIDSchoolMentor'] != $session->get('gibbonPersonID')) {
         $page->addError(__('The selected record does not exist, or you do not have access to it.'));
         return;
     }
@@ -78,10 +78,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     echo "<div class='linkTop'>";
         if ($values['type'] == 'Opportunity') {
-            echo "<a href='".$gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_detail.php&masteryTranscriptOpportunityID=".$values['masteryTranscriptOpportunityID']."'>".__m('View Opportunity Details')."</a>" ;
+            echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_detail.php&masteryTranscriptOpportunityID=".$values['masteryTranscriptOpportunityID']."'>".__m('View Opportunity Details')."</a>" ;
         }
         else if ($values['type'] == 'Credit') {
-            echo "<a href='".$gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_detail.php&masteryTranscriptCreditID=".$values['masteryTranscriptCreditID']."'>".__m('View Credit Details')."</a>" ;
+            echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_detail.php&masteryTranscriptCreditID=".$values['masteryTranscriptCreditID']."'>".__m('View Credit Details')."</a>" ;
         }
     echo "</div>";
 
@@ -108,10 +108,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     //New log form
     if ($values['status'] != 'Current - Pending') {
         echo "<h2>".__m('New Entry')."</h2>";
-        $form = Form::create('log', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/journey_manage_editProcess.php?masteryTranscriptJourneyID=$masteryTranscriptJourneyID&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent");
+        $form = Form::create('log', $session->get('absoluteURL').'/modules/'.$session->get('module')."/journey_manage_editProcess.php?masteryTranscriptJourneyID=$masteryTranscriptJourneyID&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent");
         $form->setFactory(DatabaseFormFactory::create($pdo));
 
-        $form->addHiddenValue('address', $gibbon->session->get('address'));
+        $form->addHiddenValue('address', $session->get('address'));
 
         $row = $form->addRow();
             $column = $row->addColumn();

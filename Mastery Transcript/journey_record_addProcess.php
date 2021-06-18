@@ -29,7 +29,7 @@ require_once '../../gibbon.php';
 
 $search = $_GET['search'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_record_add.php&search=$search";
+$URL = $session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_record_add.php&search=$search";
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey_record_add.php') == false) {
     $URL .= '&return=error0';
@@ -40,8 +40,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $journeyGateway = $container->get(JourneyGateway::class);
 
     $data = [
-        'gibbonPersonIDStudent'             => $gibbon->session->get('gibbonPersonID'),
-        'gibbonSchoolYearID'                => $gibbon->session->get('gibbonSchoolYearID'),
+        'gibbonPersonIDStudent'             => $session->get('gibbonPersonID'),
+        'gibbonSchoolYearID'                => $session->get('gibbonSchoolYearID'),
         'type'                              => $_POST['type'] ?? '',
         'masteryTranscriptOpportunityID'    => $_POST['masteryTranscriptOpportunityID'] ?? null,
         'masteryTranscriptCreditID'         => $_POST['masteryTranscriptCreditID'] ?? null,
@@ -73,8 +73,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     //Notify the mentor
     $notificationGateway = new NotificationGateway($pdo);
-    $notificationSender = new NotificationSender($notificationGateway, $gibbon->session);
-    $notificationString = __m('{student} has requested Mastery Trascript mentorship for the {type} {name}.', ['student' => Format::name('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', true, true), 'type' => strtolower($data['type']), 'name' => $name]);
+    $notificationSender = new NotificationSender($notificationGateway, $session);
+    $notificationString = __m('{student} has requested Mastery Trascript mentorship for the {type} {name}.', ['student' => Format::name('', $session->get('preferredName'), $session->get('surname'), 'Student', true, true), 'type' => strtolower($data['type']), 'name' => $name]);
     $notificationSender->addNotification($data['gibbonPersonIDSchoolMentor'], $notificationString, "Mastery Transcript", "/index.php?q=/modules/Mastery Transcript/journey_manage_commit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID&statusKey=".$data['statusKey']);
     $notificationSender->sendNotifications();
 
