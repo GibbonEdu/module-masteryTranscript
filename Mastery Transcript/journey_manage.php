@@ -43,12 +43,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $status = $_GET['status'] ?? '';
     $gibbonPersonIDStudent = isset($_GET['gibbonPersonIDStudent'])? $_GET['gibbonPersonIDStudent'] : '';
 
-    $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
+    $form = Form::create('search', $session->get('absoluteURL').'/index.php', 'get');
     $form->setTitle(__('Filter'));
     $form->setClass('noIntBorder fullWidth');
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
-    $form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/journey_manage.php');
+    $form->addHiddenValue('q', '/modules/'.$session->get('module').'/journey_manage.php');
 
     $row = $form->addRow();
         $row->addLabel('search', __('Search'));
@@ -67,10 +67,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $row = $form->addRow();
         $row->addLabel('gibbonPersonIDStudent',__('Student'));
-        $row->addSelectStudent('gibbonPersonIDStudent', $_SESSION[$guid]['gibbonSchoolYearID'])->selected($gibbonPersonIDStudent)->placeholder();
+        $row->addSelectStudent('gibbonPersonIDStudent', $session->get('gibbonSchoolYearID'))->selected($gibbonPersonIDStudent)->placeholder();
 
     $row = $form->addRow();
-        $row->addSearchSubmit($gibbon->session, __('Clear Search'));
+        $row->addSearchSubmit($session, __('Clear Search'));
 
     echo $form->getOutput();
 
@@ -96,7 +96,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         ->sortBy('timestampJoined', 'DESC')
         ->fromPOST();
 
-    $journey = $journeyGateway->selectJourneyByStaff($criteria, $gibbon->session->get('gibbonPersonID'), $highestAction);
+    $journey = $journeyGateway->selectJourneyByStaff($criteria, $session->get('gibbonPersonID'), $highestAction);
 
     // Render table
     $table = DataTable::createPaginated('opportunities', $criteria);
@@ -134,10 +134,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $table->addColumn('logo', __('Name'))
         ->notSortable()
-        ->format(function($values) use ($guid, &$foundational, &$advanced, &$foundationalComplete, &$advancedComplete) {
+        ->format(function($values) use ($session, &$foundational, &$advanced, &$foundationalComplete, &$advancedComplete) {
             $return = null;
             $return .= "<div class='text-center'>";
-            $return .= ($values['logo'] != '') ? "<img class='user' style='max-width: 75px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/><br/>":"<img class='user' style='max-width: 75px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
+            $return .= ($values['logo'] != '') ? "<img class='user' style='max-width: 75px' src='".$session->get('absoluteURL').'/'.$values['logo']."'/><br/>":"<img class='user' style='max-width: 75px' src='".$session->get('absoluteURL').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
             $return .= "<div class='mt-1 font-bold'>".$values['name']."</div>";
             if ($values['type'] == 'Credit') {
                 $return .= Format::small($values['level']);

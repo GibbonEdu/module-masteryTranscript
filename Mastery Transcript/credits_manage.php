@@ -39,11 +39,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     $masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
     $search = $_GET['search'] ?? '';
 
-    $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
+    $form = Form::create('search', $session->get('absoluteURL').'/index.php', 'get');
     $form->setTitle(__('Filter'));
     $form->setClass('noIntBorder fullWidth');
 
-    $form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/credits_manage.php');
+    $form->addHiddenValue('q', '/modules/'.$session->get('module').'/credits_manage.php');
 
     $domainGateway = $container->get(DomainGateway::class);
     $domains = $domainGateway->selectActiveDomains()->fetchKeyPair();
@@ -57,7 +57,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         $row->addTextField('search')->setValue($search);
 
     $row = $form->addRow();
-        $row->addSearchSubmit($gibbon->session, __('Clear Search'));
+        $row->addSearchSubmit($session, __('Clear Search'));
 
     echo $form->getOutput();
 
@@ -90,9 +90,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
     $table->addColumn('logo', __('Logo'))
     ->notSortable()
-    ->format(function($values) use ($guid) {
+    ->format(function($values) use ($session) {
         $return = null;
-        $return .= ($values['logo'] != '') ? "<img class='user' style='max-width: 75px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/>":"<img class='user' style='max-width: 75px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/>";
+        $return .= ($values['logo'] != '') ? "<img class='user' style='max-width: 75px' src='".$session->get('absoluteURL').'/'.$values['logo']."'/>":"<img class='user' style='max-width: 75px' src='".$session->get('absoluteURL').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/>";
         return $return;
     });
 

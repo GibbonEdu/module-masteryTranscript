@@ -32,9 +32,9 @@ $masteryTranscriptJourneyID = $_GET['masteryTranscriptJourneyID'] ?? '';
 $statusKey = $_GET['statusKey'] ?? '';
 $response = $_GET['response'] ?? '';
 
-$URLRedirect = $URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_edit.php&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
-if (empty($gibbon->session->get('username'))) {
-    $URLRedirect = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_commit_thanks.php";
+$URLRedirect = $URL = $session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_edit.php&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
+if (empty($session->get('username'))) {
+    $URLRedirect = $session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_manage_commit_thanks.php";
 }
 
 if (empty($masteryTranscriptJourneyID) || empty($statusKey) || ($response != 'Y' && $response !='N')) {

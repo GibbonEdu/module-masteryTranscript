@@ -31,20 +31,20 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/transcr
 
     $editLink = '';
     if (isset($_GET['editID'])) {
-        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Mastery Transcript/transcripts_manage_edit.php&masteryTranscriptTranscriptID='.$_GET['editID'];
+        $editLink = $session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/transcripts_manage_edit.php&masteryTranscriptTranscriptID='.$_GET['editID'];
     }
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], $editLink, null);
     }
 
-    $form = Form::create('domain', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/transcripts_manage_addProcess.php");
+    $form = Form::create('domain', $session->get('absoluteURL').'/modules/'.$session->get('module')."/transcripts_manage_addProcess.php");
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
-    $form->addHiddenValue('address', $gibbon->session->get('address'));
+    $form->addHiddenValue('address', $session->get('address'));
 
     $row = $form->addRow();
         $row->addLabel('gibbonPersonIDStudent',__('Student'));
-        $row->addSelectStudent('gibbonPersonIDStudent', $gibbon->session->get('gibbonSchoolYearID'))->required()->placeholder();
+        $row->addSelectStudent('gibbonPersonIDStudent', $session->get('gibbonSchoolYearID'))->required()->placeholder();
 
     $row = $form->addRow();
         $row->addLabel('status', __('Status'));

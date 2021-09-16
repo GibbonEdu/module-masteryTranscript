@@ -23,7 +23,7 @@ require_once '../../gibbon.php';
 
 $masteryTranscriptTranscriptID = $_POST['masteryTranscriptTranscriptID'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/transcripts_manage_edit.php&masteryTranscriptTranscriptID=$masteryTranscriptTranscriptID";
+$URL = $session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/transcripts_manage_edit.php&masteryTranscriptTranscriptID=$masteryTranscriptTranscriptID";
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/transcripts_manage_edit.php') == false) {
     $URL .= '&return=error0';

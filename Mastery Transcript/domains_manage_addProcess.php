@@ -23,7 +23,7 @@ use Gibbon\Module\MasteryTranscript\Domain\DomainGateway;
 
 require_once '../../gibbon.php';
 
-$URL = $gibbon->session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/domains_manage_add.php';
+$URL = $session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/domains_manage_add.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains_manage_add.php') == false) {
     $URL .= '&return=error0';
@@ -59,7 +59,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
 
     //Deal with file upload
     if (!empty($_FILES['file']['tmp_name'])) {
-        $fileUploader = new FileUploader($pdo, $gibbon->session);
+        $fileUploader = new FileUploader($pdo, $session);
         $logo = $fileUploader->uploadFromPost($_FILES['file'], 'masteryTranscript_domainLogo_'.$data['name']);
 
         if (empty($logo)) {

@@ -38,18 +38,18 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     //Filter
     $search = $_GET['search'] ?? '';
 
-    $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
+    $form = Form::create('search', $session->get('absoluteURL').'/index.php', 'get');
     $form->setTitle(__('Filter'));
     $form->setClass('noIntBorder fullWidth');
 
-    $form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/journey_record.php');
+    $form->addHiddenValue('q', '/modules/'.$session->get('module').'/journey_record.php');
 
     $row = $form->addRow();
         $row->addLabel('search', __('Search'));
         $row->addTextField('search')->setValue($search);
 
     $row = $form->addRow();
-        $row->addSearchSubmit($gibbon->session, __('Clear Search'));
+        $row->addSearchSubmit($session, __('Clear Search'));
 
     echo $form->getOutput();
 
@@ -73,7 +73,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         ->sortBy('timestampJoined', 'DESC')
         ->fromPOST();
 
-    $journey = $journeyGateway->selectJourneyByStudent($criteria, $gibbon->session->get('gibbonPersonID'));
+    $journey = $journeyGateway->selectJourneyByStudent($criteria, $session->get('gibbonPersonID'));
 
     // Render table
     $table = DataTable::createPaginated('opportunities', $criteria);
@@ -114,10 +114,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $table->addColumn('logo', __('Name'))
         ->notSortable()
-        ->format(function($values) use ($guid, &$foundational, &$advanced, &$foundationalComplete, &$advancedComplete) {
+        ->format(function($values) use ($session, &$foundational, &$advanced, &$foundationalComplete, &$advancedComplete) {
             $return = null;
             $return .= "<div class='text-center'>";
-            $return .= ($values['logo'] != '') ? "<img class='user' style='max-width: 75px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$values['logo']."'/><br/>":"<img class='user' style='max-width: 75px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
+            $return .= ($values['logo'] != '') ? "<img class='user' style='max-width: 75px' src='".$session->get('absoluteURL').'/'.$values['logo']."'/><br/>":"<img class='user' style='max-width: 75px' src='".$session->get('absoluteURL').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
             $return .= "<div class='mt-1 font-bold'>".$values['name']."</div>";
             if ($values['type'] == 'Credit') {
                 $return .= Format::small($values['level']);

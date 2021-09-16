@@ -40,6 +40,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         return;
     }
 
-    $form = DeleteForm::createForm($gibbon->session->get('absoluteURL')."/modules/Mastery Transcript/journey_record_deleteProcess.php?search=$search");
+    $form = DeleteForm::createForm($session->get('absoluteURL')."/modules/Mastery Transcript/journey_record_deleteProcess.php?search=$search");
     echo $form->getOutput();
 }

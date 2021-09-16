@@ -22,7 +22,7 @@ use Gibbon\Domain\System\SettingGateway;
 @session_start();
 
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include './modules/'.$session->get('module').'/moduleFunctions.php';
 
 if (isModuleAccessible($guid, $connection2) == false) {
     //Acess denied

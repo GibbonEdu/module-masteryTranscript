@@ -1,5 +1,8 @@
 CHANGELOG
 =========
+v1.4.01
+-------
+Refactored session variables
 
 v1.4.00
 -------

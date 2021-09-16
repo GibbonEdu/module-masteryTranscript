@@ -27,7 +27,7 @@ require_once '../../gibbon.php';
 
 $search = $_GET['search'] ?? '';
 
-$URL = $gibbon->session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_manage_add.php&search=$search";
+$URL = $session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_manage_add.php&search=$search";
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportunities_manage_add.php') == false) {
     $URL .= '&return=error0';
@@ -63,7 +63,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
 
     //Deal with file upload
     if (!empty($_FILES['file']['tmp_name'])) {
-        $fileUploader = new FileUploader($pdo, $gibbon->session);
+        $fileUploader = new FileUploader($pdo, $session);
         $logo = $fileUploader->uploadFromPost($_FILES['file'], 'masteryTranscript_opportunityLogo_'.$data['name']);
 
         if (empty($logo)) {

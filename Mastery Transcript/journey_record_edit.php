@@ -58,7 +58,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     if ($search !='') {
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Mastery Transcript/journey_record.php&search=$search'>".('Back to Search Results')."</a>";
+        echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/journey_record.php&search=$search'>".('Back to Search Results')."</a>";
         echo "</div>";
     }
 
@@ -90,10 +90,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     //New log form
     if ($values['status'] != 'Current - Pending') {
         echo "<h2>".__m('New Entry')."</h2>";
-        $form = Form::create('log', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/journey_record_editProcess.php?masteryTranscriptJourneyID=$masteryTranscriptJourneyID&search=$search");
+        $form = Form::create('log', $session->get('absoluteURL').'/modules/'.$session->get('module')."/journey_record_editProcess.php?masteryTranscriptJourneyID=$masteryTranscriptJourneyID&search=$search");
         $form->setFactory(DatabaseFormFactory::create($pdo));
 
-        $form->addHiddenValue('address', $gibbon->session->get('address'));
+        $form->addHiddenValue('address', $session->get('address'));
 
         $types = array(
             'Comment' => __m('Comment'),
@@ -126,7 +126,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
             $row->addLabel('evidenceLink', __('Link'));
             $row->addURL('evidenceLink')->required()->required();
 
-        $fileUploader = new FileUploader($pdo, $gibbon->session);
+        $fileUploader = new FileUploader($pdo, $session);
         $row = $form->addRow()->addClass('evidenceFile');
             $row->addLabel('evidenceFile', __('File'));
             $row->addFileUpload('evidenceFile')->required();
