@@ -37,10 +37,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         ->add(__m('Manage Credits'), 'credits_manage.php')
         ->add(__m('Edit Credit'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     if (empty($masteryTranscriptCreditID)) {
         $page->addError(__('You have not specified one or more required parameters.'));
         return;

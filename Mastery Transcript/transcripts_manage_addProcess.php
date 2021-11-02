@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Format;
 use Gibbon\Module\MasteryTranscript\Domain\TranscriptGateway;
 
 require_once '../../gibbon.php';
@@ -36,7 +37,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/transcr
         'gibbonSchoolYearID'                => $session->get('gibbonSchoolYearID'),
         'status'                            => $_POST['status'] ?? '',
         'code'                              => $_POST['code'] ?? '',
-        'date'                              => (!empty($_POST['date']))? dateConvert($guid, $_POST['date']) : null
+        'date'                              => (!empty($_POST['date']))? Format::dateConvert($_POST['date']) : null
     ];
 
     // Validate the required values are present

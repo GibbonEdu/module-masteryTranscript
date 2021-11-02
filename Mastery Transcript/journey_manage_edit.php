@@ -39,10 +39,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $page->breadcrumbs
         ->add(__m('Manage Journey'), 'journey_manage.php');
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     if (empty($masteryTranscriptJourneyID)) {
         $page->addError(__('You have not specified one or more required parameters.'));
         return;

@@ -34,9 +34,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
     if (isset($_GET['editID'])) {
         $editLink = $session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/domains_manage_edit.php&masteryTranscriptDomainID='.$_GET['editID'];
     }
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], $editLink, null);
-    }
+    $page->return->setEditLink($editLink);
 
     $form = Form::create('domain', $session->get('absoluteURL').'/modules/'.$session->get('module').'/domains_manage_addProcess.php');
     $form->setFactory(DatabaseFormFactory::create($pdo));

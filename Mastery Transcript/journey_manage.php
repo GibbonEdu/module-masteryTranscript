@@ -34,10 +34,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $page->breadcrumbs
         ->add(__m('Manage Journey'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     //Filter
     $search = $_GET['search'] ?? '';
     $status = $_GET['status'] ?? '';

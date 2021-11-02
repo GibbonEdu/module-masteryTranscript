@@ -29,10 +29,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/transcr
     $page->breadcrumbs
         ->add(__m('Manage Transcripts'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     $page->addMessage(sprintf(__m('Published Mastery Transcripts can be viewed using %1$sthis link%2$s and the student-specific codes shown in the table below.'),"<a href='https://transcript.mastery.org' target='_blank'>", "</a>"));
 
     // Query categories

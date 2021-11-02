@@ -38,9 +38,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     if (isset($_GET['editID'])) {
         $editLink = $session->get('absoluteURL').'/index.php?q=/modules/Mastery Transcript/credits_manage_edit.php&masteryTranscriptCreditID='.$_GET['editID']."&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search";
     }
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], $editLink, null);
-    }
+    $page->return->setEditLink($editLink);
 
     if ($masteryTranscriptDomainID != '' || $search !='') {
         echo "<div class='linkTop'>";

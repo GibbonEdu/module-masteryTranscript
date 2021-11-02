@@ -30,10 +30,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
     $page->breadcrumbs
         ->add(__m('Manage Opportunities'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     //Filter
     $search = $_GET['search'] ?? '';
 

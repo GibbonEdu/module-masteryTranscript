@@ -33,10 +33,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
         ->add(__m('Manage Domains'), 'domains_manage.php')
         ->add(__m('Edit Domain'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     if (empty($masteryTranscriptDomainID)) {
         $page->addError(__('You have not specified one or more required parameters.'));
         return;

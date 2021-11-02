@@ -59,10 +59,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $page->breadcrumbs->add(__m('Manage Journey'), 'journey_manage.php')
         ->add(__m('Commit'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, array('success0' => __m('Your request was completed successfully. Thank you for your time. The requesting student has been notified, and will be in touch in due course: in the meanwhile, no further action is required on your part.'), 'success1' => __m('Your request was completed successfully. Thank you for your time. The requesting student has been notified. No further action is required on your part.')));
-    }
-
+    $returns = ['success0' => __m('Your request was completed successfully. Thank you for your time. The requesting student has been notified, and will be in touch in due course: in the meanwhile, no further action is required on your part.'), 'success1' => __m('Your request was completed successfully. Thank you for your time. The requesting student has been notified. No further action is required on your part.')];
+	$page->return->addReturns($returns);
+	
     echo '<p style=\'margin-top: 20px\'>';
     echo __m('{student} has requested your help as mentor of the {type} {name}.', array('student' => Format::name('', $values['preferredName'], $values['surname'], 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']))."<br/><br/>";
     echo __m('Please {link1} if you are able to get involved, or, {link2} if you not in a position to help.', array('link1' => "<a class='p-1 border border-solid border-green-500 text-green-500 bg-green-200' href='".$session->get('absoluteURL')."/modules/Mastery Transcript/journey_manage_commitProcess.php?response=Y&masteryTranscriptJourneyID=$masteryTranscriptJourneyID&statusKey=$statusKey&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent'>click here</a>", 'link2' => "<a class='p-1 border border-solid border-red-500 text-red-500 bg-red-200' href='".$session->get('absoluteURL')."/modules/Mastery Transcript/journey_manage_commitProcess.php?response=N&masteryTranscriptJourneyID=$masteryTranscriptJourneyID&statusKey=$statusKey&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent'>click here</a>"));

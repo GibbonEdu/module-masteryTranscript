@@ -54,6 +54,9 @@ if ($result->rowCount() != 1) {
 
 $values = $result->fetch();
 
+$notificationGateway = new \Gibbon\Domain\System\NotificationGateway($pdo);
+$notificationSender = new \Gibbon\Comms\NotificationSender($notificationGateway, $session);
+
 if ($response == 'Y') {
     //Update record
     $data = array(
@@ -63,7 +66,8 @@ if ($response == 'Y') {
 
     //Notify student
     $notificationText = __m('Your mentorship request for the Mastery Transcript {type} {name} has been accepted.', array('type' => strtolower($values['type']), 'name' => $values['name']));
-    setNotification($connection2, $guid, $values['gibbonPersonIDStudent'], $notificationText, 'Mastery Transcript', "/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID");
+    $notificationSender->addNotification($values['gibbonPersonIDStudent'], $notificationText, 'Mastery Transcript', "/index.php?q=/modules/Mastery Transcript/journey_record_edit.php&masteryTranscriptJourneyID=$masteryTranscriptJourneyID");
+	$notificationSender->sendNotifications();
 
     //Return to thanks page
     $URLRedirect .= "&return=success0&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";
@@ -75,7 +79,8 @@ else {
 
     //Notify student
     $notificationText = __m('Your mentorship request for the Mastery Transcript {type} {name} has been declined. Your enrolment has been deleted.', array('type' => strtolower($values['type']), 'name' => $values['name']));
-    setNotification($connection2, $guid, $values['gibbonPersonIDStudent'], $notificationText, 'Mastery Transcript', "/index.php?q=/modules/Mastery Transcript/journey_record.php");
+    $notificationSender->addNotification($values['gibbonPersonIDStudent'], $notificationText, 'Mastery Transcript', "/index.php?q=/modules/Mastery Transcript/journey_record.php");
+	$notificationSender->sendNotifications();
 
     //Return to thanks page
     $URLRedirect .= "&return=success1&masteryTranscriptJourneyID=$masteryTranscriptJourneyID";

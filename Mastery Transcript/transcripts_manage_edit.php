@@ -33,10 +33,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/transcr
         ->add(__m('Manage Transcripts'), 'transcripts_manage.php')
         ->add(__m('Edit'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     if (empty($masteryTranscriptTranscriptID)) {
         $page->addError(__('You have not specified one or more required parameters.'));
         return;

@@ -36,10 +36,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
         ->add(__m('Manage Opportunities'), 'opportunities_manage.php')
         ->add(__m('Edit Opportunity'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     if (empty($masteryTranscriptOpportunityID)) {
         $page->addError(__('You have not specified one or more required parameters.'));
         return;

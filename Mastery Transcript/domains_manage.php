@@ -29,10 +29,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
     $page->breadcrumbs
         ->add(__m('Manage Domains'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     // Query categories
     $domainGateway = $container->get(DomainGateway::class);
 

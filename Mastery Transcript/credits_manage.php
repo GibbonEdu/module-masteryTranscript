@@ -31,10 +31,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     $page->breadcrumbs
         ->add(__m('Manage Credits'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     //Filter
     $masteryTranscriptDomainID = $_GET['masteryTranscriptDomainID'] ?? '';
     $search = $_GET['search'] ?? '';
