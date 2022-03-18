@@ -82,7 +82,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         $return = null;
         $background = ($values['backgroundColour']) ? "; background-color: #".$values['backgroundColour'] : '';
         $font = ($values['accentColour']) ? "color: #".$values['accentColour'] : '';
-        $return .= "<a class='h-full block text-black no-underline' href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_detail.php&masteryTranscriptCreditID=".$values['masteryTranscriptCreditID']."&search=$search&$masteryTranscriptDomainID=$masteryTranscriptDomainID'><div title='".str_replace("'", "&#39;", $values['description'])."' class='h-full text-center pb-8' style='".$background."'>";
+        $return .= "<a class='h-full block text-black no-underline' href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_detail.php&masteryTranscriptCreditID=".$values['masteryTranscriptCreditID']."&search=$search&masteryTranscriptDomainID=$masteryTranscriptDomainID'><div title='".str_replace("'", "&#39;", $values['description'])."' class='h-full text-center pb-8' style='".$background."'>";
         $return .= ($values['logo'] != '') ? "<img class='pt-10 pb-2' style='max-width: 65px' src='".$session->get('absoluteURL').'/'.$values['logo']."'/><br/>":"<img class='pt-10 pb-2' style='max-width: 65px' src='".$session->get('absoluteURL').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
         $return .= "<span class='font-bold underline'>".$values['name']."</span><br/>";
         $return .= "<span class='text-sm italic' style='$font'>".$values['domain']."</span><br/>";

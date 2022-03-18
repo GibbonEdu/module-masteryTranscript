@@ -17,10 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Http\Url;
 use Gibbon\Forms\Form;
+use Gibbon\Services\Format;
 use Gibbon\Tables\DataTable;
 use Gibbon\Tables\View\GridView;
-use Gibbon\Services\Format;
 use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
 use Gibbon\Module\MasteryTranscript\Domain\DomainGateway;
 use Gibbon\Module\MasteryTranscript\Domain\CreditMentorGateway;
@@ -53,9 +54,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     $values = $result->fetch();
 
     if ($masteryTranscriptDomainID != '' || $search !='') {
-        echo "<div class='linkTop'>";
-        echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits.php&masteryTranscriptDomainID=".$masteryTranscriptDomainID."&search=".$search."'>".('Back to Search Results')."</a>";
-        echo "</div>";
+        $params = [
+            "search" => $search,
+            "masteryTranscriptDomainID" => $masteryTranscriptDomainID
+        ];
+        $page->navigator->addSearchResultsAction(Url::fromModuleRoute('Mastery Transcript', 'credits.php')->withQueryParams($params));
     }
 
     echo "<table class='smallIntBorder' cellspacing='0' style='width: 100%'>";

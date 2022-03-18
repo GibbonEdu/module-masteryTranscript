@@ -17,9 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Http\Url;
 use Gibbon\Forms\Form;
-use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\FileUploader;
+use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Module\MasteryTranscript\Domain\DomainGateway;
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits_manage_add.php') == false) {
@@ -41,9 +42,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     $page->return->setEditLink($editLink);
 
     if ($masteryTranscriptDomainID != '' || $search !='') {
-        echo "<div class='linkTop'>";
-        echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_manage.php&masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search'>".('Back to Search Results')."</a>";
-        echo "</div>";
+        $params = [
+            "search" => $search,
+            "masteryTranscriptDomainID" => $masteryTranscriptDomainID
+        ];
+        $page->navigator->addSearchResultsAction(Url::fromModuleRoute('Mastery Transcript', 'credits_manage.php')->withQueryParams($params));
     }
 
     $form = Form::create('domain', $session->get('absoluteURL').'/modules/'.$session->get('module')."/credits_manage_addProcess.php?masteryTranscriptDomainID=$masteryTranscriptDomainID&search=$search");

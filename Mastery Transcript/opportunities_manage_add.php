@@ -17,9 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Http\Url;
 use Gibbon\Forms\Form;
-use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\FileUploader;
+use Gibbon\Forms\DatabaseFormFactory;
 
 if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportunities_manage_add.php') == false) {
     // Access denied
@@ -39,9 +40,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
     $page->return->setEditLink($editLink);
 
     if ($search !='') {
-        echo "<div class='linkTop'>";
-        echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_manage.php&search=$search'>".('Back to Search Results')."</a>";
-        echo "</div>";
+        $params = [
+            "search" => $search
+        ];
+        $page->navigator->addSearchResultsAction(Url::fromModuleRoute('Mastery Transcript', 'opportunities_manage.php')->withQueryParams($params));
     }
 
     $form = Form::create('domain', $session->get('absoluteURL').'/modules/'.$session->get('module')."/opportunities_manage_addProcess.php?search=$search");
