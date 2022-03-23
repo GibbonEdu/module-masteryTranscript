@@ -76,14 +76,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         return;
     }
 
-    echo "<div class='linkTop'>";
-        if ($values['type'] == 'Opportunity') {
-            echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/opportunities_detail.php&masteryTranscriptOpportunityID=".$values['masteryTranscriptOpportunityID']."'>".__m('View Opportunity Details')."</a>" ;
-        }
-        else if ($values['type'] == 'Credit') {
-            echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Mastery Transcript/credits_detail.php&masteryTranscriptCreditID=".$values['masteryTranscriptCreditID']."'>".__m('View Credit Details')."</a>" ;
-        }
-    echo "</div>";
+    if ($values['type'] == 'Opportunity') {
+        $page->navigator->addHeaderAction('view', __m('View Opportunity Details'))
+            ->setURL('/modules/Mastery Transcript/opportunities_detail.php')
+            ->addParams(["masteryTranscriptOpportunityID" => $values['masteryTranscriptOpportunityID']])
+            ->displayLabel();
+    } else if ($values['type'] == 'Credit') {
+        $page->navigator->addHeaderAction('view', __m('View Credit Details'))
+            ->setURL('/modules/Mastery Transcript/credits_detail.php')
+            ->addParams(["masteryTranscriptCreditID" => $values['masteryTranscriptCreditID']])
+            ->displayLabel();
+    }
 
     //Render log
     $discussionGateway = $container->get(DiscussionGateway::class);

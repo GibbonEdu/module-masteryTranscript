@@ -34,7 +34,7 @@ if (isModuleAccessible($guid, $connection2) == false) {
     $settingGateway = $container->get(SettingGateway::class);
     $setting = $settingGateway->getSettingByScope('Mastery Transcript', 'indexText', true);
     if (!empty($setting['value'])) {
-        echo '<p class="text-base">';
+        echo '<p>';
         echo $setting['value'];
         echo '</p>';
     }
