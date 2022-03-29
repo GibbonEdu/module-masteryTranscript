@@ -58,54 +58,49 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
         $page->navigator->addSearchResultsAction(Url::fromModuleRoute('Mastery Transcript', 'opportunities.php')->withQueryParams($params));
     }
 
-    echo "<table class='smallIntBorder' cellspacing='0' style='width: 100%'>";
-    echo '<tr>';
-    echo "<td style='width: 75%; vertical-align: middle'>";
-    echo "<span style='font-size: 150%; font-weight: bold'>".$values['name'].'</span><br/>';
-    echo '</td>';
-    echo "<td style='width: 135%!important; vertical-align: top; text-align: right' rowspan=4>";
-    if ($values['logo'] == null) {
-        echo "<img style='margin: 5px; height: 125px; width: 125px' class='user' src='".$session->get('absoluteURL').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_125.jpg'/><br/>";
-    } else {
-        echo "<img style='margin: 5px; height: 125px; width: 125px' class='user' src='".$values['logo']."'/><br/>";
-    }
-    echo '</td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo "<td style='padding-top: 15px; vertical-align: top'>";
-    echo "<span style='font-size: 115%; font-weight: bold'>".__m('Year Groups').'</span><br/>';
-    echo '<i>';
-    echo (!empty($values['gibbonYearGroupIDList'])) ? $values['yearGroups'] : __('N/A');
-    echo '<i>';
-    echo '</td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo "<td style='padding-top: 15px; vertical-align: top'>";
-    echo "<span style='font-size: 115%; font-weight: bold'>".__m('Description').'</span><br/>';
-    echo '<i>'.$values['description'].'<i>';
-    echo '</td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo "<td style='padding-top: 15px; vertical-align: top'>";
-    echo "<span style='font-size: 115%; font-weight: bold'>".__m('Outcomes').'</span><br/>';
-    echo '<i>'.$values['outcomes'].'<i>';
-    echo '</td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo "<td style='padding-top: 15px; vertical-align: top'>";
-    echo "<span style='font-size: 115%; font-weight: bold'>".__m('Mentors').'</span><br/>';
-    $mentors = $container->get(OpportunityMentorGateway::class)->selectMentorsByOpportunity($masteryTranscriptOpportunityID);
-    if ($mentors->rowCount() < 1) {
-        echo __('N/A');
-    }
-    else {
-        echo "<ul>";
-        while ($mentor = $mentors->fetch()) {
-            echo "<li>".Format::name($mentor['title'], $mentor['preferredName'], $mentor['surname'], 'Staff', true, true)."</li>";
-        }
-        echo "</ul>";
-    }
-    echo '</td>';
-    echo '</tr>';
-    echo '</table>';
+    // CREDIT DETAILS TABLE
+    $table = DataTable::createDetails('unitDetails');
+
+    $table->addColumn('name', '')->addClass('col-span-2 text-lg font-bold');
+
+    $table->addColumn('logo', '')
+        ->addClass('row-span-5 text-right')
+        ->format(function ($values) use ($session) {
+            if ($values['logo'] == null) {
+                return "<img style='margin: 5px; height: 125px; width: 125px' class='user' src='".$session->get('absoluteURL').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_125.jpg'/><br/>";
+            } else {
+                return "<img style='margin: 5px; height: 125px; width: 125px' class='user' src='".$values['logo']."'/><br/>";
+            }
+        });
+
+    $table->addColumn('yearGroups', __('Year Groups'))
+        ->addClass('col-span-2')
+        ->format(function ($values) {
+            return (!empty($values['gibbonYearGroupIDList'])) ? $values['yearGroups'] : __('N/A');
+        });
+
+    $table->addColumn('description', __m('Description'))->addClass('col-span-2');
+    $table->addColumn('outcomes', __m('Indicative Outcomes & Criteria'))->addClass('col-span-2');
+
+    $table->addColumn('mentors', __m('Mentors'))
+        ->addClass('col-span-2')
+        ->format(function ($values) use ($container, $masteryTranscriptOpportunityID) {
+            $return = '';
+
+            $mentors = $container->get(OpportunityMentorGateway::class)->selectMentorsByOpportunity($masteryTranscriptOpportunityID);
+            if ($mentors->rowCount() < 1) {
+                $return .= __('N/A');
+            }
+            else {
+                $return .= "<ul>";
+                while ($mentor = $mentors->fetch()) {
+                    $return .= "<li>".Format::name($mentor['title'], $mentor['preferredName'], $mentor['surname'], 'Staff', true, true)."</li>";
+                }
+                $return .= "</ul>";
+            }
+
+            return $return;
+        });
+
+    echo $table->render([$values]);
 }

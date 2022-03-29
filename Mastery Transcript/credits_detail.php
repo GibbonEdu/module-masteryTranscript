@@ -61,47 +61,49 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         $page->navigator->addSearchResultsAction(Url::fromModuleRoute('Mastery Transcript', 'credits.php')->withQueryParams($params));
     }
 
-    echo "<table class='smallIntBorder' cellspacing='0' style='width: 100%'>";
-    echo '<tr>';
-    echo "<td style='width: 75%; vertical-align: middle'>";
-    echo "<span style='font-size: 150%; font-weight: bold'>".$values['name'].'</span><br/>';
-    echo '<i>'.$values['domain'].' | '.$values['level'].'<i>';
-    echo '</td>';
-    echo "<td style='width: 135%!important; vertical-align: top; text-align: right' rowspan=4>";
-    if ($values['logo'] == null) {
-        echo "<img style='margin: 5px; height: 125px; width: 125px' class='user' src='".$session->get('absoluteURL').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_125.jpg'/><br/>";
-    } else {
-        echo "<img style='margin: 5px; height: 125px; width: 125px' class='user' src='".$values['logo']."'/><br/>";
-    }
-    echo '</td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo "<td style='padding-top: 15px; vertical-align: top'>";
-    echo "<span style='font-size: 115%; font-weight: bold'>".__m('Description').'</span><br/>';
-    echo '<i>'.$values['description'].'<i>';
-    echo '</td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo "<td style='padding-top: 15px; vertical-align: top'>";
-    echo "<span style='font-size: 115%; font-weight: bold'>".__m('Indicative Outcomes & Criteria').'</span><br/>';
-    echo '<i>'.$values['outcomes'].'<i>';
-    echo '</td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo "<td style='padding-top: 15px; vertical-align: top'>";
-    echo "<span style='font-size: 115%; font-weight: bold'>".__m('Mentors').'</span><br/>';
-    $mentors = $container->get(CreditMentorGateway::class)->selectMentorsByCredit($masteryTranscriptCreditID);
-    if ($mentors->rowCount() < 1) {
-        echo __('N/A');
-    }
-    else {
-        echo "<ul>";
-        while ($mentor = $mentors->fetch()) {
-            echo "<li>".Format::name($mentor['title'], $mentor['preferredName'], $mentor['surname'], 'Staff', true, true)."</li>";
-        }
-        echo "</ul>";
-    }
-    echo '</td>';
-    echo '</tr>';
-    echo '</table>';
+    // CREDIT DETAILS TABLE
+    $table = DataTable::createDetails('unitDetails');
+
+    $table->addColumn('name', '')
+        ->addClass('col-span-2 text-lg font-bold')
+        ->format(function ($values) {
+            $return = $values['name']."<br/>";
+            $return .= Format::small($values['domain']." | ".$values['level']);
+            return $return;
+        });
+
+    $table->addColumn('logo', '')
+        ->addClass('row-span-4 text-right')
+        ->format(function ($values) use ($session) {
+            if ($values['logo'] == null) {
+                return "<img style='margin: 5px; height: 125px; width: 125px' class='user' src='".$session->get('absoluteURL').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_125.jpg'/><br/>";
+            } else {
+                return "<img style='margin: 5px; height: 125px; width: 125px' class='user' src='".$values['logo']."'/><br/>";
+            }
+        });
+
+    $table->addColumn('description', __m('Description'))->addClass('col-span-2');
+    $table->addColumn('outcomes', __m('Indicative Outcomes & Criteria'))->addClass('col-span-2');
+
+    $table->addColumn('mentors', __m('Mentors'))
+        ->addClass('col-span-2')
+        ->format(function ($values) use ($container, $masteryTranscriptCreditID) {
+            $return = '';
+
+            $mentors = $container->get(CreditMentorGateway::class)->selectMentorsByCredit($masteryTranscriptCreditID);
+            if ($mentors->rowCount() < 1) {
+                $return .= __('N/A');
+            }
+            else {
+                $return .= "<ul>";
+                while ($mentor = $mentors->fetch()) {
+                    $return .= "<li>".Format::name($mentor['title'], $mentor['preferredName'], $mentor['surname'], 'Staff', true, true)."</li>";
+                }
+                $return .= "</ul>";
+            }
+
+            return $return;
+        });
+
+    echo $table->render([$values]);
 }
