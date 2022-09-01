@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.4.06
+-------
+Removed Left and Expected mentors from credit and opportunity details
+
 v1.4.05
 -------
 Refactoring of tables

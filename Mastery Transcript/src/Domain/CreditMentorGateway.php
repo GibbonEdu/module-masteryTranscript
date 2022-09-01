@@ -43,6 +43,7 @@ class CreditMentorGateway extends QueryableGateway
             ->innerJoin('gibbonPerson', 'masteryTranscriptCreditMentor.gibbonPersonID=gibbonPerson.gibbonPersonID')
             ->where('masteryTranscriptCreditID=:masteryTranscriptCreditID')
             ->bindValue('masteryTranscriptCreditID', $masteryTranscriptCreditID)
+            ->where("gibbonPerson.status='Full'")
             ->orderBy(['surname', 'preferredName']);
 
         return $this->runSelect($query);

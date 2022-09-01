@@ -43,6 +43,7 @@ class OpportunityMentorGateway extends QueryableGateway
             ->innerJoin('gibbonPerson', 'masteryTranscriptOpportunityMentor.gibbonPersonID=gibbonPerson.gibbonPersonID')
             ->where('masteryTranscriptOpportunityID=:masteryTranscriptOpportunityID')
             ->bindValue('masteryTranscriptOpportunityID', $masteryTranscriptOpportunityID)
+            ->where("gibbonPerson.status='Full'")
             ->orderBy(['surname', 'preferredName']);
 
         return $this->runSelect($query);
