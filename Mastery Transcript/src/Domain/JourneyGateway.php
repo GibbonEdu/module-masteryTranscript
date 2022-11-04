@@ -35,18 +35,20 @@ class JourneyGateway extends QueryableGateway
     {
         $query = $this
             ->newQuery()
-            ->cols(['masteryTranscriptJourney.*', '\'Credit\' AS type', 'level', 'masteryTranscriptCredit.name AS name', 'logo'])
+            ->cols(['masteryTranscriptJourney.*', '\'Credit\' AS type', 'level', 'masteryTranscriptCredit.name AS name', 'logo', 'mentor.gibbonPersonID', 'mentor.title', 'mentor.surname', 'mentor.preferredName'])
             ->from($this->getTableName())
             ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
             ->innerJoin('masteryTranscriptCredit','masteryTranscriptJourney.masteryTranscriptCreditID=masteryTranscriptCredit.masteryTranscriptCreditID AND type=\'Credit\'')
+            ->leftJoin('gibbonPerson as mentor', 'masteryTranscriptJourney.gibbonPersonIDSchoolMentor=mentor.gibbonPersonID')
             ->where('masteryTranscriptJourney.gibbonPersonIDStudent = :gibbonPersonID')
             ->bindValue('gibbonPersonID', $gibbonPersonID);
 
         $this->unionAllWithCriteria($query, $criteria)
-            ->cols(['masteryTranscriptJourney.*', '\'Opportunity\' AS type', 'null AS level', 'masteryTranscriptOpportunity.name AS name', 'logo'])
+            ->cols(['masteryTranscriptJourney.*', '\'Opportunity\' AS type', 'null AS level', 'masteryTranscriptOpportunity.name AS name', 'logo', 'mentor.gibbonPersonID', 'mentor.title', 'mentor.surname', 'mentor.preferredName'])
             ->from($this->getTableName())
             ->innerJoin('gibbonPerson', 'masteryTranscriptJourney.gibbonPersonIDStudent=gibbonPerson.gibbonPersonID')
             ->innerJoin('masteryTranscriptOpportunity','masteryTranscriptJourney.masteryTranscriptOpportunityID=masteryTranscriptOpportunity.masteryTranscriptOpportunityID AND type=\'Opportunity\'')
+            ->leftJoin('gibbonPerson as mentor', 'masteryTranscriptJourney.gibbonPersonIDSchoolMentor=mentor.gibbonPersonID')
             ->where('masteryTranscriptJourney.gibbonPersonIDStudent = :gibbonPersonID')
             ->bindValue('gibbonPersonID', $gibbonPersonID);
 

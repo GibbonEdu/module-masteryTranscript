@@ -140,6 +140,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     $table->addColumn('status', __m('Status'));
 
+    $canViewStaff = isActionAccessible($guid, $connection2, '/modules/Staff/staff_view_details.php');
+    $table->addColumn('mentor', __m('Mentor'))
+        ->format(function ($values) use ($canViewStaff) {
+            return $canViewStaff
+                ? Format::nameLinked($values['gibbonPersonID'], $values['title'], $values['preferredName'], $values['surname'], 'Staff')
+                : Format::name($values['title'], $values['preferredName'], $values['surname'], 'Staff');
+        });
+
     // ACTIONS
     $table->addActionColumn()
         ->addParam('masteryTranscriptJourneyID')

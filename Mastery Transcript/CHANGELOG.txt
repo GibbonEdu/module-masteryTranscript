@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.4.07
+-------
+Added mentor name to the Record Journey page for current records 
+
 v1.4.06
 -------
 Removed Left and Expected mentors from credit and opportunity details
