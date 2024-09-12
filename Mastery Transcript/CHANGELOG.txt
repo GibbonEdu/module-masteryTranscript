@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.5.00
+-------
+Transferred ownership from Ross Parker to Gibbon Foundation
+
 v1.4.07
 -------
 Added mentor name to the Record Journey page for current records 

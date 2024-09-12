@@ -197,3 +197,10 @@ $sql[$count][1] = "";
 //v1.4.07
 $sql[$count][0] = '1.4.07';
 $sql[$count][1] = "";
+
+//v1.5.00
+++$count;
+$sql[$count][0] = '1.5.00';
+$sql[$count][1] = "
+UPDATE gibbonModule SET author='Gibbon Foundation', url='https://gibbonedu.org' WHERE name='Mastery Transcript';end
+";
