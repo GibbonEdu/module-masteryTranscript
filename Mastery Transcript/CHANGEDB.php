@@ -209,3 +209,8 @@ UPDATE gibbonModule SET author='Gibbon Foundation', url='https://gibbonedu.org' 
 ++$count;
 $sql[$count][0] = '1.5.01';
 $sql[$count][1] = "";
+
+//v1.5.02
+++$count;
+$sql[$count][0] = '1.5.02';
+$sql[$count][1] = "";
