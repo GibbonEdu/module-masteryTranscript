@@ -29,8 +29,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
     exit;
 } else {
     // Proceed!
-    $data = $_POST['data'] ?? [];
-    $order = json_decode($_POST['order']);
+    $order = $_POST['order'] ?? [];
 
     if (empty($order)) {
         exit;

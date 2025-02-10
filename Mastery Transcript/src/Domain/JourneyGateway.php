@@ -70,6 +70,10 @@ class JourneyGateway extends QueryableGateway
                 return $query
                     ->where('masteryTranscriptJourney.status = :status')
                     ->bindValue('status', $status);
+            },
+            'active' => function ($query, $status) {
+                return $query
+                    ->where('masteryTranscriptJourney.status <> "Complete - Approved"');
             }
         ]);
 

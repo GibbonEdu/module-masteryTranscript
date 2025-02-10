@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.6.00
+-------
+Gibbon v28 Compatibility
+
 v1.5.02
 -------
 Fixed JS bug introduced in ownership transfer
