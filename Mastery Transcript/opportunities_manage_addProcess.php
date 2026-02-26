@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\FileUploader;
-use Gibbon\Services\Format;
+use Gibbon\Domain\System\FileGateway;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityMentorGateway;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityCreditGateway;
@@ -64,6 +64,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
     }
 
     //Deal with file upload
+    $fileMetaData = null;
     if (!empty($_FILES['file']['tmp_name'])) {
         $fileUploader = new FileUploader($pdo, $session);
         $logo = $fileUploader->uploadFromPost($_FILES['file'], 'masteryTranscript_opportunityLogo_'.$data['name']);
@@ -73,11 +74,26 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
         }
         else {
             $data['logo'] = $logo;
+            $fileMetaData = $fileUploader->getFileMetaData($logo);
         }
     }
 
     // Create the record
     $masteryTranscriptOpportunityID = $opportunityGateway->insert($data);
+
+    // Record file tracking
+    if (!empty($fileMetaData) && !empty($masteryTranscriptOpportunityID)) {
+        $gibbonFileID = $container->get(FileGateway::class)->recordFileUpload(
+            $fileMetaData,
+            'masteryTranscriptOpportunity',
+            $masteryTranscriptOpportunityID,
+            'logo'
+        );
+
+        if (empty($gibbonFileID)) {
+            $partialFail = true;
+        }
+    }
 
     //Deal with mentors
     $opportunityMentorGateway = $container->get(OpportunityMentorGateway::class);

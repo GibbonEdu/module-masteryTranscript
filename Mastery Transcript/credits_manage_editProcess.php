@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\FileUploader;
-use Gibbon\Services\Format;
+use Gibbon\Domain\System\FileGateway;
 use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
 use Gibbon\Module\MasteryTranscript\Domain\CreditMentorGateway;
 
@@ -66,6 +66,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     }
 
     //Deal with file upload
+    $fileMetaData = null;
     $data['logo'] = $_POST['logo'];
     if (!empty($_FILES['file']['tmp_name'])) {
         $fileUploader = new FileUploader($pdo, $session);
@@ -73,14 +74,28 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
         if (empty($logo)) {
             $partialFail = true;
-        }
-        else {
+        } else {
             $data['logo'] = $logo;
+            $fileMetaData = $fileUploader->getFileMetaData($logo);
         }
     }
 
     // Update the record
     $updated = $creditGateway->update($masteryTranscriptCreditID, $data);
+
+    // Record file tracking
+    if (!empty($fileMetaData) && !empty($masteryTranscriptCreditID)) {
+        $gibbonFileID = $container->get(FileGateway::class)->recordFileUpload(
+            $fileMetaData,
+            'masteryTranscriptCredit',
+            $masteryTranscriptCreditID,
+            'logo'
+        );
+
+        if (empty($gibbonFileID)) {
+            $partialFail = true;
+        }
+    }
 
     //Deal with mentors
     $creditMentorGateway = $container->get(CreditMentorGateway::class);

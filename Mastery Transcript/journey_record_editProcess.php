@@ -21,6 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\FileUploader;
 use Gibbon\Services\Format;
+use Gibbon\Domain\System\FileGateway;
 use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
 use Gibbon\Domain\System\DiscussionGateway;
 use Gibbon\Comms\NotificationSender;
@@ -76,12 +77,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     ];
 
     //Deal with file upload
+    $fileMetaData = null;
     if ($data['attachmentType'] == 'File' && !empty($_FILES['evidenceFile']['tmp_name'])) {
         $fileUploader = new FileUploader($pdo, $session);
         $logo = $fileUploader->uploadFromPost($_FILES['evidenceFile'], 'masteryTranscript_evidence_'.$session->get('gibbonPersonID'));
 
         if (!empty($logo)) {
             $data['attachmentLocation'] = $logo;
+            $fileMetaData = $fileUploader->getFileMetaData($logo);
         }
     }
 
@@ -93,7 +96,22 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     }
 
     // Insert the record
-    $inserted = $discussionGateway->insert($data);
+    $gibbonDiscussionID = $discussionGateway->insert($data);
+    $inserted = $gibbonDiscussionID;
+
+    // Record file tracking
+    if (!empty($fileMetaData) && !empty($gibbonDiscussionID)) {
+        $gibbonFileID = $container->get(FileGateway::class)->recordFileUpload(
+            $fileMetaData,
+            'gibbonDiscussion',
+            $gibbonDiscussionID,
+            'attachmentLocation'
+        );
+
+        if (empty($gibbonFileID)) {
+            $inserted = false;
+        }
+    }
 
     //Update the journey
     $data = [
