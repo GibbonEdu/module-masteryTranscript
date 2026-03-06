@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\FileUploader;
-use Gibbon\Domain\System\FileGateway;
+use Gibbon\Contracts\Filesystem\FileHandler;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityMentorGateway;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityCreditGateway;
@@ -83,7 +83,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
 
     // Record file tracking
     if (!empty($fileMetaData) && !empty($masteryTranscriptOpportunityID)) {
-        $gibbonFileID = $container->get(FileGateway::class)->recordFileUpload(
+        $gibbonFileID = $container->get(FileHandler::class)->recordFileUpload(
             $fileMetaData,
             'masteryTranscriptOpportunity',
             $masteryTranscriptOpportunityID,

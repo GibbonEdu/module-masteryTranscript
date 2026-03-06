@@ -21,7 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\FileUploader;
 use Gibbon\Services\Format;
-use Gibbon\Domain\System\FileGateway;
+use Gibbon\Contracts\Filesystem\FileHandler;
 use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
 use Gibbon\Domain\System\DiscussionGateway;
 use Gibbon\Comms\NotificationSender;
@@ -45,6 +45,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 } else {
     // Proceed!
     $journeyGateway = $container->get(JourneyGateway::class);
+    $discussionGateway = $container->get(DiscussionGateway::class);
     $result = $container->get(JourneyGateway::class)->selectJourneyByID($masteryTranscriptJourneyID);
 
     if ($result->rowCount() != 1) {
@@ -60,9 +61,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         header("Location: {$URL}");
         exit;
     }
-
-    $discussionGateway = $container->get(DiscussionGateway::class);
-
+    
     $data = [
         'foreignTable'         => 'masteryTranscriptJourney',
         'foreignTableID'       => $masteryTranscriptJourneyID,
@@ -101,7 +100,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 
     // Record file tracking
     if (!empty($fileMetaData) && !empty($gibbonDiscussionID)) {
-        $gibbonFileID = $container->get(FileGateway::class)->recordFileUpload(
+        $gibbonFileID = $container->get(FileHandler::class)->recordFileUpload(
             $fileMetaData,
             'gibbonDiscussion',
             $gibbonDiscussionID,

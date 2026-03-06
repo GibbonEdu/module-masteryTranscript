@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\FileUploader;
-use Gibbon\Domain\System\FileGateway;
+use Gibbon\Contracts\Filesystem\FileHandler;
 use Gibbon\Module\MasteryTranscript\Domain\DomainGateway;
 
 require_once '../../gibbon.php';
@@ -77,12 +77,20 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
         }
     }
 
+    // Get old record for file deletion check
+    $oldRecord = $domainGateway->getByID($masteryTranscriptDomainID);
+
     // Update the record
     $updated = $domainGateway->update($masteryTranscriptDomainID, $data);
 
+    // Handle file deletion when user removes logo
+    if (empty($data['logo']) && !empty($oldRecord['logo'])) {
+        $deleted = $container->get(FileHandler::class)->deleteFile('masteryTranscriptDomain', $masteryTranscriptDomainID, 'logo');
+    }
+
     // Record file tracking
     if (!empty($fileMetaData) && !empty($masteryTranscriptDomainID)) {
-        $gibbonFileID = $container->get(FileGateway::class)->recordFileUpload(
+        $gibbonFileID = $container->get(FileHandler::class)->recordFileUpload(
             $fileMetaData,
             'masteryTranscriptDomain',
             $masteryTranscriptDomainID,

@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\FileUploader;
-use Gibbon\Domain\System\FileGateway;
+use Gibbon\Contracts\Filesystem\FileHandler;
 use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
 use Gibbon\Module\MasteryTranscript\Domain\CreditMentorGateway;
 
@@ -80,12 +80,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         }
     }
 
+    // Get old record for file deletion check
+    $oldRecord = $creditGateway->getByID($masteryTranscriptCreditID);
+
     // Update the record
     $updated = $creditGateway->update($masteryTranscriptCreditID, $data);
 
     // Record file tracking
     if (!empty($fileMetaData) && !empty($masteryTranscriptCreditID)) {
-        $gibbonFileID = $container->get(FileGateway::class)->recordFileUpload(
+        $gibbonFileID = $container->get(FileHandler::class)->recordFileUpload(
             $fileMetaData,
             'masteryTranscriptCredit',
             $masteryTranscriptCreditID,
@@ -95,6 +98,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
         if (empty($gibbonFileID)) {
             $partialFail = true;
         }
+    }
+
+    // Handle file deletion when user removes logo
+    if (empty($data['logo']) && !empty($oldRecord['logo'])) {
+        $deleted = $container->get(FileHandler::class)->deleteFile('masteryTranscriptCredit', $masteryTranscriptCreditID, 'logo');
     }
 
     //Deal with mentors
