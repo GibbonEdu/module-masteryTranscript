@@ -21,7 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Http\Url;
 use Gibbon\Forms\Form;
-use Gibbon\FileUploader;
 use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Domain\Students\StudentGateway;
 
@@ -80,8 +79,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
     $form->toggleVisibilityByClass('opportunity')->onSelect('type')->when('Opportunity');
 
     $studentGateway = $container->get(StudentGateway::class);
-    $student = $studentGateway->selectActiveStudentByPerson($session->get('gibbonSchoolYearID'), $session->get('gibbonPersonID'));
-    $data = array('gibbonYearGroupID' => '%'.$student->fetch()['gibbonYearGroupID'].'%');
+    $student = $studentGateway->selectActiveStudentByPerson($session->get('gibbonSchoolYearID'), $session->get('gibbonPersonID'))->fetch();
+    if (empty($student['gibbonYearGroupID'])) {
+        $page->addError(__('The selected record does not exist, or you do not have access to it.'));
+        return;
+    }
+
+    $data = array('gibbonYearGroupID' => '%'.$student['gibbonYearGroupID'].'%');
     $sql = "SELECT masteryTranscriptOpportunityID AS value, masteryTranscriptOpportunity.name FROM masteryTranscriptOpportunity WHERE masteryTranscriptOpportunity.active='Y' AND gibbonYearGroupIDList LIKE :gibbonYearGroupID ORDER BY masteryTranscriptOpportunity.name";
     $row = $form->addRow()->addClass('opportunity');
         $row->addLabel('masteryTranscriptOpportunityID', __m('Available Opportunities'))->description(__m('Which opportunity do you want to apply for?'));
