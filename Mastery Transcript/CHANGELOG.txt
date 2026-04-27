@@ -1,6 +1,6 @@
 CHANGELOG
 =========
-v1.6.02
+v1.6.01
 -------
 Improved checking for error in add journey record page
 
