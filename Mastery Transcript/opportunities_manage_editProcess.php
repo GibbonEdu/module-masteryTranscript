@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\FileUploader;
-use Gibbon\Services\Format;
+use Gibbon\Contracts\Filesystem\FileHandler;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityMentorGateway;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityCreditGateway;
@@ -65,6 +65,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
     }
 
     //Deal with file upload
+    $fileMetaData = null;
     $data['logo'] = $_POST['logo'];
     if (!empty($_FILES['file']['tmp_name'])) {
         $fileUploader = new FileUploader($pdo, $session);
@@ -72,14 +73,36 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
 
         if (empty($logo)) {
             $partialFail = true;
-        }
-        else {
+        } else {
             $data['logo'] = $logo;
+            $fileMetaData = $fileUploader->getFileMetaData($logo);
         }
     }
 
+    // Get old record for file deletion check
+    $oldRecord = $opportunityGateway->getByID($masteryTranscriptOpportunityID);
+
     // Update the record
     $updated = $opportunityGateway->update($masteryTranscriptOpportunityID, $data);
+
+    // Handle file deletion when user removes logo
+    if (empty($data['logo']) && !empty($oldRecord['logo'])) {
+        $deleted = $container->get(FileHandler::class)->deleteFile('masteryTranscriptOpportunity', $masteryTranscriptOpportunityID, 'logo');
+    }
+
+    // Record file tracking
+    if (!empty($fileMetaData) && !empty($masteryTranscriptOpportunityID)) {
+        $gibbonFileID = $container->get(FileHandler::class)->recordFileUpload(
+            $fileMetaData,
+            'masteryTranscriptOpportunity',
+            $masteryTranscriptOpportunityID,
+            'logo'
+        );
+
+        if (empty($gibbonFileID)) {
+            $partialFail = true;
+        }
+    }
 
     //Deal with mentors
     $opportunityMentorGateway = $container->get(OpportunityMentorGateway::class);

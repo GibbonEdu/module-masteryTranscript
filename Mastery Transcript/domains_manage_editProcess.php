@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\FileUploader;
-use Gibbon\Services\Format;
+use Gibbon\Contracts\Filesystem\FileHandler;
 use Gibbon\Module\MasteryTranscript\Domain\DomainGateway;
 
 require_once '../../gibbon.php';
@@ -60,10 +60,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
         header("Location: {$URL}");
         exit;
     }
-
-
-
+    
     //Deal with file upload
+    $fileMetaData = null;
     $data['logo'] = $_POST['logo'];
     if (!empty($_FILES['file']['tmp_name'])) {
         $fileUploader = new FileUploader($pdo, $session);
@@ -74,11 +73,34 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
         }
         else {
             $data['logo'] = $logo;
+            $fileMetaData = $fileUploader->getFileMetaData($logo);
         }
     }
 
+    // Get old record for file deletion check
+    $oldRecord = $domainGateway->getByID($masteryTranscriptDomainID);
+
     // Update the record
     $updated = $domainGateway->update($masteryTranscriptDomainID, $data);
+
+    // Handle file deletion when user removes logo
+    if (empty($data['logo']) && !empty($oldRecord['logo'])) {
+        $deleted = $container->get(FileHandler::class)->deleteFile('masteryTranscriptDomain', $masteryTranscriptDomainID, 'logo');
+    }
+
+    // Record file tracking
+    if (!empty($fileMetaData) && !empty($masteryTranscriptDomainID)) {
+        $gibbonFileID = $container->get(FileHandler::class)->recordFileUpload(
+            $fileMetaData,
+            'masteryTranscriptDomain',
+            $masteryTranscriptDomainID,
+            'logo'
+        );
+
+        if (empty($gibbonFileID)) {
+            $partialFail = true;
+        }
+    }
 
     $URL .= !$updated
         ? "&return=error2"

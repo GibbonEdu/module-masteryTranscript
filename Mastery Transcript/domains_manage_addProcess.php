@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\FileUploader;
-use Gibbon\Services\Format;
+use Gibbon\Contracts\Filesystem\FileHandler;
 use Gibbon\Module\MasteryTranscript\Domain\DomainGateway;
 
 require_once '../../gibbon.php';
@@ -60,20 +60,35 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
     }
 
     //Deal with file upload
+    $fileMetaData = null;
     if (!empty($_FILES['file']['tmp_name'])) {
         $fileUploader = new FileUploader($pdo, $session);
         $logo = $fileUploader->uploadFromPost($_FILES['file'], 'masteryTranscript_domainLogo_'.$data['name']);
 
         if (empty($logo)) {
             $partialFail = true;
-        }
-        else {
+        } else {
             $data['logo'] = $logo;
+            $fileMetaData = $fileUploader->getFileMetaData($logo);
         }
     }
 
     // Create the record
     $masteryTranscriptDomainID = $domainGateway->insert($data);
+
+    // Record file tracking
+    if (!empty($fileMetaData) && !empty($masteryTranscriptDomainID)) {
+        $gibbonFileID = $container->get(FileHandler::class)->recordFileUpload(
+            $fileMetaData,
+            'masteryTranscriptDomain',
+            $masteryTranscriptDomainID,
+            'logo'
+        );
+
+        if (empty($gibbonFileID)) {
+            $partialFail = true;
+        }
+    }
 
     if ($masteryTranscriptDomainID && !$partialFail) {
         $URL .= "&return=success0&editID=$masteryTranscriptDomainID";

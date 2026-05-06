@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\FileUploader;
-use Gibbon\Services\Format;
+use Gibbon\Contracts\Filesystem\FileHandler;
 use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
 use Gibbon\Module\MasteryTranscript\Domain\CreditMentorGateway;
 
@@ -66,6 +66,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     }
 
     //Deal with file upload
+    $fileMetaData = null;
     $data['logo'] = $_POST['logo'];
     if (!empty($_FILES['file']['tmp_name'])) {
         $fileUploader = new FileUploader($pdo, $session);
@@ -73,14 +74,36 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
 
         if (empty($logo)) {
             $partialFail = true;
-        }
-        else {
+        } else {
             $data['logo'] = $logo;
+            $fileMetaData = $fileUploader->getFileMetaData($logo);
         }
     }
 
+    // Get old record for file deletion check
+    $oldRecord = $creditGateway->getByID($masteryTranscriptCreditID);
+
     // Update the record
     $updated = $creditGateway->update($masteryTranscriptCreditID, $data);
+
+    // Record file tracking
+    if (!empty($fileMetaData) && !empty($masteryTranscriptCreditID)) {
+        $gibbonFileID = $container->get(FileHandler::class)->recordFileUpload(
+            $fileMetaData,
+            'masteryTranscriptCredit',
+            $masteryTranscriptCreditID,
+            'logo'
+        );
+
+        if (empty($gibbonFileID)) {
+            $partialFail = true;
+        }
+    }
+
+    // Handle file deletion when user removes logo
+    if (empty($data['logo']) && !empty($oldRecord['logo'])) {
+        $deleted = $container->get(FileHandler::class)->deleteFile('masteryTranscriptCredit', $masteryTranscriptCreditID, 'logo');
+    }
 
     //Deal with mentors
     $creditMentorGateway = $container->get(CreditMentorGateway::class);
