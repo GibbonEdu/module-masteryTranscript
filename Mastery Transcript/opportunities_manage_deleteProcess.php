@@ -19,6 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Contracts\Filesystem\FileHandler;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityGateway;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityMentorGateway;
 use Gibbon\Module\MasteryTranscript\Domain\OpportunityCreditGateway;
@@ -50,6 +51,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/opportu
     }
 
     $deleted = $opportunityGateway->delete($masteryTranscriptOpportunityID);
+
+    $fileDeleted = $container->get(FileHandler::class)->deleteFile('masteryTranscriptOpportunity', $masteryTranscriptOpportunityID, 'logo');
 
     $opportunityMentorGateway = $container->get(OpportunityMentorGateway::class);
     $opportunityMentorGateway->deleteMentorsByOpportunity($masteryTranscriptOpportunityID);

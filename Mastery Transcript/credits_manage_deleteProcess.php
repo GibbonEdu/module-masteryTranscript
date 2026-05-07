@@ -19,6 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Contracts\Filesystem\FileHandler;
 use Gibbon\Module\MasteryTranscript\Domain\CreditGateway;
 use Gibbon\Module\MasteryTranscript\Domain\CreditMentorGateway;
 
@@ -50,6 +51,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/credits
     }
 
     $deleted = $creditGateway->delete($masteryTranscriptCreditID);
+
+    $fileDeleted = $container->get(FileHandler::class)->deleteFile('masteryTranscriptCredit', $masteryTranscriptCreditID, 'logo');
 
     $creditMentorGateway = $container->get(CreditMentorGateway::class);
     $creditMentorGateway->deleteMentorsByCredit($masteryTranscriptCreditID);

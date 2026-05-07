@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.7.01
+-------
+Added file cleanup feature after a record is deleted
+
 v1.7.00
 -------
 Added comprehensive file upload tracking system to monitor and manage all file uploads across the system

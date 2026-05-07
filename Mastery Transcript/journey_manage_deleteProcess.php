@@ -19,6 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Contracts\Filesystem\FileHandler;
+use Gibbon\Domain\System\DiscussionGateway;
 use Gibbon\Module\MasteryTranscript\Domain\JourneyGateway;
 
 require_once '../../gibbon.php';
@@ -58,6 +60,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
         header("Location: {$URL}");
         exit();
     }
+
+    $discussionGateway = $container->get(DiscussionGateway::class);
+    $discussions = $discussionGateway->selectBy(['foreignTable' => 'masteryTranscriptJourney', 'foreignTableID' => $masteryTranscriptJourneyID], ['gibbonDiscussionID'])->fetchAll();
+
+    foreach ($discussions as $discussion) {
+        $fileDeleted = $container->get(FileHandler::class)->deleteFile('gibbonDiscussion', $discussion['gibbonDiscussionID'], 'attachmentLocation');
+    }
+    
+    $discussionGateway->deleteWhere(['foreignTable' => 'masteryTranscriptJourney', 'foreignTableID' => $masteryTranscriptJourneyID]);
 
     $deleted = $journeyGateway->delete($masteryTranscriptJourneyID);
 
