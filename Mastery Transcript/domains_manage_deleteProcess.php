@@ -19,6 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Contracts\Filesystem\FileHandler;
 use Gibbon\Module\MasteryTranscript\Domain\DomainGateway;
 
 require_once '../../gibbon.php';
@@ -47,6 +48,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/domains
     }
 
     $deleted = $domainGateway->delete($masteryTranscriptDomainID);
+
+    $fileDeleted = $container->get(FileHandler::class)->deleteFile('masteryTranscriptDomain', $masteryTranscriptDomainID, 'logo');
 
     $URL .= !$deleted
         ? '&return=error2'
