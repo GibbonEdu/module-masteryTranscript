@@ -66,7 +66,27 @@ if (isActionAccessible($guid, $connection2, '/modules/Mastery Transcript/journey
 	
     echo '<p style=\'margin-top: 20px\'>';
     echo __m('{student} has requested your help as mentor of the {type} {name}.', array('student' => Format::name('', $values['preferredName'], $values['surname'], 'Student', false, true), 'type' => strtolower($values['type']), 'name' => $values['name']))."<br/><br/>";
-    echo __m('Please {link1} if you are able to get involved, or, {link2} if you not in a position to help.', array('link1' => "<a class='p-1 border border-solid border-green-500 text-green-500 bg-green-200' href='".$session->get('absoluteURL')."/modules/Mastery Transcript/journey_manage_commitProcess.php?response=Y&masteryTranscriptJourneyID=$masteryTranscriptJourneyID&statusKey=$statusKey&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent'>click here</a>", 'link2' => "<a class='p-1 border border-solid border-red-500 text-red-500 bg-red-200' href='".$session->get('absoluteURL')."/modules/Mastery Transcript/journey_manage_commitProcess.php?response=N&masteryTranscriptJourneyID=$masteryTranscriptJourneyID&statusKey=$statusKey&search=$search&status=$status&gibbonPersonIDStudent=$gibbonPersonIDStudent'>click here</a>"));
+    $yesLink = (new \Gibbon\Forms\Layout\WebLink(__('click here')))
+        ->addClass('p-1 border border-solid border-green-500 text-green-500 bg-green-200')
+        ->setURL($session->get('absoluteURL').'/modules/Mastery Transcript/journey_manage_commitProcess.php')
+        ->addParam('response', 'Y')
+        ->addParam('masteryTranscriptJourneyID', $masteryTranscriptJourneyID)
+        ->addParam('statusKey', $statusKey)
+        ->addParam('search', $search)
+        ->addParam('status', $status)
+        ->addParam('gibbonPersonIDStudent', $gibbonPersonIDStudent)
+        ->getElement();
+    $noLink = (new \Gibbon\Forms\Layout\WebLink(__('click here')))
+        ->addClass('p-1 border border-solid border-red-500 text-red-500 bg-red-200')
+        ->setURL($session->get('absoluteURL').'/modules/Mastery Transcript/journey_manage_commitProcess.php')
+        ->addParam('response', 'N')
+        ->addParam('masteryTranscriptJourneyID', $masteryTranscriptJourneyID)
+        ->addParam('statusKey', $statusKey)
+        ->addParam('search', $search)
+        ->addParam('status', $status)
+        ->addParam('gibbonPersonIDStudent', $gibbonPersonIDStudent)
+        ->getElement();
+    echo __m('Please {link1} if you are able to get involved, or, {link2} if you not in a position to help.', ['link1' => $yesLink, 'link2' => $noLink]);
     echo '</p>';
 }
 
